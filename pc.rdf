@@ -1,0 +1,199 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE rdf:RDF [
+	<!ENTITY archive 'http://www.accorpa.com/ns/system/archive#'>
+	<!ENTITY catalog 'http://www.accorpa.com/ns/world/catalog#'>
+	<!ENTITY kbs 'http://www.accorpa.com/ns/kbs#'>
+	<!ENTITY organization 'http://www.accorpa.com/ns/world/organization#'>
+	<!ENTITY owl 'http://www.w3.org/2002/07/owl#'>
+	<!ENTITY rdfs 'http://www.w3.org/2000/01/rdf-schema#'>
+	<!ENTITY system 'http://www.accorpa.com/ns/system#'>
+	<!ENTITY world 'http://www.accorpa.com/ns/world#'>
+	<!ENTITY xsd 'http://www.w3.org/2001/XMLSchema#'>
+	<!ENTITY rdf 'http://www.w3.org/1999/02/22-rdf-syntax-ns#'>
+	<!ENTITY origin 'http://www.accorpa.com/origin/'>
+]>
+<rdf:RDF xmlns="http://www.accorpa.com/ns/enterprise/pc#" 
+         xmlns:archive="http://www.accorpa.com/ns/system/archive#"
+         xmlns:catalog="http://www.accorpa.com/ns/world/catalog#"
+         xmlns:kbs="http://www.accorpa.com/ns/kbs#"
+         xmlns:organization="http://www.accorpa.com/ns/world/organization#"
+         xmlns:owl="http://www.w3.org/2002/07/owl#"
+         xmlns:pc="http://www.accorpa.com/ns/enterprise/pc#"
+         xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+         xmlns:system="http://www.accorpa.com/ns/system#"
+         xmlns:world="http://www.accorpa.com/ns/world#"
+         xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+         xml:base="http://www.accorpa.com/ns/enterprise/pc#"
+         xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+    <owl:Ontology rdf:about="">
+        <rdfs:label>Physical Capital</rdfs:label>
+        <kbs:origin rdf:resource="&origin;29733706-e1a8-4f66-a48f-3d693ff41627"/>
+    </owl:Ontology>
+    <kbs:Concept rdf:about="#Order">
+        <rdfs:subClassOf rdf:resource="&kbs;Entity"/>
+        <!--rdfs:subClassOf rdf:resource="#Counted"/-->
+        <kbs:abstract rdf:datatype="&xsd;boolean">true</kbs:abstract>
+        <kbs:isDescribedBy rdf:resource="#fromStore"/>
+        <kbs:isDescribedBy rdf:resource="&catalog;hasItem"/>
+        <kbs:isDescribedBy rdf:resource="#hasLot"/>
+        <kbs:isDescribedBy rdf:resource="#toStore"/>
+        <kbs:isDescribedBy rdf:resource="#unitQty"/>
+        <rdfs:label>Order</rdfs:label>
+        <kbs:origin rdf:resource="&origin;34f28fc5-2402-4afb-ae2b-438732445e59"/>
+    </kbs:Concept>
+    <kbs:Concept rdf:about="#Lot">
+        <rdfs:subClassOf rdf:resource="&kbs;Entity"/>
+        <rdfs:subClassOf rdf:resource="&system;Barcoded"/>
+        <kbs:isDescribedBy rdf:resource="&system;status"/>
+        <kbs:isDescribedBy rdf:resource="#hasItem"/>
+        <rdfs:label>Lot</rdfs:label>
+        <kbs:origin rdf:resource="&origin;b3f0dc81-bc2a-4839-ba90-da612d3ee061"/>
+    </kbs:Concept>
+    <kbs:Concept rdf:about="#Counted">
+        <rdfs:subClassOf rdf:resource="&catalog;Countable"/>
+        <kbs:abstract rdf:datatype="&xsd;boolean">true</kbs:abstract>
+        <kbs:isDescribedBy rdf:resource="#unitQty"/>
+        <rdfs:label>Counted</rdfs:label>
+        <kbs:origin rdf:resource="&origin;86ce43f9-1a19-4bf0-bd28-5506bab0cce9"/>
+    </kbs:Concept>
+    <kbs:Concept rdf:about="#Move">
+        <rdfs:subClassOf rdf:resource="&kbs;Entity"/>
+        <kbs:isDescribedBy rdf:resource="&catalog;hasItem"/>
+        <kbs:isDescribedBy rdf:resource="#hasLot"/>
+        <kbs:isDescribedBy rdf:resource="#hasStore"/>
+        <kbs:isDescribedBy rdf:resource="#unitQty"/>
+        <rdfs:label>Move</rdfs:label>
+        <kbs:origin rdf:resource="&origin;211f92ad-7f48-45d5-b1db-6b38af97be0b"/>
+    </kbs:Concept>
+    <kbs:Concept rdf:about="#Warehouse">
+        <rdfs:subClassOf rdf:resource="&system;Resource"/>
+        <rdfs:subClassOf rdf:resource="&world;Place"/>
+        <kbs:isDescribedBy rdf:resource="&organization;hasOrganization"/>
+        <rdfs:label>Warehouse</rdfs:label>
+        <kbs:origin rdf:resource="&origin;5e5e4aa8-be7d-4f23-895a-658ed08ca132"/>
+    </kbs:Concept>
+    <kbs:Concept rdf:about="#Store">
+        <rdfs:subClassOf rdf:resource="&system;Resource"/>
+        <kbs:abstract rdf:datatype="&xsd;boolean">true</kbs:abstract>
+        <kbs:isDescribedBy rdf:resource="#hasWarehouse"/>
+        <rdfs:label>Store</rdfs:label>
+        <kbs:origin rdf:resource="&origin;451e8f57-8965-4474-9b41-8f177c510c9e"/>
+    </kbs:Concept>
+    <kbs:Concept rdf:about="#PhysicalStore">
+        <rdfs:subClassOf rdf:resource="#Store"/>
+        <rdfs:subClassOf rdf:resource="&world;Place"/>
+        <rdfs:label>PhysicalStore</rdfs:label>
+        <kbs:origin rdf:resource="&origin;d799df89-b375-416b-ab1b-317913bcb8db"/>
+    </kbs:Concept>
+    <kbs:Concept rdf:about="#VirtualStore">
+        <rdfs:subClassOf rdf:resource="#Store"/>
+        <kbs:abstract rdf:datatype="&xsd;boolean">true</kbs:abstract>
+        <rdfs:label>VirtualStore</rdfs:label>
+        <kbs:origin rdf:resource="&origin;25506e2b-cb39-434b-9645-87ca1669983c"/>
+    </kbs:Concept>
+    <kbs:Concept rdf:about="#Document">
+        <rdfs:subClassOf rdf:resource="&archive;WorkDocument"/>
+        <kbs:abstract rdf:datatype="&xsd;boolean">true</kbs:abstract>
+        <kbs:isDescribedBy rdf:resource="#hasWarehouse"/>
+        <rdfs:label>Document</rdfs:label>
+        <kbs:origin rdf:resource="&origin;a7a66b7f-3035-48a9-b2aa-a8012232283d"/>
+    </kbs:Concept>
+    <owl:ObjectProperty rdf:about="#hasItem">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdfs:range rdf:resource="&catalog;Tangible"/>
+        <kbs:origin rdf:resource="&origin;43f1967e-e8a3-4332-a55d-ed5e813256f3"/>
+    </owl:ObjectProperty>
+    <owl:ObjectProperty rdf:about="#hasLine">
+        <rdf:type rdf:resource="&owl;InverseFunctionalProperty"/>
+        <rdfs:domain rdf:resource="#Document"/>
+        <rdfs:range rdf:resource="#Order"/>
+        <rdfs:label>hasLine</rdfs:label>
+        <kbs:origin rdf:resource="&origin;ff517bf1-5430-4cea-b2c4-9e2d365b0537"/>
+    </owl:ObjectProperty>
+    <owl:DatatypeProperty rdf:about="#expiry">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdfs:domain rdf:resource="#Lot"/>
+        <rdfs:range rdf:resource="&xsd;date"/>
+        <rdfs:label>expiry</rdfs:label>
+        <kbs:origin rdf:resource="&origin;c18ef694-0e59-4f78-a734-149bed2cde54"/>
+    </owl:DatatypeProperty>
+    <owl:ObjectProperty rdf:about="#fromStore">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdfs:range rdf:resource="#Store"/>
+        <rdfs:label>fromStore</rdfs:label>
+        <kbs:origin rdf:resource="&origin;fcdbb963-66f6-4456-a9b3-d5dfa3b270c2"/>
+    </owl:ObjectProperty>
+    <owl:ObjectProperty rdf:about="#hasWarehouse">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdfs:range rdf:resource="#Warehouse"/>
+        <rdfs:label>hasWarehouse</rdfs:label>
+        <kbs:origin rdf:resource="&origin;f0ba4b82-d489-42c0-afe3-cf6f001d7bd8"/>
+    </owl:ObjectProperty>
+    <owl:DatatypeProperty rdf:about="#externalCode">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdfs:domain rdf:resource="#Lot"/>
+        <rdfs:range rdf:resource="&xsd;string"/>
+        <rdfs:label>externalCode</rdfs:label>
+        <kbs:origin rdf:resource="&origin;c895b113-faf0-427f-a242-07a87abbbcaf"/>
+    </owl:DatatypeProperty>
+    <owl:DatatypeProperty rdf:about="#price">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdfs:domain rdf:resource="#Lot"/>
+        <rdfs:range rdf:resource="&xsd;decimal"/>
+        <rdfs:label>price</rdfs:label>
+        <kbs:origin rdf:resource="&origin;03231ea4-fcfc-4ab2-bd22-c4da67da43f5"/>
+    </owl:DatatypeProperty>
+    <owl:ObjectProperty rdf:about="#hasStore">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdfs:range rdf:resource="#Store"/>
+        <rdfs:label>hasStore</rdfs:label>
+        <kbs:origin rdf:resource="&origin;4eb0a9f3-5d54-4f91-be59-1863a2539fc3"/>
+    </owl:ObjectProperty>
+    <owl:DatatypeProperty rdf:about="#batch">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdfs:domain rdf:resource="#Lot"/>
+        <rdfs:range rdf:resource="&xsd;string"/>
+        <rdfs:label>batch</rdfs:label>
+        <kbs:origin rdf:resource="&origin;103682c6-be3a-454e-9cc2-1fef18b7a41d"/>
+    </owl:DatatypeProperty>
+    <owl:ObjectProperty rdf:about="#hasDocument">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdfs:domain rdf:resource="#Order"/>
+        <rdfs:range rdf:resource="#Document"/>
+        <owl:inverseOf rdf:resource="#hasLine"/>
+        <rdfs:label>hasDocument</rdfs:label>
+        <kbs:origin rdf:resource="&origin;5684de71-47e2-4405-9b24-fa11f2931d22"/>
+    </owl:ObjectProperty>
+    <owl:DatatypeProperty rdf:about="#cost">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdfs:domain rdf:resource="#Lot"/>
+        <rdfs:range rdf:resource="&xsd;decimal"/>
+        <rdfs:label>cost</rdfs:label>
+        <kbs:origin rdf:resource="&origin;0ac20c1b-1f8a-419e-b856-24ece6b12800"/>
+    </owl:DatatypeProperty>
+    <owl:DatatypeProperty rdf:about="#unitQty">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdfs:range rdf:resource="&xsd;int"/>
+        <rdfs:label>unitQty</rdfs:label>
+        <kbs:origin rdf:resource="&origin;1390f4bf-469c-4745-a03b-026d3b8037db"/>
+    </owl:DatatypeProperty>
+    <owl:ObjectProperty rdf:about="#toStore">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdfs:range rdf:resource="#Store"/>
+        <rdfs:label>toStore</rdfs:label>
+        <kbs:origin rdf:resource="&origin;231e4c9b-f438-4cce-aa6a-beb872565ee4"/>
+    </owl:ObjectProperty>
+    <owl:DatatypeProperty rdf:about="#pending">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdfs:domain rdf:resource="#Order"/>
+        <rdfs:range rdf:resource="&xsd;int"/>
+        <rdfs:label>Pending</rdfs:label>
+        <kbs:origin rdf:resource="&origin;51ae03f9-8942-4145-a0dc-e7af158c4b3c"/>
+    </owl:DatatypeProperty>
+    <owl:ObjectProperty rdf:about="#hasLot">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdfs:range rdf:resource="#Lot"/>
+        <rdfs:label>hasLot</rdfs:label>
+        <kbs:origin rdf:resource="&origin;3ebc7238-9331-4f40-8917-e07330aa7e3b"/>
+    </owl:ObjectProperty>
+</rdf:RDF>

@@ -86,6 +86,16 @@ public class OntologyGraphNode {
                 allEdges = new ArrayList<OntologyGraphEdge>();
 	}
 
+        public boolean isValue() {
+            if (nodeType == NodeType.INDIVIDUAL || nodeType == NodeType.LITERAL)
+                return true;
+            return false;
+        }
+
+        public OntologyGraphEdge lastEdgeAdded() {
+            return allEdges.get(allEdges.size()-1);
+        }
+
         public Set<OntologyGraphEdge> getEdges() {
             Set<OntologyGraphEdge> set = new HashSet<OntologyGraphEdge>(allEdges.size());
             for (OntologyGraphEdge edge : allEdges) {

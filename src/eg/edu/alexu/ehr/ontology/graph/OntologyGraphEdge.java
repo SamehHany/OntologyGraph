@@ -16,6 +16,8 @@ public class OntologyGraphEdge {
 	private String label;
 	private float weight;
 	private Integer hash;
+
+        private OntologyGraphEdge inverseEdge;
 	
 	public OntologyGraphEdge(EdgeType edgeType, OntologyGraphNode prevNode, OntologyGraphNode nextNode) {
 		this.edgeType = edgeType;
@@ -24,6 +26,7 @@ public class OntologyGraphEdge {
 		this.nextNode = nextNode;
 		label = "";
 		weight = 0.0f;
+                inverseEdge = null;
 		hashCode();
 	}
 	
@@ -34,6 +37,7 @@ public class OntologyGraphEdge {
 		this.nextNode = nextNode;
 		label = "";
 		weight = 0.0f;
+                inverseEdge = null;
 		hashCode();
 	}
 	
@@ -44,8 +48,19 @@ public class OntologyGraphEdge {
 		this.nextNode = nextNode;
 		this.label = label;
 		weight = 0.0f;
+                inverseEdge = null;
 		hashCode();
 	}
+
+        public void inverseOf(OntologyGraphEdge inverseEdge) {
+            this.inverseEdge = inverseEdge;
+        }
+
+        public boolean isInverse(OntologyGraphEdge edge) {
+            if (inverseEdge == null)
+                return false;
+            return inverseEdge.equals(edge);
+        }
 	
 	public float getWeight() {
 		return weight;
@@ -90,6 +105,10 @@ public class OntologyGraphEdge {
 	public Set<OntologyEntity> getRanges(Ontology ontology) {
 		return property.getRanges(ontology);
 	}
+
+        public OntologyGraphNode getPreviousNode() {
+            return prevNode;
+        }
 
         public OntologyGraphNode getNextNode() {
             return nextNode;

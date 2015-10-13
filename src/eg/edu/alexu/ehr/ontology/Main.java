@@ -38,6 +38,7 @@ public class Main {
 		//Ontology ontology = new Ontology("pc.rdf");
 		OntologyGraph graph = new OntologyGraph(ontology);
                 graph.save("Edges.txt");
+                graph.saveAsGraph();
 		//System.out.println();
 		//System.out.println(graph);
 		//graph.save("Graph Edges.txt");

@@ -34,8 +34,8 @@ public class Main {
 			System.out.println(p + ": " + p.getDomains(ontology).size() + " - " + p.getRanges(ontology).size());
 		}*/
 		
-		Ontology ontology = new Ontology("movieontology-instances.owl");
-		//Ontology ontology = new Ontology("pc.rdf");
+		//Ontology ontology = new Ontology("movieontology-instances.owl");
+		Ontology ontology = new Ontology("pc.rdf");
 		OntologyGraph graph = new OntologyGraph(ontology);
                 graph.save("Edges.txt");
                 graph.saveAsGraph();

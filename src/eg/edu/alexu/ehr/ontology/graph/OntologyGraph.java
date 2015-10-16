@@ -22,7 +22,8 @@ import eg.edu.alexu.ehr.ontology.api.wrapper.object.entities.OntologyDatatype;
 import eg.edu.alexu.ehr.ontology.api.wrapper.object.entities.OntologyEntity;
 import eg.edu.alexu.ehr.ontology.api.wrapper.object.values.OntologyIndividual;
 import eg.edu.alexu.ehr.ontology.api.wrapper.object.values.OntologyValue;
-import eg.edu.alexu.ehr.util.io.buffered.BufferedFileWriter;
+import eg.edu.alexu.ehr.util.io.BufferedFileWriter;
+import eg.edu.alexu.ehr.util.io.Pair;
 
 public class OntologyGraph {
 	private Ontology ontology;
@@ -182,6 +183,7 @@ public class OntologyGraph {
                     = class2.lastEdgeAdded();
             lastAdded1.inverseOf(lastAdded2);
             lastAdded2.inverseOf(lastAdded1);
+            lastAdded2.setIsInverse();
             edges.add(lastAdded1);
             edges.add(lastAdded2);
         }
@@ -329,29 +331,51 @@ public class OntologyGraph {
                 bw.close();
 
                 bw = new BufferedFileWriter(graphPath);
-
-                int numberOfNodes = classes.size() + datatypes.size();
-
-                bw.writeln(numberOfNodes + " " + edges.size());
                 
-                List<Float> []adjacencyArray = new List[numberOfNodes];
+                int numberOfNodes = classes.size() + datatypes.size();
+                
+                List<Pair<Integer, Float>> []adjacencyArray = new List[numberOfNodes];
                 for (int i = 0; i < adjacencyArray.length; i++)
-                    adjacencyArray[i] = new ArrayList<Float>();
+                    adjacencyArray[i] = new ArrayList<Pair<Integer, Float>>();
 
+                int noOfEdges = 0;
+                Set<Integer> []usedNodes = new Set[numberOfNodes];
+                for (int i = 0; i < numberOfNodes; i++)
+                    usedNodes[i] = new HashSet<Integer>();
                 for (OntologyGraphEdge edge : edges) {
+                    if (edge.isInverse())
+                        continue;
                     OntologyGraphNode subject = edge.getPreviousNode();
                     OntologyGraphNode object = edge.getNextNode();
                     if (subject.isValue() || object.isValue())
                         continue;
-                    int index = reverseIndex.get(subject);
-                    int nodeNumber = reverseIndex.get(object);
-                    adjacencyArray[index].add((float)nodeNumber);
-                    adjacencyArray[index].add(edge.getWeight());
+                    int subjectNumber = reverseIndex.get(subject);
+                    int objectNumber = reverseIndex.get(object);
+                    if (!usedNodes[subjectNumber].contains(objectNumber)) {
+                        adjacencyArray[subjectNumber].add(new Pair(objectNumber, edge.getWeight()));
+                        usedNodes[subjectNumber].add(objectNumber);
+                        noOfEdges++;
+                    } /*else {
+                        adjacencyArray[subjectNumber]
+                    }*/
+                    if (!usedNodes[objectNumber].contains(subjectNumber)) {
+                        adjacencyArray[objectNumber].add(new Pair(subjectNumber, edge.getWeight()));
+                        usedNodes[objectNumber].add(subjectNumber);
+                        noOfEdges++;
+                    }
                 }
 
-                for (List<Float> list : adjacencyArray) {
-                    bw.write("" + list.get(0));
-                    // continue...
+                bw.writeln(numberOfNodes + " " + noOfEdges);
+
+                for (List<Pair<Integer, Float>> list : adjacencyArray) {
+                    int size = list.size();
+                    if (size < 1)
+                        continue;
+                    bw.write("" + list.get(0).getFirst() + " " + list.get(0).getSecond());
+                    for (int i = 1; i < size; i++) {
+                        bw.write(" " + list.get(i).getFirst() + " " + list.get(i).getSecond());
+                    }
+                    bw.writeln();
                 }
 
                 bw.close();

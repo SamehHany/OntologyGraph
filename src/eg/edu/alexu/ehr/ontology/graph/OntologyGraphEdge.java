@@ -16,41 +16,59 @@ public class OntologyGraphEdge {
 	private String label;
 	private float weight;
 	private Integer hash;
+        private boolean isInverse;
 
         private OntologyGraphEdge inverseEdge;
+        
+        private static final float initWeight = 1.0f;
 	
 	public OntologyGraphEdge(EdgeType edgeType, OntologyGraphNode prevNode, OntologyGraphNode nextNode) {
-		this.edgeType = edgeType;
-		property = null;
-		this.prevNode = prevNode;
-		this.nextNode = nextNode;
-		label = "";
-		weight = 0.0f;
-                inverseEdge = null;
-		hashCode();
+            initialize(null, edgeType, prevNode, nextNode, "", false);
 	}
 	
 	public OntologyGraphEdge(OntologyProperty property, OntologyGraphNode prevNode, OntologyGraphNode nextNode) {
-		this.property = property;
-		edgeType = EdgeType.PROPERTY;
-		this.prevNode = prevNode;
-		this.nextNode = nextNode;
-		label = "";
-		weight = 0.0f;
-                inverseEdge = null;
-		hashCode();
+            initialize(property, EdgeType.PROPERTY, prevNode, nextNode, "", false);
 	}
 	
 	public OntologyGraphEdge(OntologyProperty property, OntologyGraphNode prevNode, OntologyGraphNode nextNode, String label) {
-		this.property = property;
-		edgeType = EdgeType.PROPERTY;
-		this.prevNode = prevNode;
-		this.nextNode = nextNode;
-		this.label = label;
-		weight = 0.0f;
-                inverseEdge = null;
-		hashCode();
+            initialize(property, EdgeType.PROPERTY, prevNode, nextNode, label, false);
 	}
+        
+        public OntologyGraphEdge(EdgeType edgeType, OntologyGraphNode prevNode, OntologyGraphNode nextNode, boolean isInverse) {
+            initialize(null, edgeType, prevNode, nextNode, "", isInverse);
+	}
+	
+	public OntologyGraphEdge(OntologyProperty property, OntologyGraphNode prevNode, OntologyGraphNode nextNode, boolean isInverse) {
+            initialize(property, EdgeType.PROPERTY, prevNode, nextNode, "", isInverse);
+	}
+	
+	public OntologyGraphEdge(OntologyProperty property, OntologyGraphNode prevNode, OntologyGraphNode nextNode, String label, boolean isInverse) {
+            initialize(property, EdgeType.PROPERTY, prevNode, nextNode, label, isInverse);
+	}
+        
+        private void initialize(OntologyProperty property, EdgeType edgeType, OntologyGraphNode prevNode, OntologyGraphNode nextNode, String label, boolean isInverse) {
+            this.property = property;
+            this.edgeType = edgeType;
+            this.prevNode = prevNode;
+            this.nextNode = nextNode;
+            this.label = label;
+            inverseEdge = null;
+            weight = initWeight;
+            this.isInverse = isInverse;
+            hashCode();
+        }
+        
+        public void setIsInverse() {
+            isInverse = true;
+        }
+        
+        public void resetIsInverse() {
+            isInverse = false;
+        }
+        
+        public boolean isInverse() {
+            return isInverse;
+        }
 
         public void inverseOf(OntologyGraphEdge inverseEdge) {
             this.inverseEdge = inverseEdge;

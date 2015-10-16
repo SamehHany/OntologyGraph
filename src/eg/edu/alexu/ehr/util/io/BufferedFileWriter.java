@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package eg.edu.alexu.ehr.util.io.buffered;
+package eg.edu.alexu.ehr.util.io;
 
 import java.io.BufferedWriter;
 import java.io.File;

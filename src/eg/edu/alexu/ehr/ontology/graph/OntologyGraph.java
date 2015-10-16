@@ -24,6 +24,7 @@ import eg.edu.alexu.ehr.ontology.api.wrapper.object.values.OntologyIndividual;
 import eg.edu.alexu.ehr.ontology.api.wrapper.object.values.OntologyValue;
 import eg.edu.alexu.ehr.util.io.BufferedFileWriter;
 import eg.edu.alexu.ehr.util.io.Pair;
+import java.util.Iterator;
 
 public class OntologyGraph {
 	private Ontology ontology;
@@ -334,14 +335,12 @@ public class OntologyGraph {
                 
                 int numberOfNodes = classes.size() + datatypes.size();
                 
-                List<Pair<Integer, Float>> []adjacencyArray = new List[numberOfNodes];
-                for (int i = 0; i < adjacencyArray.length; i++)
-                    adjacencyArray[i] = new ArrayList<Pair<Integer, Float>>();
+                Map<Integer, Float> []adjacencyArray = new Map[numberOfNodes];
+                for (int i = 0; i < adjacencyArray.length; i++) {
+                    adjacencyArray[i] = new HashMap<Integer, Float>();
+                }
 
                 int noOfEdges = 0;
-                Set<Integer> []usedNodes = new Set[numberOfNodes];
-                for (int i = 0; i < numberOfNodes; i++)
-                    usedNodes[i] = new HashSet<Integer>();
                 for (OntologyGraphEdge edge : edges) {
                     if (edge.isInverse())
                         continue;
@@ -349,31 +348,38 @@ public class OntologyGraph {
                     OntologyGraphNode object = edge.getNextNode();
                     if (subject.isValue() || object.isValue())
                         continue;
-                    int subjectNumber = reverseIndex.get(subject);
-                    int objectNumber = reverseIndex.get(object);
-                    if (!usedNodes[subjectNumber].contains(objectNumber)) {
-                        adjacencyArray[subjectNumber].add(new Pair(objectNumber, edge.getWeight()));
-                        usedNodes[subjectNumber].add(objectNumber);
+                    int subjectNumber = reverseIndex.get(subject)-1;
+                    int objectNumber = reverseIndex.get(object)-1;
+                    if (!adjacencyArray[subjectNumber].containsKey(objectNumber)) {
+                        adjacencyArray[subjectNumber].put(objectNumber, edge.getWeight());
                         noOfEdges++;
-                    } /*else {
-                        adjacencyArray[subjectNumber]
-                    }*/
-                    if (!usedNodes[objectNumber].contains(subjectNumber)) {
-                        adjacencyArray[objectNumber].add(new Pair(subjectNumber, edge.getWeight()));
-                        usedNodes[objectNumber].add(subjectNumber);
+                    } else {
+                        float newWeight = adjacencyArray[subjectNumber].get(objectNumber) + edge.getWeight();
+                        adjacencyArray[subjectNumber].put(objectNumber, newWeight);
+                    }
+                   if (!adjacencyArray[objectNumber].containsKey(subjectNumber)) {
+                        adjacencyArray[objectNumber].put(subjectNumber, edge.getWeight());
                         noOfEdges++;
+                    } else {
+                        float newWeight = adjacencyArray[objectNumber].get(subjectNumber) + edge.getWeight();
+                        adjacencyArray[objectNumber].put(subjectNumber, newWeight);
                     }
                 }
 
                 bw.writeln(numberOfNodes + " " + noOfEdges);
 
-                for (List<Pair<Integer, Float>> list : adjacencyArray) {
-                    int size = list.size();
+                for (Map<Integer, Float> map : adjacencyArray) {
+                    int size = map.size();
                     if (size < 1)
                         continue;
-                    bw.write("" + list.get(0).getFirst() + " " + list.get(0).getSecond());
-                    for (int i = 1; i < size; i++) {
-                        bw.write(" " + list.get(i).getFirst() + " " + list.get(i).getSecond());
+                    Iterator<Integer> keys = map.keySet().iterator();
+                    int key = keys.next();
+                    float value = map.get(key);
+                    bw.write("" + key + " " + value);
+                    while (keys.hasNext()) {
+                        key = keys.next();
+                        value = map.get(key);
+                        bw.write(" " + key + " " + value);
                     }
                     bw.writeln();
                 }

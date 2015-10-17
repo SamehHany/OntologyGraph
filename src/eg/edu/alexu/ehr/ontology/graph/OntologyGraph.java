@@ -352,34 +352,45 @@ public class OntologyGraph {
                     int objectNumber = reverseIndex.get(object)-1;
                     if (!adjacencyArray[subjectNumber].containsKey(objectNumber)) {
                         adjacencyArray[subjectNumber].put(objectNumber, edge.getWeight());
+                        adjacencyArray[objectNumber].put(subjectNumber, edge.getWeight());
                         noOfEdges++;
                     } else {
                         float newWeight = adjacencyArray[subjectNumber].get(objectNumber) + edge.getWeight();
                         adjacencyArray[subjectNumber].put(objectNumber, newWeight);
+                        adjacencyArray[objectNumber].put(subjectNumber, newWeight);
                     }
-                   if (!adjacencyArray[objectNumber].containsKey(subjectNumber)) {
+                   /*if (!adjacencyArray[objectNumber].containsKey(subjectNumber)) {
                         adjacencyArray[objectNumber].put(subjectNumber, edge.getWeight());
-                        noOfEdges++;
                     } else {
                         float newWeight = adjacencyArray[objectNumber].get(subjectNumber) + edge.getWeight();
                         adjacencyArray[objectNumber].put(subjectNumber, newWeight);
-                    }
+                    }*/
                 }
+                
+                noOfEdges = 0;
+                for (Map<Integer, Float> map : adjacencyArray) {
+                    noOfEdges += map.size();
+                }
+                
+                noOfEdges /= 2;
 
-                bw.writeln(numberOfNodes + " " + noOfEdges);
+                bw.writeln(numberOfNodes + " " + noOfEdges + " 001");
 
                 for (Map<Integer, Float> map : adjacencyArray) {
                     int size = map.size();
-                    if (size < 1)
+                    if (size < 1) {
+                        bw.writeln();
                         continue;
+                    }
                     Iterator<Integer> keys = map.keySet().iterator();
                     int key = keys.next();
-                    float value = map.get(key);
-                    bw.write("" + key + " " + value);
+                    int value = (int)Math.floor((double)map.get(key));
+                    bw.write("" + (key+1) + " " + value);
                     while (keys.hasNext()) {
                         key = keys.next();
-                        value = map.get(key);
-                        bw.write(" " + key + " " + value);
+                        //value = map.get(key);
+                        value = (int)Math.floor((double)map.get(key));
+                        bw.write(" " + (key+1) + " " + value);
                     }
                     bw.writeln();
                 }

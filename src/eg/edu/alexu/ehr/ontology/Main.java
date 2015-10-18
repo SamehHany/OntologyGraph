@@ -1,10 +1,11 @@
 package eg.edu.alexu.ehr.ontology;
+import java.io.IOException;
 import eg.edu.alexu.ehr.ontology.api.wrapper.Ontology;
 import eg.edu.alexu.ehr.ontology.graph.OntologyGraph;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 
 public class Main {
-	public static void main(String []args) throws OWLOntologyCreationException {
+	public static void main(String []args) throws OWLOntologyCreationException, IOException {
 		//File file = new File("pc.rdf");
 		/*File file = new File("movieontology-instances.owl");
 		OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
@@ -34,11 +35,13 @@ public class Main {
 			System.out.println(p + ": " + p.getDomains(ontology).size() + " - " + p.getRanges(ontology).size());
 		}*/
 		
-		Ontology ontology = new Ontology("movieontology-instances.owl");
-		//Ontology ontology = new Ontology("pc.rdf");
+		//Ontology ontology = new Ontology("movieontology-instances.owl");
+		Ontology ontology = new Ontology("pc.rdf");
 		OntologyGraph graph = new OntologyGraph(ontology);
                 graph.save("Edges.txt");
                 graph.saveAsGraph();
+                int noOfPartitions = 4;
+                Process p = Runtime.getRuntime().exec("gpmetis graph.txt " + noOfPartitions);
 		//System.out.println();
 		//System.out.println(graph);
 		//graph.save("Graph Edges.txt");

@@ -10,6 +10,7 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -22,9 +23,8 @@ import eg.edu.alexu.ehr.ontology.api.wrapper.object.entities.OntologyDatatype;
 import eg.edu.alexu.ehr.ontology.api.wrapper.object.entities.OntologyEntity;
 import eg.edu.alexu.ehr.ontology.api.wrapper.object.values.OntologyIndividual;
 import eg.edu.alexu.ehr.ontology.api.wrapper.object.values.OntologyValue;
+import eg.edu.alexu.ehr.util.Pair;
 import eg.edu.alexu.ehr.util.io.BufferedFileWriter;
-import eg.edu.alexu.ehr.util.io.Pair;
-import java.util.Iterator;
 
 public class OntologyGraph {
 	private Ontology ontology;
@@ -400,5 +400,17 @@ public class OntologyGraph {
                 Logger.getLogger(OntologyGraph.class.getName()).
                         log(Level.SEVERE, null, ex);
             }
+        }
+
+        private Pair<OntologyGraphNode, Integer> readIds(String path) {
+            try {
+                BufferedFileWriter bw = new BufferedFileWriter(path);
+                
+            } catch (IOException ex) {
+                Logger.getLogger(OntologyGraph.class.getName()).
+                        log(Level.SEVERE, null, ex);
+                return null;
+            }
+
         }
 }

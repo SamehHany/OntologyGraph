@@ -495,14 +495,16 @@ public class OntologyGraph {
                     List<Pair<String, String>> labelsAndDatatypes
                             = labelsAndDatatypes(subject, nodesInPartition);
                     Iterator<Pair<String, String>> iterator = labelsAndDatatypes.iterator();
-                    Pair<String, String> labelAndDatatype = iterator.next();
+                    //Pair<String, String> labelAndDatatype = iterator.next();
 
-                    writer.write("\t" + labelAndDatatype.getFirst()
-                            + " " + labelAndDatatype.getSecond());
+                    //writer.write("\t" + labelAndDatatype.getFirst()
+                    //        + " " + labelAndDatatype.getSecond());
+                    
+                    writer.write("\tId LONG");
 
 
                     while (iterator.hasNext()) {
-                        labelAndDatatype = iterator.next();
+                        Pair<String, String> labelAndDatatype = iterator.next();
 
                         writer.writeln(",");
                         writer.write("\t" + labelAndDatatype.getFirst()
@@ -529,8 +531,11 @@ public class OntologyGraph {
                 OntologyGraphNode next = edge.getNextNode();
                 if (!set.contains(next))
                     continue;
-                Pair<String, String> pair
-                        = new Pair<String, String>(edge.getLabel(), next.getSQLDatatype());
+                Pair<String, String> pair;
+                if (next.isClass())
+                        pair = new Pair<String, String>(edge.getLabel(), "LONG");
+                else
+                    pair = new Pair<String, String>(edge.getLabel(), next.getSQLDatatype());
                 ret.add(pair);
             }
 
@@ -543,6 +548,8 @@ public class OntologyGraph {
 
             int count = 0;
             for (OntologyGraphEdge edge : edges) {
+                if (!edge.isProperty())
+                    continue;
                 OntologyGraphNode node = edge.getNextNode();
                 if (set.contains(node))
                     count++;

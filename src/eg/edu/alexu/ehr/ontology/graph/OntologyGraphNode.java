@@ -94,6 +94,10 @@ public class OntologyGraphNode {
             return false;
         }
 
+        public boolean isClass() {
+            return nodeType == NodeType.CLASS;
+        }
+
         public OntologyGraphEdge lastEdgeAdded() {
             return allEdges.get(allEdges.size()-1);
         }

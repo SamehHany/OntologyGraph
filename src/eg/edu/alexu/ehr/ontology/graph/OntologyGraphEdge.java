@@ -51,7 +51,10 @@ public class OntologyGraphEdge {
             this.edgeType = edgeType;
             this.prevNode = prevNode;
             this.nextNode = nextNode;
-            this.label = label;
+            if (label.equals("") || label == null)
+                this.label = getLabelOfObject();
+            else
+                this.label = label;
             inverseEdge = null;
             weight = initWeight;
             this.isInverse = isInverse;
@@ -196,6 +199,26 @@ public class OntologyGraphEdge {
 			return "";
 		}
 	}
+
+        private String getLabelOfObject() {
+            if (edgeType == EdgeType.PROPERTY) {
+                return getLabelFromUri(property.getURIAsStr());
+            } else {
+                return edgeTypeAsString();
+            }
+        }
+
+        private String getLabelFromUri(String uri) {
+            int len = uri.length();
+            int end = uri.charAt(len-1) == '/' ? len-1 : len;
+            for (int i = len-1; i >= 0; i--) {
+                char ch = uri.charAt(i);
+                if (ch == '#' || ch == '/')
+                    return uri.substring(i+1, end);
+            }
+
+            return "";
+        }
 	
 	@Override
 	public int hashCode() {

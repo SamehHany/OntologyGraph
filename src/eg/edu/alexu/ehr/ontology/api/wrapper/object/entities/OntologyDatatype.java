@@ -5,6 +5,7 @@ import org.semanticweb.owlapi.model.OWLDatatype;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import uk.ac.manchester.cs.owl.owlapi.OWLClassImpl;
+import uk.ac.manchester.cs.owl.owlapi.OWLDatatypeImpl;
 
 public class OntologyDatatype extends OntologyEntity {
 	
@@ -14,7 +15,7 @@ public class OntologyDatatype extends OntologyEntity {
 	}
 	
 	public OntologyDatatype(String uri) {
-		super((OWLEntity)(new OWLClassImpl(IRI.create(uri))));
+		super((OWLEntity)(new OWLDatatypeImpl(IRI.create(uri))));
 		isClass = false;
 	}
 	

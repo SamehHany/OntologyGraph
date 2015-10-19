@@ -24,6 +24,7 @@ import eg.edu.alexu.ehr.ontology.api.wrapper.object.entities.OntologyEntity;
 import eg.edu.alexu.ehr.ontology.api.wrapper.object.values.OntologyIndividual;
 import eg.edu.alexu.ehr.ontology.api.wrapper.object.values.OntologyValue;
 import eg.edu.alexu.ehr.util.Pair;
+import eg.edu.alexu.ehr.util.io.BufferedFileReader;
 import eg.edu.alexu.ehr.util.io.BufferedFileWriter;
 
 public class OntologyGraph {
@@ -404,8 +405,23 @@ public class OntologyGraph {
 
         private Pair<OntologyGraphNode, Integer> readIds(String path) {
             try {
-                BufferedFileWriter bw = new BufferedFileWriter(path);
-                
+                BufferedFileReader br = new BufferedFileReader("graph-node-number.txt");
+                String line;
+                while ((line = br.readLine()) != null) {
+                    int len = line.length();
+                    String uri = "";
+                    int id = 0;
+                    for (int i = len-1; i >=0; i--) {
+                        if (line.charAt(i) == ':' && line.charAt(i+1) == ' ') {
+                           uri = line.substring(0, i);
+                           id = Integer.parseInt(line.substring(i+1));
+                           break;
+                        }
+                    }
+                    
+                    
+                }
+
             } catch (IOException ex) {
                 Logger.getLogger(OntologyGraph.class.getName()).
                         log(Level.SEVERE, null, ex);

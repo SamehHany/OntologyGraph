@@ -23,7 +23,6 @@ import eg.edu.alexu.ehr.ontology.api.wrapper.object.entities.OntologyDatatype;
 import eg.edu.alexu.ehr.ontology.api.wrapper.object.entities.OntologyEntity;
 import eg.edu.alexu.ehr.ontology.api.wrapper.object.values.OntologyIndividual;
 import eg.edu.alexu.ehr.ontology.api.wrapper.object.values.OntologyValue;
-import eg.edu.alexu.ehr.util.Pair;
 import eg.edu.alexu.ehr.util.io.BufferedFileReader;
 import eg.edu.alexu.ehr.util.io.BufferedFileWriter;
 
@@ -39,6 +38,9 @@ public class OntologyGraph {
 	private Map<OntologyGraphEdge, OntologyGraphEdge> individualToClassPropertyMap;
         private Map<OntologyEntity, OntologyGraphNode> entityMap;
 	private Map<OntologyValue, OntologyGraphNode> valueMap;
+        private Map<OntologyGraphNode, Partition> partitionMap;
+
+        private Map<String, OntologyGraphNode> uriToNodeMap;
 
         private List<OntologyGraphEdge> edges;
 
@@ -67,27 +69,40 @@ public class OntologyGraph {
 		valueMap =
                         new HashMap<OntologyValue, OntologyGraphNode>(individualsSet.size());
 
+                partitionMap =
+                        new HashMap<OntologyGraphNode, Partition>(classesSet.size() + datatypeSet.size());
+
+                uriToNodeMap =
+                        new HashMap<String, OntologyGraphNode>(classesSet.size() + datatypeSet.size());
+
                 edges = new ArrayList<OntologyGraphEdge>(classesSet.size());
 		
 		for (OntologyClass clss : classesSet) {
-			OntologyGraphNode node = new OntologyGraphNode(clss);
-			classes.add(node);
-			entityMap.put(clss, node);
-			
-			Set<OntologyIndividual> individualsLocalSet = clss.getIndividuals(ontology);
-			for (OntologyIndividual individual : individualsLocalSet) {
-				node = new OntologyGraphNode(individual);
-				if (!individuals.contains(node)) {
-					individuals.add(node);
-					valueMap.put(individual, node);
-				}
-			}
+                    String uri = clss.toString();
+                    String label = getLabelFromUri(uri);
+                    OntologyGraphNode node = new OntologyGraphNode(clss, label);
+                    classes.add(node);
+                    entityMap.put(clss, node);
+                    uriToNodeMap.put(uri, node);
+
+                    Set<OntologyIndividual> individualsLocalSet = clss.
+                            getIndividuals(ontology);
+                    for (OntologyIndividual individual : individualsLocalSet) {
+                        node = new OntologyGraphNode(individual);
+                        if (!individuals.contains(node)) {
+                            individuals.add(node);
+                            valueMap.put(individual, node);
+                        }
+                    }
 		}
 		
 		for (OntologyDatatype datatype : datatypeSet) {
-			OntologyGraphNode node = new OntologyGraphNode(datatype);
-			datatypes.add(node);
-			entityMap.put(datatype, node);
+                    String uri = datatype.toString();
+                    String label = getLabelFromUri(uri);
+                    OntologyGraphNode node = new OntologyGraphNode(datatype, label);
+                    datatypes.add(node);
+                    entityMap.put(datatype, node);
+                    uriToNodeMap.put(uri, node);
 		}
 		
 		for (OntologyProperty property : properties) {
@@ -177,6 +192,18 @@ public class OntologyGraph {
 		System.out.println("Number of nodes: " + (classes.size() + datatypes.size()));
                 System.out.println("Number of edges: " + edges.size());
 	}
+
+        private String getLabelFromUri(String uri) {
+            int len = uri.length();
+            int end = uri.charAt(len-1) == '/' ? len-1 : len;
+            for (int i = len-1; i >= 0; i--) {
+                char ch = uri.charAt(i);
+                if (ch == '#' || ch == '/')
+                    return uri.substring(i+1, end);
+            }
+
+            return "";
+        }
 
         private void setAndAddInverseEdges(OntologyGraphNode class1, OntologyGraphNode class2) {
             OntologyGraphEdge lastAdded1
@@ -331,8 +358,6 @@ public class OntologyGraph {
                     reverseIndex.put(datatype, indexCounter);
                 }
                 bw.close();
-
-                bw = new BufferedFileWriter(graphPath);
                 
                 int numberOfNodes = classes.size() + datatypes.size();
                 
@@ -375,6 +400,7 @@ public class OntologyGraph {
                 
                 noOfEdges /= 2;
 
+                bw = new BufferedFileWriter(graphPath);
                 bw.writeln(numberOfNodes + " " + noOfEdges + " 001");
 
                 for (Map<Integer, Float> map : adjacencyArray) {
@@ -403,7 +429,77 @@ public class OntologyGraph {
             }
         }
 
-        private Pair<OntologyGraphNode, Integer> readIds(String path) {
+        public void generateSchema(int noOfPartitions) {
+            generateSchema("graph.txt.part." + noOfPartitions);
+        }
+
+        public void generateSchema() {
+            generateSchema("graph.txt.part.10");
+        }
+
+        public void generateSchema(String partitionsPath) {
+            generateSchema("ontology.sql", partitionsPath);
+        }
+
+        public void generateSchema(String schemaPath, String partitionsPath) {
+            BufferedFileWriter writer = null;
+            BufferedFileReader reader = null;
+            try {
+                writer = new BufferedFileWriter(schemaPath);
+                reader = new BufferedFileReader(partitionsPath);
+                Map<Integer, OntologyGraphNode> idMap = readIds();
+
+                String line;
+                int nodeId = 0;
+                Set<Partition> partitions = new HashSet<Partition>();
+                Map<Integer, Partition> map = new HashMap<Integer, Partition>();
+                while ((line = reader.readLine()) != null) {
+                    int partitionId = Integer.parseInt(line);
+                    OntologyGraphNode node = idMap.get(++nodeId);
+                    if (map.containsKey(partitionId)) {
+                        map.get(partitionId).add(node);
+                    } else {
+                        Partition partition = new Partition(partitionId);
+                        partition.add(node);
+                        map.put(partitionId, partition);
+                        partitions.add(partition);
+                    }
+                }
+                reader.close();
+
+                writer.writeln("CREATE DATABASE Ontology");
+                writer.writeln();
+                for (Partition partition : partitions) {
+                    String tableName = "Table" + partition.getId();
+                    writer.writeln("CREATE TABLE " + tableName);
+                    writer.writeln("(");
+                    Iterator<OntologyGraphNode> nodes = partition.getAllNodes().iterator();
+                    OntologyGraphNode node = nodes.next();
+                    writer.write("\t" + node.getLabel() + " " + node.getSQLDatatype());
+                    while (nodes.hasNext()) {
+                        node = nodes.next();
+                        writer.writeln(",");
+                        writer.write("\t" + node.getLabel() + " " + node.getSQLDatatype());
+                    }
+                    writer.writeln();
+                    writer.writeln(");");
+                    writer.writeln();
+                }
+                writer.close();
+                
+            } catch (IOException ex) {
+                Logger.getLogger(OntologyGraph.class.getName()).
+                        log(Level.SEVERE, null, ex);
+            }
+        }
+
+        private Map<Integer, OntologyGraphNode> readIds() {
+            return readIds("graph-node-number.txt");
+        }
+
+        private Map<Integer, OntologyGraphNode> readIds(String path) {
+            Map<Integer, OntologyGraphNode> map =
+                    new HashMap<Integer, OntologyGraphNode>(classes.size() + datatypes.size());
             try {
                 BufferedFileReader br = new BufferedFileReader("graph-node-number.txt");
                 String line;
@@ -414,19 +510,74 @@ public class OntologyGraph {
                     for (int i = len-1; i >=0; i--) {
                         if (line.charAt(i) == ':' && line.charAt(i+1) == ' ') {
                            uri = line.substring(0, i);
-                           id = Integer.parseInt(line.substring(i+1));
+                           id = Integer.parseInt(line.substring(i+2));
                            break;
                         }
                     }
                     
-                    
+                    OntologyGraphNode node = uriToNodeMap.get(uri);
+                    map.put(id, node);
                 }
 
+                br.close();
+
+                return map;
             } catch (IOException ex) {
                 Logger.getLogger(OntologyGraph.class.getName()).
                         log(Level.SEVERE, null, ex);
                 return null;
             }
 
+        }
+
+        private class Partition {
+            private int id;
+            private List<OntologyGraphNode> nodes;
+
+            public Partition(int id) {
+                this.id= id;
+                nodes = new ArrayList<OntologyGraphNode>();
+            }
+
+            public Partition(int id, int size) {
+                this.id= id;
+                nodes = new ArrayList<OntologyGraphNode>(size);
+            }
+
+            public Partition(int id, List<OntologyGraphNode> list) {
+                this.id= id;
+                nodes = list;
+            }
+
+            public void add(OntologyGraphNode node) {
+                nodes.add(node);
+            }
+
+            public int getId() {
+                return id;
+            }
+
+            public List<OntologyGraphNode> getAllNodes() {
+                return nodes;
+            }
+
+            public OntologyGraphNode get(int index) {
+                return nodes.get(index);
+            }
+
+            @Override
+            public int hashCode() {
+                return id;
+            }
+
+            @Override
+            public boolean equals(Object partition) {
+                return id == ((Partition)partition).id;
+            }
+
+            @Override
+            public String toString() {
+                return "" + id;
+            }
         }
 }

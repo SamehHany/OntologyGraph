@@ -69,6 +69,8 @@ public class OntologyGraphNode {
 		this.label = label;
 		EdgeType edgeType = EdgeType.PROPERTY;
 		classRelations = (List<OntologyGraphEdge>[])(new List[edgeType.noOfValues()]);
+		for (int i = 0; i < edgeType.noOfValues(); i++)
+			classRelations[i] = new LinkedList<OntologyGraphEdge>();
 		properties = new HashMap<String, List<OntologyGraphEdge>>();
                 allEdges = new ArrayList<OntologyGraphEdge>();
 	}
@@ -260,6 +262,23 @@ public class OntologyGraphNode {
 	public String getLabel() {
 		return label;
 	}
+
+        public void setLabel(String label) {
+            this.label = label;
+        }
+
+        public String getSQLDatatype() {
+            if (label.equals("double"))
+                return "DOUBLE";
+            else if (label.equals("date"))
+                return "DATE";
+            else if (label.equals("dateTime"))
+                return "DATETIME";
+            else if (label.equals("int"))
+                return "INT";
+            else
+                return "varchar(255)";
+        }
 	
 	@Override
 	public int hashCode() {

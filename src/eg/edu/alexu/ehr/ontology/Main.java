@@ -42,6 +42,7 @@ public class Main {
                 graph.saveAsGraph();
                 int noOfPartitions = 4;
                 Process p = Runtime.getRuntime().exec("gpmetis graph.txt " + noOfPartitions);
+                graph.generateSchema(noOfPartitions);
 		//System.out.println();
 		//System.out.println(graph);
 		//graph.save("Graph Edges.txt");

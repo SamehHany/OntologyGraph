@@ -479,8 +479,7 @@ public class OntologyGraph {
                     for (OntologyGraphNode node : nodes) {
                         if (!node.isClass())
                             continue;
-                        int tmpNoOfSubjects
-                                = noOfObjectsInSet(node, partition.getAllNodes());
+                        int tmpNoOfSubjects = noOfObjectsInSet(node, nodes);
                         if (tmpNoOfSubjects > noOfSubjects) {
                             subject = node;
                             noOfSubjects = tmpNoOfSubjects;
@@ -491,9 +490,8 @@ public class OntologyGraph {
                     writer.writeln("CREATE TABLE " + tableName);
                     writer.writeln("(");
 
-                    Set<OntologyGraphNode> nodesInPartition = partition.getAllNodes();
                     List<Pair<String, String>> labelsAndDatatypes
-                            = labelsAndDatatypes(subject, nodesInPartition);
+                            = labelsAndDatatypes(subject, nodes);
                     Iterator<Pair<String, String>> iterator = labelsAndDatatypes.iterator();
                     //Pair<String, String> labelAndDatatype = iterator.next();
 

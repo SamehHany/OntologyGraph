@@ -4,9 +4,9 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Set;
 import eg.edu.alexu.ehr.ontology.api.wrapper.Ontology;
-import eg.edu.alexu.ehr.ontology.api.wrapper.OntologyProperty;
-import eg.edu.alexu.ehr.ontology.api.wrapper.object.entities.OntologyClass;
-import eg.edu.alexu.ehr.ontology.api.wrapper.object.entities.OntologyEntity;
+import eg.edu.alexu.ehr.ontology.api.wrapper.thing.OntologyProperty;
+import eg.edu.alexu.ehr.ontology.api.wrapper.thing.object.entities.OntologyClass;
+import eg.edu.alexu.ehr.ontology.api.wrapper.thing.object.entities.OntologyEntity;
 
 public class OntologyGraphEdge {
 	private EdgeType edgeType;

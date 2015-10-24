@@ -1,11 +1,11 @@
-package eg.edu.alexu.ehr.ontology.api.wrapper.object.entities;
+package eg.edu.alexu.ehr.ontology.api.wrapper.thing.object.entities;
 
 import java.net.URI;
 
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLEntity;
 
-import eg.edu.alexu.ehr.ontology.api.wrapper.object.OntologyObject;
+import eg.edu.alexu.ehr.ontology.api.wrapper.thing.object.OntologyObject;
 
 abstract public class OntologyEntity extends OntologyObject { // Class or datatype
 	protected OWLEntity entity;

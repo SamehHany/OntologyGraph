@@ -1,9 +1,12 @@
-package eg.edu.alexu.ehr.ontology.api.wrapper;
+package eg.edu.alexu.ehr.ontology.api.wrapper.thing;
 
 import java.net.URI;
 import java.util.HashSet;
 import java.util.Set;
-
+import eg.edu.alexu.ehr.ontology.api.wrapper.Ontology;
+import eg.edu.alexu.ehr.ontology.api.wrapper.thing.object.entities.OntologyClass;
+import eg.edu.alexu.ehr.ontology.api.wrapper.thing.object.entities.OntologyDatatype;
+import eg.edu.alexu.ehr.ontology.api.wrapper.thing.object.entities.OntologyEntity;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLDataProperty;
@@ -13,17 +16,13 @@ import org.semanticweb.owlapi.model.OWLNamedObject;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
 import org.semanticweb.owlapi.model.OWLProperty;
-
-import eg.edu.alexu.ehr.ontology.api.wrapper.object.entities.OntologyClass;
-import eg.edu.alexu.ehr.ontology.api.wrapper.object.entities.OntologyDatatype;
-import eg.edu.alexu.ehr.ontology.api.wrapper.object.entities.OntologyEntity;
 import uk.ac.manchester.cs.owl.owlapi.OWL2DatatypeImpl;
 import uk.ac.manchester.cs.owl.owlapi.OWLClassImpl;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataPropertyImpl;
 import uk.ac.manchester.cs.owl.owlapi.OWLDatatypeImpl;
 import uk.ac.manchester.cs.owl.owlapi.OWLObjectPropertyImpl;
 
-public class OntologyProperty {
+public class OntologyProperty implements OntologyThing {
 	private OWLProperty property;
 	private boolean isObjectProperty;
 	

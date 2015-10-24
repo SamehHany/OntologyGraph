@@ -8,12 +8,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import eg.edu.alexu.ehr.ontology.api.wrapper.OntologyProperty;
-import eg.edu.alexu.ehr.ontology.api.wrapper.object.OntologyObject;
-import eg.edu.alexu.ehr.ontology.api.wrapper.object.entities.OntologyClass;
-import eg.edu.alexu.ehr.ontology.api.wrapper.object.entities.OntologyDatatype;
-import eg.edu.alexu.ehr.ontology.api.wrapper.object.entities.OntologyEntity;
-import eg.edu.alexu.ehr.ontology.api.wrapper.object.values.OntologyValue;
+import eg.edu.alexu.ehr.ontology.api.wrapper.thing.OntologyProperty;
+import eg.edu.alexu.ehr.ontology.api.wrapper.thing.object.OntologyObject;
+import eg.edu.alexu.ehr.ontology.api.wrapper.thing.object.entities.OntologyClass;
+import eg.edu.alexu.ehr.ontology.api.wrapper.thing.object.entities.OntologyDatatype;
+import eg.edu.alexu.ehr.ontology.api.wrapper.thing.object.entities.OntologyEntity;
+import eg.edu.alexu.ehr.ontology.api.wrapper.thing.object.values.OntologyValue;
 
 public class OntologyGraphNode {
 	private OntologyObject object;

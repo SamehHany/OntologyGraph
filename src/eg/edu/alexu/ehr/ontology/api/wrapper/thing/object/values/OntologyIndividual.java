@@ -1,4 +1,4 @@
-package eg.edu.alexu.ehr.ontology.api.wrapper.object.values;
+package eg.edu.alexu.ehr.ontology.api.wrapper.thing.object.values;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import eg.edu.alexu.ehr.ontology.api.wrapper.Ontology;
-import eg.edu.alexu.ehr.ontology.api.wrapper.OntologyProperty;
+import eg.edu.alexu.ehr.ontology.api.wrapper.thing.OntologyProperty;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLDataPropertyExpression;
 import org.semanticweb.owlapi.model.OWLIndividual;

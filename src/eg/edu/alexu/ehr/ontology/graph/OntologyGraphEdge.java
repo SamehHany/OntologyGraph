@@ -6,7 +6,7 @@ import java.util.Set;
 import eg.edu.alexu.ehr.ontology.api.wrapper.Ontology;
 import eg.edu.alexu.ehr.ontology.api.wrapper.thing.OntologyProperty;
 import eg.edu.alexu.ehr.ontology.api.wrapper.thing.object.entities.OntologyClass;
-import eg.edu.alexu.ehr.ontology.api.wrapper.thing.object.entities.OntologyEntity;
+import eg.edu.alexu.ehr.ontology.api.wrapper.thing.object.entities.OntologyObjectType;
 
 public class OntologyGraphEdge {
 	private EdgeType edgeType;
@@ -123,7 +123,7 @@ public class OntologyGraphEdge {
 		return property.getDomains(ontology);
 	}
 	
-	public Set<OntologyEntity> getRanges(Ontology ontology) {
+	public Set<OntologyObjectType> getRanges(Ontology ontology) {
 		return property.getRanges(ontology);
 	}
 

@@ -2,9 +2,9 @@ package eg.edu.alexu.ehr.ontology.api.wrapper.thing.object.values;
 
 import org.semanticweb.owlapi.model.OWLObject;
 
-import eg.edu.alexu.ehr.ontology.api.wrapper.thing.object.OntologyObject;
+import eg.edu.alexu.ehr.ontology.api.wrapper.thing.object.OntologyEntity;
 
-abstract public class OntologyValue extends OntologyObject {
+abstract public class OntologyValue extends OntologyEntity {
 	protected OWLObject obj;
 	protected boolean isIndividual;
 	

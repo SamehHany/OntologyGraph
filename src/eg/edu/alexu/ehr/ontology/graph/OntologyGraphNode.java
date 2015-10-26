@@ -23,6 +23,9 @@ public class OntologyGraphNode {
 	private Map<String, List<OntologyGraphEdge>> properties;
         private List<OntologyGraphEdge> allEdges;
 	private String label;
+        
+        private OntologyGraphEdge edge;
+        private boolean isEdge;
 	
 	public OntologyGraphNode(OntologyObject object) {
 		this.object = object;

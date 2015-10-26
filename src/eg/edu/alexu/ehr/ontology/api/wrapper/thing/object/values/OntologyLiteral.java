@@ -28,6 +28,10 @@ public class OntologyLiteral extends OntologyValue {
 		this.datatype = datatype;
 	}
 
+        public OntologyDatatype getDatatype() {
+            return datatype;
+        }
+
         @Override
         public String toString() {
             return "\"" + literal + "\"@" + obj.toString();

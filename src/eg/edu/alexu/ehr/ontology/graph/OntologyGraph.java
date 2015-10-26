@@ -59,7 +59,22 @@ public class OntologyGraph {
         build(ontology);
     }
 
+    public void edgesToNodes() {
+        for (OntologyGraphNode clss : classes)
+            clss.edgesToNodes();
+        for (OntologyGraphNode datatype : datatypes)
+            datatype.edgesToNodes();
+        for (OntologyGraphNode individual : individuals)
+            individual.edgesToNodes();
+        for (OntologyGraphNode literal : literals)
+            literal.edgesToNodes();
+    }
+
     public void build(Ontology ontology) {
+        build(ontology, true);
+    }
+
+    public void build(Ontology ontology, boolean edgesToNodes) {
         System.out.println("Building...");
         this.ontology = ontology;
         noOfedges = 0;
@@ -89,7 +104,7 @@ public class OntologyGraph {
                 = new HashMap<String, OntologyGraphNode>(classesSet.size()
                         + datatypeSet.size());
 
-        System.out.println("Reading classes.");
+        //System.out.println("Reading classes.");
         edges = new ArrayList<OntologyGraphEdge>(classesSet.size());
 
         for (OntologyClass clss : classesSet) {
@@ -110,9 +125,9 @@ public class OntologyGraph {
                 }
             }
         }
-        System.out.println("Classes read.");
+        //System.out.println("Classes read.");
 
-        System.out.println("Reading Datatypes.");
+        //System.out.println("Reading Datatypes.");
         for (OntologyDatatype datatype : datatypeSet) {
             String uri = datatype.toString();
             String label = getLabelFromUri(uri);
@@ -121,16 +136,16 @@ public class OntologyGraph {
             entityMap.put(datatype, node);
             uriToNodeMap.put(uri, node);
         }
-        System.out.println("Datatypes read.");
+        //System.out.println("Datatypes read.");
 
-        System.out.println("Reading properties.");
+        //System.out.println("Reading properties.");
         int noOfProperties = 0;
-        System.out.println("Number of Properties = " + properties.size());
+        //System.out.println("Number of Properties = " + properties.size());
         for (OntologyProperty property : properties) {
             Set<OntologyClass> domains = property.getDomains(ontology);
             Set<OntologyEntity> ranges = property.getRanges(ontology);
 
-            System.out.println("Property: " + ++noOfProperties);
+            //System.out.println("Property: " + ++noOfProperties);
             for (OntologyClass domain : domains) {
                 OntologyGraphNode domainNode = entityMap.get(domain);
                 for (OntologyEntity range : ranges) {
@@ -148,9 +163,9 @@ public class OntologyGraph {
                 }
             }
         }
-        System.out.println("Properties read.");
+        //System.out.println("Properties read.");
 
-        System.out.println("Connecting classes.");
+        //System.out.println("Connecting classes.");
         for (OntologyClass clss : classesSet) {
             Set<OntologyClass> equivalentClasses = clss.getEquivalentClasses(
                     ontology);
@@ -161,7 +176,7 @@ public class OntologyGraph {
 
             OntologyGraphNode class1 = entityMap.get(clss);
 
-            System.out.println("Connecting equivalent classes.");
+            //System.out.println("Connecting equivalent classes.");
             for (OntologyClass clss2 : equivalentClasses) {
                 if (clss.equals(clss2)) {
                     continue;
@@ -173,7 +188,7 @@ public class OntologyGraph {
                 setAndAddInverseEdges(class1, class2);
             }
 
-            System.out.println("Connecting disjoint classes.");
+            //System.out.println("Connecting disjoint classes.");
             for (OntologyClass clss2 : disjointClasses) {
                 OntologyGraphNode class2 = entityMap.get(clss2);
                 class1.addConnection(EdgeType.DISJOINTWITH, class2);
@@ -182,7 +197,7 @@ public class OntologyGraph {
                 setAndAddInverseEdges(class1, class2);
             }
 
-            System.out.println("Connecting subclasses.");
+            //System.out.println("Connecting subclasses.");
             for (OntologyClass clss2 : subclasses) {
                 OntologyGraphNode class2 = entityMap.get(clss2);
                 class1.addConnection(EdgeType.SUBCLASS, class2);
@@ -191,7 +206,7 @@ public class OntologyGraph {
                 setAndAddInverseEdges(class1, class2);
             }
 
-            System.out.println("Connecting instances.");
+            //System.out.println("Connecting instances.");
             for (OntologyIndividual ind : instances) {
                 OntologyGraphNode individual = valueMap.get(ind);
                 class1.addConnection(EdgeType.INSTANCE, individual);
@@ -203,7 +218,7 @@ public class OntologyGraph {
                         getPropertyValues(ontology);
                 Set<OntologyProperty> keys = indValues.keySet();
 
-                System.out.println("Connecting instances to properties.");
+                //System.out.println("Connecting instances to properties.");
                 // Individual properties
                 for (OntologyProperty property : keys) {
                     Set<OntologyValue> values = indValues.get(property);
@@ -211,7 +226,22 @@ public class OntologyGraph {
                         addValue(value, valueMap);
                         OntologyGraphNode individual2 = valueMap.get(value);
                         individual.addConnection(property, individual2);
-                        connectIndividualEdgeToClassEdge(individual, property);
+                        //if (individual2.isLiteral()) {
+                        OntologyDatatype datatype = individual2.getDatatype();
+                        OntologyGraphNode datatypeNode = entityMap.get(datatype);
+                        if (datatypeNode != null) {
+                            if (!datatypeNode.hasConnection(EdgeType.INSTANCE,
+                                    individual2)) {
+                                datatypeNode.addConnection(EdgeType.INSTANCE,
+                                        individual2);
+                                individual2.addConnection(EdgeType.INSTANCEOF,
+                                        datatypeNode);
+                                noOfedges += 2;
+                                setAndAddInverseEdges(datatypeNode, individual2);
+                            }
+                        }
+                        //}
+                        connectIndividualEdgeToClassEdge(individual, property, individual2);
                         noOfedges++;
                         edges.add(individual.lastEdgeAdded());
                     }
@@ -220,6 +250,9 @@ public class OntologyGraph {
         }
 
         root = classes.iterator().next();
+
+        if (edgesToNodes)
+            edgesToNodes();
 
         System.out.println("Number of nodes: " + (classes.size() + datatypes.
                 size()));
@@ -253,16 +286,41 @@ public class OntologyGraph {
     }
 
     private void connectIndividualEdgeToClassEdge(OntologyGraphNode individual,
-            OntologyProperty property) {
+            OntologyProperty property, OntologyGraphNode individual2) {
         Set<OntologyGraphNode> classes
                 = individual.getNextNodes(EdgeType.INSTANCEOF);
+        Set<OntologyGraphNode> classes2
+                = individual2.getNextNodes(EdgeType.INSTANCEOF);
         Map<OntologyGraphNode, OntologyGraphEdge> classPropertyEdges
                 = new HashMap<OntologyGraphNode, OntologyGraphEdge>(classes.
                         size());
+
+        boolean found = false;
         for (OntologyGraphNode clss : classes) {
-            classPropertyEdges.put(clss, clss.getEdges(property).iterator().
-                    next());
+            Iterator<OntologyGraphEdge> iterator = clss.getEdges(property).
+                    iterator();
+            boolean doBreak = false;
+            while (iterator.hasNext()) {
+                OntologyGraphEdge edge = iterator.next();
+                if (classes2.contains(edge.getNextNode())) {
+                    classPropertyEdges.put(clss, iterator.next());
+                    found = true;
+                    doBreak = true;
+                    break;
+                }
+            }
+
+            if (doBreak)
+                break;
         }
+
+        if (!found){
+                OntologyGraphNode class1 = classes.iterator().next();
+                OntologyGraphNode class2 = classes2.iterator().next();
+
+                class1.addConnection(property, class2);
+                classPropertyEdges.put(class1, class1.lastEdgeAdded());
+            }
         Set<OntologyGraphEdge> edges = individual.getEdges(property);
         for (OntologyGraphEdge edge : edges) {
             for (OntologyGraphNode clss : classes) {

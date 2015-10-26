@@ -1,10 +1,11 @@
 package eg.edu.alexu.ehr.ontology.api.wrapper;
 
-import eg.edu.alexu.ehr.ontology.api.wrapper.thing.OntologyProperty;
 import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
-
+import eg.edu.alexu.ehr.ontology.api.wrapper.thing.OntologyProperty;
+import eg.edu.alexu.ehr.ontology.api.wrapper.thing.object.entities.OntologyClass;
+import eg.edu.alexu.ehr.ontology.api.wrapper.thing.object.entities.OntologyDatatype;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLDataProperty;
@@ -13,9 +14,6 @@ import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
-
-import eg.edu.alexu.ehr.ontology.api.wrapper.thing.object.entities.OntologyClass;
-import eg.edu.alexu.ehr.ontology.api.wrapper.thing.object.entities.OntologyDatatype;
 
 public class Ontology {
 	private OWLOntology ontology;

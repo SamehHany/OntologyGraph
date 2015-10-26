@@ -72,8 +72,8 @@ public class OntologyProperty implements OntologyThing {
 	
 	public Set<OntologyClass> getDomains(Ontology ontology) {
 		Set<OWLNamedObject> domains = property.getDomains(ontology.getOWLOntology());
-		if (domains.size() == 0)
-			return allClasses(ontology);
+		//if (domains.size() == 0)
+			//return allClasses(ontology);
 		Set<OntologyClass> set = new HashSet<OntologyClass>(domains.size());
 		for (OWLNamedObject domain : domains)
 			set.add(new OntologyClass((OWLClass)domain));
@@ -83,8 +83,8 @@ public class OntologyProperty implements OntologyThing {
 	
 	public Set<OntologyEntity> getRanges(Ontology ontology) {
 		Set<OWLNamedObject> ranges = property.getRanges(ontology.getOWLOntology());
-		if (ranges.size() == 0)
-			return allClassesAndDatatypes(ontology);
+		//if (ranges.size() == 0)
+			//return allClassesAndDatatypes(ontology);
 		Set<OntologyEntity> set = new HashSet<OntologyEntity>(ranges.size());
 		for (OWLNamedObject range : ranges) {
 			if (range instanceof OWLClassImpl)

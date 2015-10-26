@@ -14,7 +14,7 @@ import eg.edu.alexu.ehr.ontology.api.wrapper.Ontology;
 import eg.edu.alexu.ehr.ontology.api.wrapper.thing.object.values.OntologyIndividual;
 import uk.ac.manchester.cs.owl.owlapi.OWLClassImpl;
 
-public class OntologyClass extends OntologyObjectType {
+public class OntologyClass extends OntologyEntity {
 	
 	public OntologyClass(OWLClass clss) {
 		super((OWLEntity)clss);

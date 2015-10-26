@@ -6,7 +6,7 @@ import java.util.Set;
 import eg.edu.alexu.ehr.ontology.api.wrapper.Ontology;
 import eg.edu.alexu.ehr.ontology.api.wrapper.thing.object.entities.OntologyClass;
 import eg.edu.alexu.ehr.ontology.api.wrapper.thing.object.entities.OntologyDatatype;
-import eg.edu.alexu.ehr.ontology.api.wrapper.thing.object.entities.OntologyObjectType;
+import eg.edu.alexu.ehr.ontology.api.wrapper.thing.object.entities.OntologyEntity;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLDataProperty;
@@ -22,7 +22,7 @@ import uk.ac.manchester.cs.owl.owlapi.OWLDataPropertyImpl;
 import uk.ac.manchester.cs.owl.owlapi.OWLDatatypeImpl;
 import uk.ac.manchester.cs.owl.owlapi.OWLObjectPropertyImpl;
 
-public class OntologyProperty implements OntologyObject {
+public class OntologyProperty implements OntologyThing {
 	private OWLProperty property;
 	private boolean isObjectProperty;
 	
@@ -80,34 +80,12 @@ public class OntologyProperty implements OntologyObject {
 		
 		return set;
 	}
-        public Set<OntologyClass> getDirectDomains(Ontology ontology) {
-		Set<OWLNamedObject> domains = property.getDomains(ontology.getOWLOntology());
-                Set<OntologyClass> set = new HashSet<OntologyClass>(domains.size());
-		for (OWLNamedObject domain : domains)
-			set.add(new OntologyClass((OWLClass)domain));
-		return set;
-	}
-        public Set<OntologyObjectType> getRanges(Ontology ontology) {
-		Set<OWLNamedObject> ranges = property.getRanges(ontology.getOWLOntology());
-		if (ranges.size() == 0)
-			return allClassesAndDatatypes(ontology);
-		Set<OntologyObjectType> set = new HashSet<OntologyObjectType>(ranges.size());
-		for (OWLNamedObject range : ranges) {
-			if (range instanceof OWLClassImpl)
-				set.add(new OntologyClass((OWLClass)range));
-			else if (range instanceof OWLDatatypeImpl || range instanceof OWL2DatatypeImpl)
-				set.add(new OntologyDatatype((OWLDatatype)range));
-		}
-
-		return set;
-	}
-
 	
-	public Set<OntologyObjectType> getDirectRanges(Ontology ontology) {
+	public Set<OntologyEntity> getRanges(Ontology ontology) {
 		Set<OWLNamedObject> ranges = property.getRanges(ontology.getOWLOntology());
 		if (ranges.size() == 0)
 			return allClassesAndDatatypes(ontology);
-		Set<OntologyObjectType> set = new HashSet<OntologyObjectType>(ranges.size());
+		Set<OntologyEntity> set = new HashSet<OntologyEntity>(ranges.size());
 		for (OWLNamedObject range : ranges) {
 			if (range instanceof OWLClassImpl)
 				set.add(new OntologyClass((OWLClass)range));
@@ -128,10 +106,10 @@ public class OntologyProperty implements OntologyObject {
 		return set;
 	}
 	
-	private Set<OntologyObjectType> allClassesAndDatatypes(Ontology ontology) {
+	private Set<OntologyEntity> allClassesAndDatatypes(Ontology ontology) {
 		Set<OWLClass> classes = ontology.getOWLOntology().getClassesInSignature();
 		Set<OWLDatatype> datatypes = ontology.getOWLOntology().getDatatypesInSignature();
-		Set<OntologyObjectType> set = new HashSet<OntologyObjectType>(classes.size() + datatypes.size());
+		Set<OntologyEntity> set = new HashSet<OntologyEntity>(classes.size() + datatypes.size());
 		
 		for (OWLClass clss : classes)
 			set.add(new OntologyClass(clss));
@@ -166,17 +144,6 @@ public class OntologyProperty implements OntologyObject {
 	public int hashCode() {
 		return property.hashCode();
 	}
-        public boolean isEntity() {
-            return false;
-        }
-
-	public boolean isValue() {
-            return false;
-        }
-
-        public boolean isProperty() {
-            return true;
-        }
 	
 	@Override
 	public boolean equals(Object obj) {

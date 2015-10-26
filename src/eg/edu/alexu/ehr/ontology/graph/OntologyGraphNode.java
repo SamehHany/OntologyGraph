@@ -9,68 +9,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import eg.edu.alexu.ehr.ontology.api.wrapper.thing.OntologyProperty;
-import eg.edu.alexu.ehr.ontology.api.wrapper.thing.object.OntologyEntity;
+import eg.edu.alexu.ehr.ontology.api.wrapper.thing.object.OntologyObject;
 import eg.edu.alexu.ehr.ontology.api.wrapper.thing.object.entities.OntologyClass;
 import eg.edu.alexu.ehr.ontology.api.wrapper.thing.object.entities.OntologyDatatype;
-import eg.edu.alexu.ehr.ontology.api.wrapper.thing.object.entities.OntologyObjectType;
+import eg.edu.alexu.ehr.ontology.api.wrapper.thing.object.entities.OntologyEntity;
 import eg.edu.alexu.ehr.ontology.api.wrapper.thing.object.values.OntologyValue;
 
 public class OntologyGraphNode {
-	private OntologyEntity object;
-	private NodeType nodeType;
+	private OntologyObject object;
+	NodeType nodeType;
 	//private Map<EdgeType, List<OntologyGraphEdge>> edges;
 	private List<OntologyGraphEdge> []classRelations;
 	private Map<String, List<OntologyGraphEdge>> properties;
         private List<OntologyGraphEdge> allEdges;
 	private String label;
-
-        private OntologyGraphEdge edge;
-        private boolean isEdge;
-
-        public OntologyGraphNode(OntologyGraphEdge edge) {
-		object = null;
-                this.edge = edge;
-		setNodeType(edge);
-		label = "";
-		EdgeType edgeType = EdgeType.PROPERTY;
-		classRelations = null;
-		for (int i = 0; i < edgeType.noOfValues(); i++)
-			classRelations[i] = new LinkedList<OntologyGraphEdge>();
-		properties = null;
-                allEdges = null;
-                isEdge = true;
-	}
-
-        private NodeType setNodeType(OntologyGraphEdge edge) {
-            switch(edge.getEdgeType()) {
-                case SUBCLASS:
-                    nodeType = NodeType.SUBCLASS;
-                    return nodeType;
-                case SUPERCLASS:
-                    nodeType = NodeType.SUPERCLASS;
-                    return nodeType;
-                case EQUIVALENTTO:
-                    nodeType = NodeType.EQUIVALENTTO;
-                    return nodeType;
-                case DISJOINTWITH:
-                    nodeType = NodeType.DISJOINTWITH;
-                    return nodeType;
-                case INSTANCE:
-                    nodeType = NodeType.INSTANCE;
-                    return nodeType;
-                case INSTANCEOF:
-                    nodeType = NodeType.INSTANCEOF;
-                    return nodeType;
-                case PROPERTY:
-                    nodeType = NodeType.PROPERTY;
-                    return nodeType;
-                default:
-                    return null;
-
-            }
-        }
 	
-	public OntologyGraphNode(OntologyEntity object) {
+	public OntologyGraphNode(OntologyObject object) {
 		this.object = object;
 		setNodeType(object);
 		label = "";
@@ -80,7 +34,6 @@ public class OntologyGraphNode {
 			classRelations[i] = new LinkedList<OntologyGraphEdge>();
 		properties = new HashMap<String, List<OntologyGraphEdge>>();
                 allEdges = new ArrayList<OntologyGraphEdge>();
-                isEdge = false;
 	}
 	
 	/*public OntologyGraphNode(String uri, NodeType nodeType) {
@@ -110,7 +63,7 @@ public class OntologyGraphNode {
 		properties = new HashMap<String, List<OntologyGraphEdge>>();
 	}*/
 	
-	public OntologyGraphNode(OntologyEntity object, String label) {
+	public OntologyGraphNode(OntologyObject object, String label) {
 		this.object = object;
 		setNodeType(object);
 		this.label = label;
@@ -120,7 +73,6 @@ public class OntologyGraphNode {
 			classRelations[i] = new LinkedList<OntologyGraphEdge>();
 		properties = new HashMap<String, List<OntologyGraphEdge>>();
                 allEdges = new ArrayList<OntologyGraphEdge>();
-                isEdge = false;
 	}
 	
 	public OntologyGraphNode(String uri, String label, boolean isClass) {
@@ -134,7 +86,6 @@ public class OntologyGraphNode {
 		classRelations = (List<OntologyGraphEdge>[])(new List[edgeType.noOfValues()]);
 		properties = new HashMap<String, List<OntologyGraphEdge>>();
                 allEdges = new ArrayList<OntologyGraphEdge>();
-                isEdge = false;
 	}
 
         public boolean isValue() {
@@ -223,9 +174,9 @@ public class OntologyGraphNode {
 		return nodeType;
 	}
 	
-	private NodeType setNodeType(OntologyEntity object) {
+	private NodeType setNodeType(OntologyObject object) {
 		if (object.isEntity()) {
-			if (((OntologyObjectType)object).isClass())
+			if (((OntologyEntity)object).isClass())
 				nodeType = NodeType.CLASS;
 			else
 				nodeType = NodeType.DATATYPE;
@@ -254,7 +205,7 @@ public class OntologyGraphNode {
                 allEdges.add(edge);
 	}
 	
-	public void addConnection(OntologyProperty property, OntologyObjectType entity) {
+	public void addConnection(OntologyProperty property, OntologyEntity entity) {
 		OntologyGraphNode node = new OntologyGraphNode(entity);
 		OntologyGraphEdge edge = new OntologyGraphEdge(property, this, node);
 		String uri = property.getURIAsStr();
@@ -269,7 +220,7 @@ public class OntologyGraphNode {
                 allEdges.add(edge);
 	}
 	
-	public void addConnection(EdgeType edgeType, OntologyObjectType entity) {
+	public void addConnection(EdgeType edgeType, OntologyEntity entity) {
 		if (edgeType == EdgeType.PROPERTY)
 			return;
 		OntologyGraphNode node = new OntologyGraphNode(entity);
@@ -300,7 +251,7 @@ public class OntologyGraphNode {
                 allEdges.add(edge);
 	}
 	
-	public OntologyEntity getObject() {
+	public OntologyObject getObject() {
 		return object;
 	}
 	
@@ -336,7 +287,7 @@ public class OntologyGraphNode {
 	@Override
 	public int hashCode() {
 		if (object.isEntity())
-			return ((OntologyObjectType)object).getURIAsStr().hashCode();
+			return ((OntologyEntity)object).getURIAsStr().hashCode();
 		else
 			return object.toString().hashCode();
 	}
@@ -344,7 +295,7 @@ public class OntologyGraphNode {
 	@Override
 	public boolean equals(Object obj) {
 		if (object.isEntity())
-			return ((OntologyObjectType)object).getURIAsStr().equals(((OntologyObjectType)((OntologyGraphNode)obj).object).getURIAsStr());
+			return ((OntologyEntity)object).getURIAsStr().equals(((OntologyEntity)((OntologyGraphNode)obj).object).getURIAsStr());
 		else
 			return object.toString().equals(obj.toString());
 	}

@@ -20,7 +20,7 @@ import eg.edu.alexu.ehr.ontology.api.wrapper.Ontology;
 import eg.edu.alexu.ehr.ontology.api.wrapper.thing.OntologyProperty;
 import eg.edu.alexu.ehr.ontology.api.wrapper.thing.object.entities.OntologyClass;
 import eg.edu.alexu.ehr.ontology.api.wrapper.thing.object.entities.OntologyDatatype;
-import eg.edu.alexu.ehr.ontology.api.wrapper.thing.object.entities.OntologyObjectType;
+import eg.edu.alexu.ehr.ontology.api.wrapper.thing.object.entities.OntologyEntity;
 import eg.edu.alexu.ehr.ontology.api.wrapper.thing.object.values.OntologyIndividual;
 import eg.edu.alexu.ehr.ontology.api.wrapper.thing.object.values.OntologyValue;
 import eg.edu.alexu.ehr.util.Pair;
@@ -43,7 +43,7 @@ public class OntologyGraph {
 
     private Map<OntologyGraphEdge, OntologyGraphEdge> individualToClassPropertyMap;
 
-    private Map<OntologyObjectType, OntologyGraphNode> entityMap;
+    private Map<OntologyEntity, OntologyGraphNode> entityMap;
 
     private Map<OntologyValue, OntologyGraphNode> valueMap;
 
@@ -75,7 +75,7 @@ public class OntologyGraph {
         individualToClassPropertyMap = new HashMap<OntologyGraphEdge, OntologyGraphEdge>();
 
         entityMap
-                = new HashMap<OntologyObjectType, OntologyGraphNode>(classesSet.
+                = new HashMap<OntologyEntity, OntologyGraphNode>(classesSet.
                         size());
         valueMap
                 = new HashMap<OntologyValue, OntologyGraphNode>(individualsSet.
@@ -126,20 +126,14 @@ public class OntologyGraph {
         System.out.println("Reading properties.");
         int noOfProperties = 0;
         System.out.println("Number of Properties = " + properties.size());
-        System.out.println("Maximum Number of Edges for Properties = " + properties.size()*classesSet.size()*classesSet.size());
-        long edges_cnt=0;
-       for (OntologyProperty property : properties) {
-            edges_cnt+= property.getDomains(ontology).size()* property.getRanges(ontology).size();
-       }
-       System.out.println("Edges for Properties = " + edges_cnt);
         for (OntologyProperty property : properties) {
-            Set<OntologyClass> domains = property.getDirectDomains(ontology);
-            Set<OntologyObjectType> ranges = property.getDirectRanges(ontology);
+            Set<OntologyClass> domains = property.getDomains(ontology);
+            Set<OntologyEntity> ranges = property.getRanges(ontology);
 
             System.out.println("Property: " + ++noOfProperties);
             for (OntologyClass domain : domains) {
                 OntologyGraphNode domainNode = entityMap.get(domain);
-                for (OntologyObjectType range : ranges) {
+                for (OntologyEntity range : ranges) {
                     OntologyGraphNode rangeNode;
                     if (entityMap.containsKey(range)) {
                         rangeNode = entityMap.get(range);
@@ -280,7 +274,7 @@ public class OntologyGraph {
     }
 
     private void addEntity(OntologyGraphNode entity,
-            Map<OntologyObjectType, OntologyGraphNode> map) {
+            Map<OntologyEntity, OntologyGraphNode> map) {
         if (classes.contains(entity) || datatypes.contains(entity)) {
             return;
         }
@@ -290,11 +284,11 @@ public class OntologyGraph {
         } else {
             datatypes.add(entity);
         }
-        map.put((OntologyObjectType) entity.getObject(), entity);
+        map.put((OntologyEntity) entity.getObject(), entity);
     }
 
-    private void addEntity(OntologyObjectType entity,
-            Map<OntologyObjectType, OntologyGraphNode> map) {
+    private void addEntity(OntologyEntity entity,
+            Map<OntologyEntity, OntologyGraphNode> map) {
         OntologyGraphNode node = new OntologyGraphNode(entity);
         if (classes.contains(node) || datatypes.contains(node)) {
             return;

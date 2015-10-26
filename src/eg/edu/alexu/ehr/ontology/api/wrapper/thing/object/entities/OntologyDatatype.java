@@ -7,7 +7,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
 import uk.ac.manchester.cs.owl.owlapi.OWLClassImpl;
 import uk.ac.manchester.cs.owl.owlapi.OWLDatatypeImpl;
 
-public class OntologyDatatype extends OntologyObjectType {
+public class OntologyDatatype extends OntologyEntity {
 	
 	public OntologyDatatype(OWLDatatype datatype) {
 		super((OWLEntity)datatype);

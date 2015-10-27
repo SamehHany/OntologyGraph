@@ -1338,7 +1338,7 @@
         <mo:hasEditor rdf:resource="&mo;editor1" />
     </owl:NamedIndividual>
    
-    <!--<owl:NamedIndividual rdf:about="&www;movieontology.owl#editor1">-->
+    <owl:NamedIndividual rdf:about="&www;movieontology.owl#editor1">
     <owl:NamedIndividual rdf:about="&mo;editor1">
         <rdf:type rdf:resource="&mo;Editor"/>
     </owl:NamedIndividual>

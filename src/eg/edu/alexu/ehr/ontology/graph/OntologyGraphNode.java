@@ -31,6 +31,7 @@ public class OntologyGraphNode {
 	private String label;
 
         private OntologyGraphEdge edge;
+        private float edgeWeight;
         private boolean isEdge;
 
         private boolean edgesAsNodes;
@@ -38,12 +39,15 @@ public class OntologyGraphNode {
         public OntologyGraphNode(OntologyGraphEdge edge,
                 OntologyGraphNode prevNode, OntologyGraphNode nextNode) {
 		this.object = null;
+                this.edge = edge;
+                edgeWeight = edge.getWeight();
 		nodeType = NodeType.EDGE;
 		label = "";
 		classRelations = null;
                 properties = new HashMap<String, List<OntologyGraphEdge>>();
                 allEdges = new ArrayList<OntologyGraphEdge>();
 		prevNodes = new HashSet<OntologyGraphNode>();
+                nextNodes = new HashSet<OntologyGraphNode>();
                 prevNodes.add(prevNode);
                 nextNodes.add(nextNode);
                 nextNodes = new HashSet<OntologyGraphNode>();
@@ -53,13 +57,20 @@ public class OntologyGraphNode {
                 edgesAsNodes = true;
 	}
 
-        public void edgesToNodes() {
+        public void edgesToNodes(Set<OntologyGraphNode> edgeNodes) {
             for (OntologyGraphEdge edge : allEdges) {
                 OntologyGraphNode prevNode = edge.getPreviousNode();
                 OntologyGraphNode nextNode = edge.getNextNode();
                 OntologyGraphNode node = new OntologyGraphNode(edge, prevNode, nextNode);
-                prevNodes.add(prevNode);
-                nextNodes.add(nextNode);
+                edgeNodes.add(node);
+                prevNodes = null;
+                nextNodes = new HashSet<OntologyGraphNode>();
+		node.prevNodes = new HashSet<OntologyGraphNode>();
+                node.nextNodes = new HashSet<OntologyGraphNode>();
+                node.prevNodes.add(prevNode);
+                node.nextNodes.add(nextNode);
+                node.edgeWeight = edge.getWeight();
+                nextNodes.add(node);
                 prevNodesWeights.put(prevNode, edge.getWeight());
                 nextNodesWeights.put(nextNode, edge.getWeight());
                 edgesAsNodes = true;
@@ -419,14 +430,18 @@ public class OntologyGraphNode {
 	
 	@Override
 	public int hashCode() {
-		if (object.isEntity())
-			return ((OntologyEntity)object).getURIAsStr().hashCode();
-		else
-			return object.toString().hashCode();
+            if (object == null)
+                return edge.hashCode();
+	    if (object.isEntity())
+		return ((OntologyEntity)object).getURIAsStr().hashCode();
+	    else
+		return object.toString().hashCode();
 	}
 	
 	@Override
 	public boolean equals(Object obj) {
+                if (object == null)
+                    return edge.equals(((OntologyGraphNode)obj).edge);
 		if (object.isEntity())
 			return ((OntologyEntity)object).getURIAsStr().equals(((OntologyEntity)((OntologyGraphNode)obj).object).getURIAsStr());
 		else
@@ -435,6 +450,8 @@ public class OntologyGraphNode {
 
         @Override
         public String toString() {
+            if (object == null)
+                return edge.toString();
             return object.toString();
         }
 }

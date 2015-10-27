@@ -13,6 +13,10 @@ public class OntologyObject  implements OntologyThing {
 		return !isEntity;
 	}
 
+        public String getURI() {
+            return "";
+        }
+
         @Override
         public String toString() {
             return null;

@@ -273,6 +273,10 @@ public class OntologyGraph {
 
         if (edgesToNodes) {
             edgesToNodes();
+            for (OntologyGraphNode node : edgeNodes) {
+                String uri = node.getURI();
+                uriToNodeMap.put(uri, node);
+            }
         }
 
         System.out.println("Number of nodes: " + (classes.size() + datatypes.
@@ -348,7 +352,10 @@ public class OntologyGraph {
             for (OntologyGraphNode clss : classes) {
                 OntologyGraphEdge propertyEdge = classPropertyEdges.get(clss);
                 individualToClassPropertyMap.put(edge, propertyEdge);
-                propertyEdge.incrementWeight();
+                if (propertyEdge.isProperty())
+                    propertyEdge.incrementWeight(2);
+                else
+                    propertyEdge.incrementWeight();
             }
         }
     }
@@ -496,7 +503,7 @@ public class OntologyGraph {
             }
             bw.close();
 
-            int numberOfNodes = classes.size() + datatypes.size();
+            int numberOfNodes = classes.size() + datatypes.size() + edgeNodes.size();
 
             Map<Integer, Float>[] adjacencyArray = new Map[numberOfNodes];
             for (int i = 0; i < adjacencyArray.length; i++) {
@@ -504,7 +511,8 @@ public class OntologyGraph {
             }
 
             int noOfEdges = 0;
-            for (OntologyGraphEdge edge : edges) {
+            for (OntologyGraphNode predicate : edgeNodes) {
+                OntologyGraphEdge edge = predicate.getEdge();
                 if (edge.isInverse()) {
                     continue;
                 }
@@ -515,18 +523,34 @@ public class OntologyGraph {
                 }
                 int subjectNumber = reverseIndex.get(subject) - 1;
                 int objectNumber = reverseIndex.get(object) - 1;
-                if (!adjacencyArray[subjectNumber].containsKey(objectNumber)) {
-                    adjacencyArray[subjectNumber].put(objectNumber, edge.
+                int predicateNumber = reverseIndex.get(predicate) - 1;
+
+                if (!adjacencyArray[subjectNumber].containsKey(predicateNumber)) {
+                    adjacencyArray[subjectNumber].put(predicateNumber, edge.
                             getWeight());
-                    adjacencyArray[objectNumber].put(subjectNumber, edge.
+                    adjacencyArray[predicateNumber].put(subjectNumber, edge.
                             getWeight());
                     noOfEdges++;
                 } else {
                     float newWeight = adjacencyArray[subjectNumber].get(
-                            objectNumber) + edge.getWeight();
-                    adjacencyArray[subjectNumber].put(objectNumber, newWeight);
-                    adjacencyArray[objectNumber].put(subjectNumber, newWeight);
+                            predicateNumber) + edge.getWeight();
+                    adjacencyArray[subjectNumber].put(predicateNumber, newWeight);
+                    adjacencyArray[predicateNumber].put(subjectNumber, newWeight);
                 }
+
+                if (!adjacencyArray[predicateNumber].containsKey(objectNumber)) {
+                    adjacencyArray[predicateNumber].put(objectNumber, edge.
+                            getWeight());
+                    adjacencyArray[objectNumber].put(predicateNumber, edge.
+                            getWeight());
+                    noOfEdges++;
+                } else {
+                    float newWeight = adjacencyArray[predicateNumber].get(
+                            objectNumber) + edge.getWeight();
+                    adjacencyArray[predicateNumber].put(objectNumber, newWeight);
+                    adjacencyArray[objectNumber].put(predicateNumber, newWeight);
+                }
+                
                 /*
                  * if (!adjacencyArray[objectNumber].containsKey(subjectNumber)) {
                  * adjacencyArray[objectNumber].put(subjectNumber, edge.getWeight());
@@ -711,7 +735,7 @@ public class OntologyGraph {
     private Map<Integer, OntologyGraphNode> readIds(String path) {
         Map<Integer, OntologyGraphNode> map
                 = new HashMap<Integer, OntologyGraphNode>(classes.size()
-                        + datatypes.size());
+                        + datatypes.size() + edgeNodes.size());
         try {
             BufferedFileReader br = new BufferedFileReader(
                     "graph-node-number.txt");

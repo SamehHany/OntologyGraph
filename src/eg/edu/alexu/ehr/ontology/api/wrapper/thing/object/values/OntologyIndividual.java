@@ -65,7 +65,7 @@ public class OntologyIndividual extends OntologyValue {
 		return IRI.create(((OWLIndividual)obj).toString());
 	}
 	
-	public URI getURI() {
+	public URI getURIAsURIDatatype() {
 		URI uri = null;
 		try {
 			uri = new URI(((OWLIndividual)obj).toString());
@@ -75,8 +75,9 @@ public class OntologyIndividual extends OntologyValue {
 		}
 		return uri;
 	}
-	
-	public String getURIAsStr() {
+
+        @Override
+	public String getURI() {
 		return ((OWLIndividual)obj).toString();
 	}
 }

@@ -163,7 +163,7 @@ public class OntologyGraphEdge {
 		return label;
 	}
 	
-	public URI getURI() {
+	public URI getURIAsURI() {
 		if (property == null) {
 			try {
 				return new URI(edgeTypeAsString());
@@ -175,7 +175,7 @@ public class OntologyGraphEdge {
 		return property.getURI();
 	}
 	
-	public String getURIAsStr() {
+	public String getURI() {
 		if (property == null)
 			return edgeTypeAsString();
 		return property.getURIAsStr();
@@ -193,6 +193,8 @@ public class OntologyGraphEdge {
 			return "Disjoint";
 		case INSTANCE:
 			return "Instance";
+                case INSTANCEOF:
+			return "Instance-of";
 		case PROPERTY:
 			return "Property";
 		default:

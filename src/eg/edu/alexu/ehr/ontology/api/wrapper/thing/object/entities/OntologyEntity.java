@@ -1,11 +1,9 @@
 package eg.edu.alexu.ehr.ontology.api.wrapper.thing.object.entities;
 
 import java.net.URI;
-
+import eg.edu.alexu.ehr.ontology.api.wrapper.thing.object.OntologyObject;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLEntity;
-
-import eg.edu.alexu.ehr.ontology.api.wrapper.thing.object.OntologyObject;
 
 abstract public class OntologyEntity extends OntologyObject { // Class or datatype
 	protected OWLEntity entity;
@@ -27,11 +25,12 @@ abstract public class OntologyEntity extends OntologyObject { // Class or dataty
 		return ((OWLEntity)entity).getIRI();
 	}
 	
-	public URI getURI() {
+	public URI getURIAsURIDatatype() {
 		return ((OWLEntity)entity).getIRI().toURI();
 	}
-	
-	public String getURIAsStr() {
+
+        @Override
+	public String getURI() {
 		return ((OWLEntity)entity).getIRI().toString();
 	}
 	

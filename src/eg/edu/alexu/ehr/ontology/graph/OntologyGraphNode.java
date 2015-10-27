@@ -63,7 +63,7 @@ public class OntologyGraphNode {
                 OntologyGraphNode nextNode = edge.getNextNode();
                 OntologyGraphNode node = new OntologyGraphNode(edge, prevNode, nextNode);
                 edgeNodes.add(node);
-                prevNodes = null;
+                prevNodes = new HashSet<OntologyGraphNode>();
                 nextNodes = new HashSet<OntologyGraphNode>();
 		node.prevNodes = new HashSet<OntologyGraphNode>();
                 node.nextNodes = new HashSet<OntologyGraphNode>();
@@ -75,6 +75,10 @@ public class OntologyGraphNode {
                 nextNodesWeights.put(nextNode, edge.getWeight());
                 edgesAsNodes = true;
             }
+        }
+
+        public OntologyGraphEdge getEdge() {
+            return edge;
         }
 	
 	public OntologyGraphNode(OntologyObject object) {
@@ -350,7 +354,7 @@ public class OntologyGraphNode {
 			return;
 		OntologyGraphNode node = new OntologyGraphNode(entity);
 		OntologyGraphEdge edge = new OntologyGraphEdge(edgeType, this, node);
-		String uri = edge.getURIAsStr();
+		String uri = edge.getURI();
 		int index = edgeType.value();
 		classRelations[index].add(edge);
                 allEdges.add(edge);
@@ -360,7 +364,7 @@ public class OntologyGraphNode {
 		if (edgeType == EdgeType.PROPERTY)
 			return;
 		OntologyGraphEdge edge = new OntologyGraphEdge(edgeType, this, node);
-		String uri = edge.getURIAsStr();
+		String uri = edge.getURI();
 		int index = edgeType.value();
 		classRelations[index].add(edge);
                 allEdges.add(edge);
@@ -370,7 +374,7 @@ public class OntologyGraphNode {
 		EdgeType edgeType = edge.getEdgeType();
 		if (edgeType == EdgeType.PROPERTY)
 			return;
-		String uri = edge.getURIAsStr();
+		String uri = edge.getURI();
 		int index = edgeType.value();
 		classRelations[index].add(edge);
                 allEdges.add(edge);
@@ -427,13 +431,17 @@ public class OntologyGraphNode {
             else
                 return "varchar(255)";
         }
+
+        public String getURI() {
+            return object != null ? object.getURI() : edge.getURI();
+        }
 	
 	@Override
 	public int hashCode() {
             if (object == null)
                 return edge.hashCode();
 	    if (object.isEntity())
-		return ((OntologyEntity)object).getURIAsStr().hashCode();
+		return ((OntologyEntity)object).getURI().hashCode();
 	    else
 		return object.toString().hashCode();
 	}
@@ -443,7 +451,7 @@ public class OntologyGraphNode {
                 if (object == null)
                     return edge.equals(((OntologyGraphNode)obj).edge);
 		if (object.isEntity())
-			return ((OntologyEntity)object).getURIAsStr().equals(((OntologyEntity)((OntologyGraphNode)obj).object).getURIAsStr());
+			return ((OntologyEntity)object).getURI().equals(((OntologyEntity)((OntologyGraphNode)obj).object).getURI());
 		else
 			return object.toString().equals(obj.toString());
 	}

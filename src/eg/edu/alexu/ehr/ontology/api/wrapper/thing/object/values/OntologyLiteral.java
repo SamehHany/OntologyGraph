@@ -1,6 +1,6 @@
-package eg.edu.alexu.ehr.ontology.api.wrapper.object.values;
+package eg.edu.alexu.ehr.ontology.api.wrapper.thing.object.values;
 
-import eg.edu.alexu.ehr.ontology.api.wrapper.object.entities.OntologyDatatype;
+import eg.edu.alexu.ehr.ontology.api.wrapper.thing.object.entities.OntologyDatatype;
 import org.semanticweb.owlapi.model.OWLDatatype;
 import org.semanticweb.owlapi.model.OWLLiteral;
 import org.semanticweb.owlapi.model.OWLObject;
@@ -27,6 +27,10 @@ public class OntologyLiteral extends OntologyValue {
 		isIndividual = false;
 		this.datatype = datatype;
 	}
+
+        public OntologyDatatype getDatatype() {
+            return datatype;
+        }
 
         @Override
         public String toString() {

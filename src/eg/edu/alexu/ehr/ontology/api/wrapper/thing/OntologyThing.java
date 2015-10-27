@@ -3,15 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package eg.edu.alexu.ehr.ontology.graph;
-
-import eg.edu.alexu.ehr.ontology.api.wrapper.thing.OntologyThing;
+package eg.edu.alexu.ehr.ontology.api.wrapper.thing;
 
 /**
  *
  * @author Mina R. Waheeb
  */
-public class OntologyGraphNode1 {
-    private OntologyThing object;
+public interface OntologyThing {
     
 }

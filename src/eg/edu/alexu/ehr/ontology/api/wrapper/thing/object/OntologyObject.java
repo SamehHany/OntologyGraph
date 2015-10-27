@@ -1,6 +1,8 @@
-package eg.edu.alexu.ehr.ontology.api.wrapper.object;
+package eg.edu.alexu.ehr.ontology.api.wrapper.thing.object;
 
-public class OntologyObject {
+import eg.edu.alexu.ehr.ontology.api.wrapper.thing.OntologyThing;
+
+public class OntologyObject  implements OntologyThing {
 	protected boolean isEntity;
 	
 	public boolean isEntity() {

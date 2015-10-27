@@ -1,4 +1,4 @@
-package eg.edu.alexu.ehr.ontology.api.wrapper.object.entities;
+package eg.edu.alexu.ehr.ontology.api.wrapper.thing.object.entities;
 
 import java.net.URI;
 import java.util.HashSet;
@@ -11,7 +11,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLIndividual;
 
 import eg.edu.alexu.ehr.ontology.api.wrapper.Ontology;
-import eg.edu.alexu.ehr.ontology.api.wrapper.object.values.OntologyIndividual;
+import eg.edu.alexu.ehr.ontology.api.wrapper.thing.object.values.OntologyIndividual;
 import uk.ac.manchester.cs.owl.owlapi.OWLClassImpl;
 
 public class OntologyClass extends OntologyEntity {

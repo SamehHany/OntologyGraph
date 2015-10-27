@@ -1,9 +1,12 @@
-package eg.edu.alexu.ehr.ontology.api.wrapper;
+package eg.edu.alexu.ehr.ontology.api.wrapper.thing;
 
 import java.net.URI;
 import java.util.HashSet;
 import java.util.Set;
-
+import eg.edu.alexu.ehr.ontology.api.wrapper.Ontology;
+import eg.edu.alexu.ehr.ontology.api.wrapper.thing.object.entities.OntologyClass;
+import eg.edu.alexu.ehr.ontology.api.wrapper.thing.object.entities.OntologyDatatype;
+import eg.edu.alexu.ehr.ontology.api.wrapper.thing.object.entities.OntologyEntity;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLDataProperty;
@@ -13,17 +16,13 @@ import org.semanticweb.owlapi.model.OWLNamedObject;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
 import org.semanticweb.owlapi.model.OWLProperty;
-
-import eg.edu.alexu.ehr.ontology.api.wrapper.object.entities.OntologyClass;
-import eg.edu.alexu.ehr.ontology.api.wrapper.object.entities.OntologyDatatype;
-import eg.edu.alexu.ehr.ontology.api.wrapper.object.entities.OntologyEntity;
 import uk.ac.manchester.cs.owl.owlapi.OWL2DatatypeImpl;
 import uk.ac.manchester.cs.owl.owlapi.OWLClassImpl;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataPropertyImpl;
 import uk.ac.manchester.cs.owl.owlapi.OWLDatatypeImpl;
 import uk.ac.manchester.cs.owl.owlapi.OWLObjectPropertyImpl;
 
-public class OntologyProperty {
+public class OntologyProperty implements OntologyThing {
 	private OWLProperty property;
 	private boolean isObjectProperty;
 	
@@ -73,8 +72,8 @@ public class OntologyProperty {
 	
 	public Set<OntologyClass> getDomains(Ontology ontology) {
 		Set<OWLNamedObject> domains = property.getDomains(ontology.getOWLOntology());
-		if (domains.size() == 0)
-			return allClasses(ontology);
+		//if (domains.size() == 0)
+			//return allClasses(ontology);
 		Set<OntologyClass> set = new HashSet<OntologyClass>(domains.size());
 		for (OWLNamedObject domain : domains)
 			set.add(new OntologyClass((OWLClass)domain));
@@ -84,8 +83,8 @@ public class OntologyProperty {
 	
 	public Set<OntologyEntity> getRanges(Ontology ontology) {
 		Set<OWLNamedObject> ranges = property.getRanges(ontology.getOWLOntology());
-		if (ranges.size() == 0)
-			return allClassesAndDatatypes(ontology);
+		//if (ranges.size() == 0)
+			//return allClassesAndDatatypes(ontology);
 		Set<OntologyEntity> set = new HashSet<OntologyEntity>(ranges.size());
 		for (OWLNamedObject range : ranges) {
 			if (range instanceof OWLClassImpl)

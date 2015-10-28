@@ -15,7 +15,7 @@ import eg.edu.alexu.ehr.ontology.api.wrapper.object.entities.OntologyDatatype;
 import eg.edu.alexu.ehr.ontology.api.wrapper.object.entities.OntologyEntity;
 import eg.edu.alexu.ehr.ontology.api.wrapper.object.values.OntologyValue;
 
-public class OntologyGraphNode {
+public class OntologyGraphNode implements OntologyGraphObject {
 	private OntologyObject object;
 	NodeType nodeType;
 	//private Map<EdgeType, List<OntologyGraphEdge>> edges;
@@ -120,9 +120,10 @@ public class OntologyGraphNode {
             return set;
         }
 
-        public Set<OntologyGraphEdge> getEdges(String propertyURI) {
-            String uri = propertyURI.toString();
+        public Set<OntologyGraphEdge> getEdges(String uri) {
             List<OntologyGraphEdge> list = properties.get(uri);
+            if (list == null)
+                return new HashSet<OntologyGraphEdge>();
             Set<OntologyGraphEdge> set = new HashSet<OntologyGraphEdge>(list.size());
             for (OntologyGraphEdge edge : list)
                 set.add(edge);
@@ -294,10 +295,15 @@ public class OntologyGraphNode {
 	
 	@Override
 	public boolean equals(Object obj) {
+            if (obj instanceof OntologyGraphNode) {
 		if (object.isEntity())
 			return ((OntologyEntity)object).getURIAsStr().equals(((OntologyEntity)((OntologyGraphNode)obj).object).getURIAsStr());
 		else
 			return object.toString().equals(obj.toString());
+            }
+            else {
+                return false;
+            }
 	}
 
         @Override

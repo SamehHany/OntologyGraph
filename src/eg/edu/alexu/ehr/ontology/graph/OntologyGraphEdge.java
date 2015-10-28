@@ -8,7 +8,7 @@ import eg.edu.alexu.ehr.ontology.api.wrapper.OntologyProperty;
 import eg.edu.alexu.ehr.ontology.api.wrapper.object.entities.OntologyClass;
 import eg.edu.alexu.ehr.ontology.api.wrapper.object.entities.OntologyEntity;
 
-public class OntologyGraphEdge {
+public class OntologyGraphEdge implements OntologyGraphObject {
 	private EdgeType edgeType;
 	private OntologyProperty property;
 	private OntologyGraphNode prevNode;
@@ -177,6 +177,16 @@ public class OntologyGraphEdge {
 	
 	public String getURIAsStr() {
 		if (property == null)
+			return prevNode.toString()
+                                + " --> " + edgeTypeAsString()
+                                + " --> " + nextNode.toString();
+		return prevNode.toString()
+                        + " --> " + property.getURIAsStr()
+                        + " --> " + nextNode.toString();
+	}
+
+        public String getPureURI() {
+		if (property == null)
 			return edgeTypeAsString();
 		return property.getURIAsStr();
 	}
@@ -193,6 +203,8 @@ public class OntologyGraphEdge {
 			return "Disjoint";
 		case INSTANCE:
 			return "Instance";
+                case INSTANCEOF:
+			return "Instance-of";
 		case PROPERTY:
 			return "Property";
 		default:
@@ -236,18 +248,21 @@ public class OntologyGraphEdge {
 	
 	@Override
 	public boolean equals(Object obj) {
+            if (obj instanceof OntologyGraphEdge) {
 		OntologyGraphEdge edge = (OntologyGraphEdge)obj;
 		if (hash != (edge.hash))
 			return false;
 		if (edgeType == edge.edgeType && property.equals(edge.property) && prevNode.equals(edge.prevNode) && nextNode.equals(edge.nextNode))
 			return true;
 		return false;
+            }
+            else {
+                return false;
+            }
 	}
 
         @Override
         public String toString() {
-            if (edgeType == EdgeType.PROPERTY)
-                return property.toString();
-            return edgeTypeAsString();
+            return getURIAsStr();
         }
 }

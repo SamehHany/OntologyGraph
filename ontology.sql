@@ -1,7 +1,13 @@
 CREATE DATABASE Ontology
 
-CREATE TABLE Thing
+CREATE TABLE Person
 (
 	Id LONG
+);
+
+CREATE TABLE Movie
+(
+	Id LONG,
+	hasEditor LONG
 );
 

@@ -35,10 +35,11 @@ public class Main {
 			System.out.println(p + ": " + p.getDomains(ontology).size() + " - " + p.getRanges(ontology).size());
 		}*/
 		
-		Ontology ontology = new Ontology("movieontology-instances.owl");
+		//Ontology ontology = new Ontology("movieontology-instances.owl");
 		//Ontology ontology = new Ontology("pc.rdf");
                 //Ontology ontology = new Ontology("dbpedia_2015-04.owl");
-		OntologyGraph graph = new OntologyGraph(ontology);
+		Ontology ontology = new Ontology("movieontology-instances (small).owl");
+                OntologyGraph graph = new OntologyGraph(ontology);
                 graph.save("Edges.txt");
                 graph.saveAsGraph();
                 int noOfPartitions = 10;

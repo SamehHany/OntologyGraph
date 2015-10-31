@@ -261,13 +261,16 @@ public class OntologyGraph {
             OntologyProperty property, OntologyGraphNode object) {
         Set<OntologyGraphNode> classes
                 = individual.getNextNodes(EdgeType.INSTANCEOF);
+        Set<OntologyGraphNode> objectClasses
+                = object.getNextNodes(EdgeType.INSTANCEOF);
         Map<OntologyGraphNode, OntologyGraphEdge> classPropertyEdges
                 = new HashMap<OntologyGraphNode, OntologyGraphEdge>(classes.
                         size());
         for (OntologyGraphNode clss : classes) {
             Set<OntologyGraphEdge> edgesSet = clss.getEdges(property);
             if (edgesSet.size() == 0) {
-                clss.addConnection(property, object);
+                clss.addConnection(property, objectClasses.iterator().next());
+                edges.add(clss.lastEdgeAdded());
                 edgesSet = clss.getEdges(property);
             }
             classPropertyEdges.put(clss, edgesSet.iterator().next());

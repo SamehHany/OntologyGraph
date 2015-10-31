@@ -282,7 +282,7 @@ public class OntologyGraphNode implements OntologyGraphObject {
             else if (label.equals("int"))
                 return "INT";
             else
-                return "varchar(255)";
+                return "VARCHAR(255)";
         }
 	
 	@Override

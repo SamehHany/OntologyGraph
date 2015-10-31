@@ -282,7 +282,7 @@ public class OntologyGraph {
                 if (propertyEdge == null)
                     continue;
                 individualToClassPropertyMap.put(edge, propertyEdge);
-                propertyEdge.incrementWeight();
+                propertyEdge.incrementWeight(OntologyGraphEdge.propertyWeight);
             }
         }
     }
@@ -425,6 +425,9 @@ public class OntologyGraph {
                 reverseIndex.put(datatype, indexCounter);
             }
             for (OntologyGraphEdge edge : edges) {
+                if (edge.isDisjoint() || edge.isInstance()
+                        || edge.isInverse() || edge.isSubclass())
+                    continue;
                 bw.writeln(edge + ": " + ++indexCounter);
                 reverseIndex.put(edge, indexCounter);
             }
@@ -439,9 +442,9 @@ public class OntologyGraph {
 
             int noOfEdges = 0;
             for (OntologyGraphEdge edge : edges) {
-                if (edge.isInverse()) {
+                if (edge.isDisjoint() || edge.isInstance()
+                        || edge.isInverse() || edge.isSubclass())
                     continue;
-                }
                 OntologyGraphNode subject = edge.getPreviousNode();
                 OntologyGraphNode object = edge.getNextNode();
                 if (subject.isValue() || object.isValue()) {
@@ -655,27 +658,27 @@ public class OntologyGraph {
             writer.writeln();
             //noOfObjectsInSet
             for (Partition partition : partitions) {
-                Set<OntologyGraphObject> nodes = partition.getAllNodes();
+                Set<OntologyGraphObject> graphObjects = partition.getAllNodes();
 
                 OntologyGraphNode subject = null;// = (OntologyGraphNode)nodes.iterator().next();
-                for (OntologyGraphObject node : nodes) {
-                    if (node instanceof OntologyGraphNode) {
-                        subject = (OntologyGraphNode)node;
+                for (OntologyGraphObject graphObject : graphObjects) {
+                    if (graphObject instanceof OntologyGraphNode) {
+                        subject = (OntologyGraphNode)graphObject;
                         break;
                     }
                 }
                 if (subject == null)
-                    break;
+                    continue;
 
                 int noOfSubjects = 0;
-                for (OntologyGraphObject objectNode : nodes) {
+                for (OntologyGraphObject objectNode : graphObjects) {
                     if (!(objectNode instanceof OntologyGraphNode))
                         continue;
                     OntologyGraphNode node = (OntologyGraphNode)objectNode;
                     if (!node.isClass()) {
                         continue;
                     }
-                    int tmpNoOfSubjects = noOfObjectsInSet(node, nodes);
+                    int tmpNoOfSubjects = noOfObjectsInSet(node, graphObjects);
                     if (tmpNoOfSubjects > noOfSubjects) {
                         subject = node;
                         noOfSubjects = tmpNoOfSubjects;
@@ -687,7 +690,7 @@ public class OntologyGraph {
                 writer.writeln("(");
 
                 List<Pair<String, String>> labelsAndDatatypes
-                        = labelsAndDatatypes(subject, nodes);
+                        = labelsAndDatatypes(subject, graphObjects);
                 Iterator<Pair<String, String>> iterator = labelsAndDatatypes.
                         iterator();
                     //Pair<String, String> labelAndDatatype = iterator.next();
@@ -721,6 +724,10 @@ public class OntologyGraph {
         List<Pair<String, String>> ret
                 = new ArrayList<Pair<String, String>>(edges.size());
         for (OntologyGraphEdge edge : edges) {
+            if (edge.isDisjoint() || edge.isInstance()
+                        || edge.isInverse() || edge.isSubclass())
+                    continue;
+            
             OntologyGraphNode next = edge.getNextNode();
             if (!set.contains(next)) {
                 continue;

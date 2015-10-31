@@ -1,11 +1,104 @@
-http://www.movieontology.org/2009/10/01/movieontology.owl#Editor: 1
-http://dbpedia.org/ontology/Person: 2
-http://www.movieontology.org/2009/10/01/movieontology.owl#Movie: 3
-http://www.movieontology.org/2009/10/01/movieontology.owl#Editor --> Instance --> <http://www.movieontology.org/2009/10/01/movieontology.owl#editor1>: 4
-<http://www.movieontology.org/2009/10/01/movieontology.owl#editor1> --> Instance-of --> http://www.movieontology.org/2009/10/01/movieontology.owl#Editor: 5
-http://dbpedia.org/ontology/Person --> Subclass --> http://www.movieontology.org/2009/10/01/movieontology.owl#Editor: 6
-http://www.movieontology.org/2009/10/01/movieontology.owl#Editor --> Superclass --> http://dbpedia.org/ontology/Person: 7
-http://www.movieontology.org/2009/10/01/movieontology.owl#Movie --> Instance --> <http://www.movieontology.org/2009/11/09/movieontology.owl#movie1>: 8
-<http://www.movieontology.org/2009/11/09/movieontology.owl#movie1> --> Instance-of --> http://www.movieontology.org/2009/10/01/movieontology.owl#Movie: 9
-http://www.movieontology.org/2009/10/01/movieontology.owl#Movie --> http://www.movieontology.org/2009/10/01/movieontology.owl#hasEditor --> http://www.movieontology.org/2009/10/01/movieontology.owl#Editor: 10
-<http://www.movieontology.org/2009/11/09/movieontology.owl#movie1> --> http://www.movieontology.org/2009/10/01/movieontology.owl#hasEditor --> <http://www.movieontology.org/2009/10/01/movieontology.owl#editor1>: 11
+http://www.movieontology.org/2009/10/01/movieontology.owl#Southeastern_Asia: 1
+http://www.movieontology.org/2009/10/01/movieontology.owl#Central_Asia: 2
+http://www.movieontology.org/2009/10/01/movieontology.owl#Polynesia: 3
+http://www.movieontology.org/2009/10/01/movieontology.owl#Fun: 4
+http://www.movieontology.org/2009/10/01/movieontology.owl#Musical_Entertainment: 5
+http://www.movieontology.org/2009/10/01/movieontology.owl#Award: 6
+http://www.movieontology.org/2009/10/01/movieontology.owl#Intelectual_Entertainment: 7
+http://www.movieontology.org/2009/10/01/movieontology.owl#Colorinfo: 8
+http://www.movieontology.org/2009/10/01/movieontology.owl#Africa: 9
+http://www.movieontology.org/2009/10/01/movieontology.owl#Oceania: 10
+http://www.movieontology.org/2009/10/01/movieontology.owl#Australia_and_New_Zealand: 11
+http://www.movieontology.org/2009/10/01/movieontology.owl#East_Asian_Company: 12
+http://www.w3.org/2002/07/owl#Thing: 13
+http://dbpedia.org/ontology/CompanyCountry: 14
+http://www.movieontology.org/2009/10/01/movieontology.owl#Experience: 15
+http://www.movieontology.org/2009/10/01/movieontology.owl#Northern_Europe: 16
+http://www.movieontology.org/2009/10/01/movieontology.owl#Production_Company: 17
+http://www.movieontology.org/2009/10/01/movieontology.owl#TVSeries: 18
+http://www.movieontology.org/2009/10/01/movieontology.owl#South_Asian_Company: 19
+http://www.movieontology.org/2009/10/01/movieontology.owl#West_European_Company: 20
+http://www.movieontology.org/2009/10/01/movieontology.owl#Asia: 21
+http://www.movieontology.org/2009/10/01/movieontology.owl#Sensible_Thrilling: 22
+http://www.movieontology.org/2009/10/01/movieontology.owl#North_American_Company: 23
+http://www.movieontology.org/2009/10/01/movieontology.owl#Europe: 24
+http://www.movieontology.org/2009/10/01/movieontology.owl#Western_Europe: 25
+http://www.movieontology.org/2009/10/01/movieontology.owl#TV-Entertainment: 26
+http://www.movieontology.org/2009/11/09/movieontology.owl#Consumable_Product: 27
+http://www.movieontology.org/2009/10/01/movieontology.owl#Logical_Thrilling: 28
+http://www.movieontology.org/2009/10/01/movieontology.owl#Sound_Mix: 29
+http://www.movieontology.org/2009/10/01/movieontology.owl#Eastern_Asia: 30
+http://www.movieontology.org/2009/10/01/movieontology.owl#Northern_Africa: 31
+http://www.movieontology.org/2009/10/01/movieontology.owl#North_European_Company: 32
+http://dbpedia.org/page/Place: 33
+http://www.movieontology.org/2009/10/01/movieontology.owl#Middle_Africa: 34
+http://www.movieontology.org/2009/10/01/movieontology.owl#Western_Africa: 35
+http://www.movieontology.org/2009/10/01/movieontology.owl#Oceanian_Company: 36
+http://www.movieontology.org/2009/10/01/movieontology.owl#Costume_Designer: 37
+http://www.movieontology.org/2009/10/01/movieontology.owl#Southern_Europe: 38
+http://www.movieontology.org/2009/10/01/movieontology.owl#Sensible: 39
+http://www.movieontology.org/2009/10/01/movieontology.owl#Information: 40
+http://www.movieontology.org/2009/10/01/movieontology.owl#Entertaining_Information: 41
+http://www.movieontology.org/2009/10/01/movieontology.owl#Thrilling: 42
+http://www.movieontology.org/2009/10/01/movieontology.owl#Eastern_Europe: 43
+http://www.movieontology.org/2009/10/01/movieontology.owl#Heavy_Sensible: 44
+http://dbpedia.org/ontology/Writer: 45
+http://www.movieontology.org/2009/10/01/movieontology.owl#Presentation: 46
+http://dbpedia.org/ontology/Musical_Artist: 47
+http://www.movieontology.org/2009/10/01/movieontology.owl#SciFi_and_Fantasy: 48
+http://www.movieontology.org/2009/10/01/movieontology.owl#Editor: 49
+http://www.movieontology.org/2009/10/01/movieontology.owl#Center_American_Company: 50
+http://www.movieontology.org/2009/10/01/movieontology.owl#Central_America: 51
+http://www.movieontology.org/2009/10/01/movieontology.owl#Historical_Information: 52
+http://www.movieontology.org/2009/10/01/movieontology.owl#SouthEast_Asian_Company: 53
+http://www.movieontology.org/2009/10/01/movieontology.owl#Certification: 54
+http://www.movieontology.org/2009/10/01/movieontology.owl#Love: 55
+http://dbpedia.org/ontology/Language: 56
+http://www.movieontology.org/2009/11/09/movieontology.owl#Colorinfo: 57
+http://www.movieontology.org/2009/10/01/movieontology.owl#Western_Asia: 58
+http://www.movieontology.org/2009/10/01/movieontology.owl#South_European_Company: 59
+http://www.movieontology.org/2009/10/01/movieontology.owl#Actionreach: 60
+http://www.movieontology.org/2009/10/01/movieontology.owl#Location_Company: 61
+http://www.movieontology.org/2009/10/01/movieontology.owl#Brute_Action: 62
+http://www.movieontology.org/2009/10/01/movieontology.owl#Special-Info: 63
+http://www.movieontology.org/2009/10/01/movieontology.owl#Territory: 64
+http://www.movieontology.org/2009/10/01/movieontology.owl#Porn: 65
+http://www.movieontology.org/2009/10/01/movieontology.owl#Producer: 66
+http://www.movieontology.org/2009/10/01/movieontology.owl#South_American_Company: 67
+http://www.movieontology.org/2009/10/01/movieontology.owl#Northern_America: 68
+http://www.movieontology.org/2009/10/01/movieontology.owl#Online_retailer: 69
+http://dbpedia.org/ontology/Actor: 70
+http://www.movieontology.org/2009/10/01/movieontology.owl#Documentarial_Information: 71
+http://www.movieontology.org/2009/10/01/movieontology.owl#Genre: 72
+http://www.movieontology.org/2009/10/01/movieontology.owl#Micronesia: 73
+http://www.movieontology.org/2009/10/01/movieontology.owl#Entertainment: 74
+http://www.movieontology.org/2009/10/01/movieontology.owl#SocialActive: 75
+http://www.movieontology.org/2009/10/01/movieontology.owl#LatinAmerica: 76
+http://www.movieontology.org/2009/10/01/movieontology.owl#Southern_Africa: 77
+http://www.movieontology.org/2009/10/01/movieontology.owl#Movie: 78
+http://www.movieontology.org/2009/10/01/movieontology.owl#Info-TV: 79
+http://dbpedia.org/page/Film_Director: 80
+http://www.movieontology.org/2009/10/01/movieontology.owl#America: 81
+http://www.movieontology.org/2009/10/01/movieontology.owl#Fast-Info: 82
+http://www.movieontology.org/2009/10/01/movieontology.owl#Kids: 83
+http://www.movieontology.org/2009/10/01/movieontology.owl#Caribbean: 84
+http://www.movieontology.org/2009/10/01/movieontology.owl#Eastern_Africa: 85
+http://dbpedia.org/ontology/Person: 86
+http://www.movieontology.org/2009/10/01/movieontology.owl#Imaginational_Entertainment: 87
+http://www.movieontology.org/2009/10/01/movieontology.owl#Southern_Asia: 88
+http://www.movieontology.org/2009/11/09/movieontology.owl#Actress: 89
+http://www.movieontology.org/2009/10/01/movieontology.owl#South_America: 90
+http://www.movieontology.org/2009/10/01/movieontology.owl#Old_Action: 91
+http://www.movieontology.org/2009/10/01/movieontology.owl#Melanesia: 92
+http://www.w3.org/2001/XMLSchema#double: 93
+http://www.w3.org/2001/XMLSchema#date: 94
+http://www.w3.org/2001/XMLSchema#dateTime: 95
+http://www.w3.org/2001/XMLSchema#int: 96
+http://www.w3.org/2001/XMLSchema#string: 97
+http://www.w3.org/1999/02/22-rdf-syntax-ns#PlainLiteral: 98
+http://dbpedia.org/ontology/Person --> http://dbpedia.org/ontology/birthName --> http://www.w3.org/2001/XMLSchema#string: 99
+http://www.movieontology.org/2009/10/01/movieontology.owl#Territory --> http://www.movieontology.org/2009/10/01/movieontology.owl#containsCompanyCountry --> http://dbpedia.org/ontology/CompanyCountry: 100
+http://dbpedia.org/ontology/Person --> http://dbpedia.org/ontology/birthDate --> http://www.w3.org/2001/XMLSchema#string: 101
+http://dbpedia.org/ontology/CompanyCountry --> http://www.movieontology.org/2009/10/01/movieontology.owl#partOfCompanyTerritory --> http://www.movieontology.org/2009/10/01/movieontology.owl#Territory: 102
+http://www.movieontology.org/2009/10/01/movieontology.owl#Movie --> http://www.movieontology.org/2009/10/01/movieontology.owl#hasEditor --> http://www.movieontology.org/2009/10/01/movieontology.owl#Editor: 103
+<http://www.movieontology.org/2009/11/09/movieontology.owl#movie1> --> http://www.movieontology.org/2009/10/01/movieontology.owl#hasEditor --> <http://www.movieontology.org/2009/10/01/movieontology.owl#editor1>: 104

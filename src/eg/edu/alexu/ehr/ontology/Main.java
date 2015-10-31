@@ -35,19 +35,28 @@ public class Main {
 			System.out.println(p + ": " + p.getDomains(ontology).size() + " - " + p.getRanges(ontology).size());
 		}*/
 		
-		//Ontology ontology = new Ontology("movieontology-instances.owl");
+		Ontology ontology = new Ontology("movieontology-instances.owl");
 		//Ontology ontology = new Ontology("pc.rdf");
                 //Ontology ontology = new Ontology("dbpedia_2015-04.owl");
-		Ontology ontology = new Ontology("movieontology-instances (small).owl");
+		//Ontology ontology = new Ontology("movieontology-instances (small).owl");
                 OntologyGraph graph = new OntologyGraph(ontology);
                 graph.save("Edges.txt");
                 graph.saveAsGraph();
-                int noOfPartitions = 10;
-                Process p = Runtime.getRuntime().exec("gpmetis graph.txt " + noOfPartitions);
+                int noOfPartitions = 5;
+                //Process p = Runtime.getRuntime().exec("gpmetis graph.txt " + noOfPartitions);
+                gpmetis("graph.txt", noOfPartitions);
                 graph.generateSchema(noOfPartitions);
 		//System.out.println();
 		//System.out.println(graph);
 		//graph.save("Graph Edges.txt");
 		
 	}
+
+        public static void gpmetis(String path, int noOfPartitions) throws IOException {
+            Runtime.getRuntime().exec("gpmetis " + path + " " + noOfPartitions);
+        }
+
+        public static void gpmetis(String path) throws IOException {
+            gpmetis(path, 10);
+        }
 }

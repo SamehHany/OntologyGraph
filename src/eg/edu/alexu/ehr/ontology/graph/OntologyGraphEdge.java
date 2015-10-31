@@ -21,6 +21,7 @@ public class OntologyGraphEdge implements OntologyGraphObject {
         private OntologyGraphEdge inverseEdge;
         
         private static final float initWeight = 1.0f;
+        public static final float propertyWeight = 100.0f;
 	
 	public OntologyGraphEdge(EdgeType edgeType, OntologyGraphNode prevNode, OntologyGraphNode nextNode) {
             initialize(null, edgeType, prevNode, nextNode, "", false);
@@ -56,7 +57,10 @@ public class OntologyGraphEdge implements OntologyGraphObject {
             else
                 this.label = label;
             inverseEdge = null;
-            weight = initWeight;
+            if (edgeType == EdgeType.PROPERTY)
+                weight = propertyWeight;
+            else
+                weight = initWeight;
             this.isInverse = isInverse;
             hashCode();
         }

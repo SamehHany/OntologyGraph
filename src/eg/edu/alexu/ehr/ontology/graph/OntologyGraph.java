@@ -89,7 +89,7 @@ public class OntologyGraph {
                 = new HashMap<String, OntologyGraphObject>(classesSet.size()
                         + datatypeSet.size());
 
-        System.out.println("Reading classes.");
+        //System.out.println("Reading classes.");
         edges = new ArrayList<OntologyGraphEdge>(classesSet.size());
 
         for (OntologyClass clss : classesSet) {
@@ -110,9 +110,9 @@ public class OntologyGraph {
                 }
             }
         }
-        System.out.println("Classes read.");
+        //System.out.println("Classes read.");
 
-        System.out.println("Reading Datatypes.");
+        //System.out.println("Reading Datatypes.");
         for (OntologyDatatype datatype : datatypeSet) {
             String uri = datatype.toString();
             String label = getLabelFromUri(uri);
@@ -121,16 +121,16 @@ public class OntologyGraph {
             entityMap.put(datatype, node);
             uriToNodeMap.put(uri, node);
         }
-        System.out.println("Datatypes read.");
+        //System.out.println("Datatypes read.");
 
-        System.out.println("Reading properties.");
+        //System.out.println("Reading properties.");
         int noOfProperties = 0;
-        System.out.println("Number of Properties = " + properties.size());
+        //System.out.println("Number of Properties = " + properties.size());
         for (OntologyProperty property : properties) {
             Set<OntologyClass> domains = property.getDomains(ontology);
             Set<OntologyEntity> ranges = property.getRanges(ontology);
 
-            System.out.println("Property: " + ++noOfProperties);
+            //System.out.println("Property: " + ++noOfProperties);
             for (OntologyClass domain : domains) {
                 OntologyGraphNode domainNode = entityMap.get(domain);
                 for (OntologyEntity range : ranges) {
@@ -148,9 +148,9 @@ public class OntologyGraph {
                 }
             }
         }
-        System.out.println("Properties read.");
+        //System.out.println("Properties read.");
 
-        System.out.println("Connecting classes.");
+        //System.out.println("Connecting classes.");
         for (OntologyClass clss : classesSet) {
             Set<OntologyClass> equivalentClasses = clss.getEquivalentClasses(
                     ontology);
@@ -161,7 +161,7 @@ public class OntologyGraph {
 
             OntologyGraphNode class1 = entityMap.get(clss);
 
-            System.out.println("Connecting equivalent classes.");
+            //System.out.println("Connecting equivalent classes.");
             for (OntologyClass clss2 : equivalentClasses) {
                 if (clss.equals(clss2)) {
                     continue;
@@ -173,7 +173,7 @@ public class OntologyGraph {
                 setAndAddInverseEdges(class1, class2);
             }
 
-            System.out.println("Connecting disjoint classes.");
+            //System.out.println("Connecting disjoint classes.");
             for (OntologyClass clss2 : disjointClasses) {
                 OntologyGraphNode class2 = entityMap.get(clss2);
                 class1.addConnection(EdgeType.DISJOINTWITH, class2);
@@ -182,7 +182,7 @@ public class OntologyGraph {
                 setAndAddInverseEdges(class1, class2);
             }
 
-            System.out.println("Connecting subclasses.");
+            //System.out.println("Connecting subclasses.");
             for (OntologyClass clss2 : subclasses) {
                 OntologyGraphNode class2 = entityMap.get(clss2);
                 class1.addConnection(EdgeType.SUBCLASS, class2);
@@ -191,9 +191,10 @@ public class OntologyGraph {
                 setAndAddInverseEdges(class1, class2);
             }
 
-            System.out.println("Connecting instances.");
+            //System.out.println("Connecting instances.");
             for (OntologyIndividual ind : instances) {
                 OntologyGraphNode individual = valueMap.get(ind);
+                individuals.add(individual);
                 class1.addConnection(EdgeType.INSTANCE, individual);
                 individual.addConnection(EdgeType.INSTANCEOF, class1);
                 noOfedges += 2;
@@ -203,7 +204,7 @@ public class OntologyGraph {
                         getPropertyValues(ontology);
                 Set<OntologyProperty> keys = indValues.keySet();
 
-                System.out.println("Connecting instances to properties.");
+                //System.out.println("Connecting instances to properties.");
                 // Individual properties
                 for (OntologyProperty property : keys) {
                     Set<OntologyValue> values = indValues.get(property);
@@ -229,6 +230,7 @@ public class OntologyGraph {
         System.out.println("Number of nodes: " + (classes.size() + datatypes.
                 size()));
         System.out.println("Number of edges: " + edges.size());
+        System.out.println("Number of Individuals: " + individuals.size());
     }
 
     private String getLabelFromUri(String uri) {
@@ -406,6 +408,11 @@ public class OntologyGraph {
         }
     }
 
+    private boolean skipEdge(OntologyGraphEdge edge) {
+        return edge.isDisjoint() || edge.isInstance()
+                        || edge.isInverse() || edge.isSubclass();
+    }
+
     public void saveAsGraph() {
         String nodeNumberPath = "graph-node-number.txt";
         String graphPath = "graph.txt";
@@ -425,8 +432,7 @@ public class OntologyGraph {
                 reverseIndex.put(datatype, indexCounter);
             }
             for (OntologyGraphEdge edge : edges) {
-                if (edge.isDisjoint() || edge.isInstance()
-                        || edge.isInverse() || edge.isSubclass())
+                if (skipEdge(edge))
                     continue;
                 bw.writeln(edge + ": " + ++indexCounter);
                 reverseIndex.put(edge, indexCounter);
@@ -442,8 +448,7 @@ public class OntologyGraph {
 
             int noOfEdges = 0;
             for (OntologyGraphEdge edge : edges) {
-                if (edge.isDisjoint() || edge.isInstance()
-                        || edge.isInverse() || edge.isSubclass())
+                if (skipEdge(edge))
                     continue;
                 OntologyGraphNode subject = edge.getPreviousNode();
                 OntologyGraphNode object = edge.getNextNode();
@@ -724,8 +729,7 @@ public class OntologyGraph {
         List<Pair<String, String>> ret
                 = new ArrayList<Pair<String, String>>(edges.size());
         for (OntologyGraphEdge edge : edges) {
-            if (edge.isDisjoint() || edge.isInstance()
-                        || edge.isInverse() || edge.isSubclass())
+            if (skipEdge(edge))
                     continue;
             
             OntologyGraphNode next = edge.getNextNode();

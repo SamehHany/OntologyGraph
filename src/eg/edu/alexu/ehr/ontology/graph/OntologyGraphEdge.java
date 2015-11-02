@@ -252,11 +252,16 @@ public class OntologyGraphEdge implements OntologyGraphObject {
 	
 	@Override
 	public boolean equals(Object obj) {
+            if (obj == null)
+                return false;
             if (obj instanceof OntologyGraphEdge) {
 		OntologyGraphEdge edge = (OntologyGraphEdge)obj;
 		if (hash != (edge.hash))
 			return false;
-		if (edgeType == edge.edgeType && property.equals(edge.property) && prevNode.equals(edge.prevNode) && nextNode.equals(edge.nextNode))
+		if (edgeType == edge.edgeType &&
+                        (property != null ? property.equals(edge.property) : false)
+                        && (prevNode != null ? prevNode.equals(edge.prevNode) : false)
+                        && (nextNode != null ? nextNode.equals(edge.nextNode) : false))
 			return true;
 		return false;
             }

@@ -144,7 +144,9 @@ public class OntologyProperty {
 	
 	@Override
 	public boolean equals(Object obj) {
-		return property.equals(((OntologyProperty)obj).property);
+            if (obj == null)
+                return false;
+            return property.equals(((OntologyProperty)obj).property);
 	}
 	
 	@Override

@@ -244,13 +244,62 @@ public class OntologyGraphNode implements OntologyGraphObject {
 	
 	public void addConnection(OntologyGraphEdge edge) {
 		EdgeType edgeType = edge.getEdgeType();
-		if (edgeType == EdgeType.PROPERTY)
-			return;
-		String uri = edge.getURIAsStr();
+                OntologyGraphNode object = edge.getNextNode();
+		if (edgeType == EdgeType.PROPERTY) {
+                    OntologyProperty property = edge.getProperty();
+                    addConnection(property, object);
+                }
+                else {
+                    addConnection(edgeType, object);
+                }
+                
 		int index = edgeType.value();
-		classRelations[index].add(edge);
-                allEdges.add(edge);
+		classRelations[index].add(lastEdgeAdded());
+                allEdges.add(lastEdgeAdded());
 	}
+
+        public boolean edgeExists(OntologyGraphEdge edge) {
+            for (OntologyGraphEdge e : allEdges) {
+                if (edgesAreEqual(edge, e))
+                    return true;
+            }
+
+            return false;
+        }
+
+        public boolean edgeExists(OntologyGraphEdge edge, OntologyGraphNode next) {
+            for (OntologyGraphEdge e : allEdges) {
+                if (edgesAreEqual(edge, e, next))
+                    return true;
+            }
+
+            return false;
+        }
+
+        private boolean edgesAreEqual(OntologyGraphEdge edge1, OntologyGraphEdge edge2) {
+            OntologyProperty property1 = edge1.getProperty();
+            OntologyProperty property2 = edge2.getProperty();
+            if ((property1 == null && property2 == null)
+                    || (property1 != null ? property1.equals(property2) : false)) {
+                return edge1.getEdgeType() == edge2.getEdgeType()
+                        && edge1.getNextNode().equals(edge2.getNextNode());
+            }
+
+            return false;
+        }
+
+        private boolean edgesAreEqual(OntologyGraphEdge edge1
+                , OntologyGraphEdge edge2, OntologyGraphNode next) {
+            OntologyProperty property1 = edge1.getProperty();
+            OntologyProperty property2 = edge2.getProperty();
+            if ((property1 == null && property2 == null)
+                    || (property1 != null ? property1.equals(property2) : false)) {
+                return edge1.getEdgeType() == edge2.getEdgeType()
+                        && edge1.getNextNode().equals(next);
+            }
+
+            return false;
+        }
 	
 	public OntologyObject getObject() {
 		return object;
@@ -295,6 +344,8 @@ public class OntologyGraphNode implements OntologyGraphObject {
 	
 	@Override
 	public boolean equals(Object obj) {
+            if (obj == null)
+                return false;
             if (obj instanceof OntologyGraphNode) {
 		if (object.isEntity())
 			return ((OntologyEntity)object).getURIAsStr().equals(((OntologyEntity)((OntologyGraphNode)obj).object).getURIAsStr());

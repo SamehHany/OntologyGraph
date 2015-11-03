@@ -230,16 +230,19 @@ public class OntologyGraph {
             for (OntologyGraphNode equivalentClass : equivalentClasses) {
                 skipSet.add(equivalentClass);
                 Set<OntologyGraphEdge> edges = equivalentClass.getEdges();
+                // Connect edges of equivalent classes
                 for (OntologyGraphEdge edge : edges) {
-                    if (edge.isInverse())
-                        continue;
+                    //if (edge.isInverse())
+                        //continue;
                     this.edges.remove(edge);
-                    if (clss.edgeExists(edge))
+                    if (clss.edgeExists(edge) || edge.getNextNode().equals(clss)
+                            || edge.getEdgeType() == EdgeType.EQUIVALENTTO)
                         continue;
                     clss.addConnection(edge);
                     this.edges.add(clss.lastEdgeAdded());
                 }
 
+                // Connect edges to equivalent classes (edges going to equivalent classes)
                 List<OntologyGraphEdge> edgesToRemove = new ArrayList<OntologyGraphEdge>();
                 List<OntologyGraphEdge> edgesToAdd = new ArrayList<OntologyGraphEdge>();
                 for (OntologyGraphEdge edge : this.edges) {

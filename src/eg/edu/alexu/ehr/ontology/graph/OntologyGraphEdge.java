@@ -256,13 +256,16 @@ public class OntologyGraphEdge implements OntologyGraphObject {
                 return false;
             if (obj instanceof OntologyGraphEdge) {
 		OntologyGraphEdge edge = (OntologyGraphEdge)obj;
-		if (hash != (edge.hash))
+		if (hashCode() != (edge.hashCode()))
 			return false;
 		if (edgeType == edge.edgeType &&
                         (property != null ? property.equals(edge.property) : false)
                         && (prevNode != null ? prevNode.equals(edge.prevNode) : false)
                         && (nextNode != null ? nextNode.equals(edge.nextNode) : false))
 			return true;
+                else if (edgeType == edge.edgeType && property == edge.property
+                        && prevNode == edge.prevNode && nextNode == edge.nextNode)
+                    return true;
 		return false;
             }
             else {

@@ -37,12 +37,14 @@ public class Main {
 		
 		//Ontology ontology = new Ontology("movieontology-instances.owl");
 		//Ontology ontology = new Ontology("pc.rdf");
-                Ontology ontology = new Ontology("dbpedia_2015-04.owl");
+                //Ontology ontology = new Ontology("dbpedia_2015-04.owl");
 		//Ontology ontology = new Ontology("movieontology-instances (small).owl");
+                Ontology ontology = new Ontology("countries.owl");
+                //Ontology ontology = new Ontology("countries2.owl");
                 OntologyGraph graph = new OntologyGraph(ontology);
                 graph.save("Edges.txt");
                 graph.saveAsGraph();
-                int noOfPartitions = 100;
+                int noOfPartitions = 5;
                 //Process p = Runtime.getRuntime().exec("gpmetis graph.txt " + noOfPartitions);
                 gpmetis("graph.txt", noOfPartitions);
                 graph.generateSchema(noOfPartitions);

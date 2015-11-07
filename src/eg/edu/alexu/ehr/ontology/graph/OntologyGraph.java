@@ -733,18 +733,20 @@ public class OntologyGraph {
                 if (subject == null)
                     continue;
 
-                int noOfSubjects = 0;
+                int noOfObjects = 0;
+                int noOfNodes = 0;
                 for (OntologyGraphObject objectNode : graphObjects) {
                     if (!(objectNode instanceof OntologyGraphNode))
                         continue;
+                    noOfNodes++;
                     OntologyGraphNode node = (OntologyGraphNode)objectNode;
                     if (!node.isClass()) {
                         continue;
                     }
                     int tmpNoOfSubjects = noOfObjectsInSet(node, graphObjects);
-                    if (tmpNoOfSubjects > noOfSubjects) {
+                    if (tmpNoOfSubjects > noOfObjects) {
                         subject = node;
-                        noOfSubjects = tmpNoOfSubjects;
+                        noOfObjects = tmpNoOfSubjects;
                     }
                 }
 
@@ -772,6 +774,17 @@ public class OntologyGraph {
                 writer.writeln();
                 writer.writeln(");");
                 writer.writeln();
+
+                if (noOfNodes - noOfObjects > 0) {
+                    writer.writeln("CREATE TABLE " + tableName + "Triple");
+                    writer.writeln("(");
+                    writer.writeln("\tId LONG,");
+                    writer.writeln("\tSubject LONG,");
+                    writer.writeln("\tPredicate LONG,");
+                    writer.writeln("\tObject LONG,");
+                    writer.writeln(")");
+
+                }
             }
             writer.close();
 

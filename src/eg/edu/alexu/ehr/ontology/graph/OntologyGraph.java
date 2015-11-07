@@ -225,7 +225,6 @@ public class OntologyGraph {
         Map<OntologyGraphNode, OntologyGraphNode> equivalenceMap
                 = new HashMap<OntologyGraphNode, OntologyGraphNode>();
 
-        int counter = 0;
         for (OntologyGraphNode clss : classes) {
             if (skipSet.contains(clss))
                 continue;
@@ -235,10 +234,6 @@ public class OntologyGraph {
                 if (clss == equivalentClass)
                     continue;
                 skipSet.add(equivalentClass);
-                counter++;
-                if (equivalentClass.toString().equals("http://dbpedia.org/ontology/Work")
-                        || clss.toString().equals("http://dbpedia.org/ontology/Work"))
-                    System.out.println("http://dbpedia.org/ontology/Work\n" + counter);
                 equivalenceMap.put(equivalentClass, clss);
                 Set<OntologyGraphEdge> equivalentClassEdges = equivalentClass.getEdges();
                 // Connect edges of equivalent classes

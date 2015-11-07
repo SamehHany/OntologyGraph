@@ -245,10 +245,13 @@ public class OntologyGraphNode implements OntologyGraphObject {
                 allEdges.add(edge);
                 lastEdgeAdded = edge;
 	}
+        
+        public void addConnection(OntologyGraphEdge edge) {
+		addConnection(edge, edge.getNextNode());
+	}
 	
-	public void addConnection(OntologyGraphEdge edge) {
+	public void addConnection(OntologyGraphEdge edge, OntologyGraphNode object) {
 		EdgeType edgeType = edge.getEdgeType();
-                OntologyGraphNode object = edge.getNextNode();
 		if (edgeType == EdgeType.PROPERTY) {
                     OntologyProperty property = edge.getProperty();
                     addConnection(property, object);
@@ -256,11 +259,6 @@ public class OntologyGraphNode implements OntologyGraphObject {
                 else {
                     addConnection(edgeType, object);
                 }
-                
-		int index = edgeType.value();
-		classRelations[index].add(lastEdgeAdded());
-                allEdges.add(lastEdgeAdded());
-                lastEdgeAdded = edge;
 	}
 
         public boolean edgeExists(OntologyGraphEdge edge) {

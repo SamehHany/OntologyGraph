@@ -1,8 +1,9 @@
 CREATE DATABASE Ontology
 
-CREATE TABLE TelevisionSeason
+CREATE TABLE Archeologist
 (
-	Id LONG
+	Id LONG,
+	Equivalent LONG
 );
 
 CREATE TABLE GrandPrix
@@ -15,52 +16,41 @@ CREATE TABLE GrandPrix
 	firstDriverTeam LONG
 );
 
-CREATE TABLE SoccerClub
+CREATE TABLE Q2334719
 (
-	Id LONG,
-	chairmanTitle LONG
+	Id LONG
 );
 
-CREATE TABLE Instrument
+CREATE TABLE MilitaryVehicle
 (
-	Id LONG,
-	musicians LONG
+	Id LONG
 );
 
-CREATE TABLE FilmFestival
+CREATE TABLE MultiVolumePublication
+(
+	Id LONG
+);
+
+CREATE TABLE Settlement
 (
 	Id LONG,
-	film LONG,
 	Equivalent LONG,
-	openingFilm LONG,
-	closingFilm LONG
+	mergedSettlement LONG,
+	twinTown LONG,
+	commune LONG,
+	canton LONG
 );
 
-CREATE TABLE AnatomicalStructure
+CREATE TABLE Event
 (
 	Id LONG,
-	graySubject VARCHAR(255),
-	grayPage VARCHAR(255),
-	vein LONG,
-	drainsFrom LONG,
 	Equivalent LONG,
-	organSystem LONG,
-	branchFrom LONG,
-	precursor LONG,
-	lymph LONG,
-	drainsTo LONG,
-	branchTo LONG,
-	nerve LONG,
-	artery LONG
+	nextEvent LONG,
+	followingEvent LONG,
+	previousEvent LONG
 );
 
-CREATE TABLE Tournament
-(
-	Id LONG,
-	Equivalent LONG
-);
-
-CREATE TABLE BeachVolleyballPlayer
+CREATE TABLE FormulaOneTeam
 (
 	Id LONG
 );
@@ -71,146 +61,139 @@ CREATE TABLE Artwork
 	museum LONG
 );
 
-CREATE TABLE NobleFamily
+CREATE TABLE Q24354
 (
 	Id LONG,
-	otherFamilyBranch LONG,
-	mainFamilyBranch LONG,
 	Equivalent LONG
 );
 
-CREATE TABLE Globularswarm
+CREATE TABLE SoccerTournament
 (
 	Id LONG,
-	radius_ly VARCHAR(255),
-	v_hb VARCHAR(255)
+	soccerTournamentClosingSeason LONG,
+	soccerTournamentOpeningSeason LONG,
+	soccerTournamentThisSeason LONG
 );
 
-CREATE TABLE Settlement
+CREATE TABLE Plant
 (
 	Id LONG,
-	mergedSettlement LONG,
-	twinTown LONG,
-	commune LONG,
-	canton LONG
+	Equivalent LONG,
+	hybrid LONG
 );
 
-CREATE TABLE CyclingTeam
+CREATE TABLE Q3053337
 (
 	Id LONG,
-	uciCode VARCHAR(255)
+	Equivalent LONG
 );
 
-CREATE TABLE RouteStop
+CREATE TABLE Person
 (
 	Id LONG,
-	routePrevious LONG,
-	routeNext LONG
+	detractor LONG,
+	Equivalent LONG,
+	colleague LONG,
+	tvShow LONG,
+	dubber LONG,
+	seiyu LONG,
+	spouse LONG,
+	copilote LONG,
+	friend LONG,
+	collaboration LONG,
+	relation LONG,
+	coemperor LONG,
+	cousurper LONG,
+	sibling LONG,
+	influencedBy LONG,
+	student LONG,
+	opponent LONG,
+	parent LONG,
+	influenced LONG,
+	partner LONG,
+	usurper LONG,
+	relative LONG
 );
 
 CREATE TABLE Broadcaster
 (
 	Id LONG,
-	shareDate VARCHAR(255),
-	sisterStation LONG,
-	broadcastNetwork LONG,
-	formerBroadcastNetwork LONG,
-	network LONG,
-	Equivalent LONG
-);
-
-CREATE TABLE Place
-(
-	Id LONG,
-	eastPlace LONG,
-	land LONG,
-	subregion LONG,
-	northPlace LONG,
-	locatedInArea LONG,
-	northEastPlace LONG,
-	flower LONG,
-	northWestPlace LONG,
-	previousEntity LONG,
-	mainIsland LONG,
-	namedByLanguage LONG,
-	southPlace LONG,
-	nextEntity LONG,
-	subdivision LONG,
-	closeTo LONG,
-	westPlace LONG,
-	bird LONG,
-	southWestPlace LONG,
-	hasInsidePlace LONG,
-	tree LONG,
-	supply LONG,
-	southEastPlace LONG,
-	hasOutsidePlace LONG
-);
-
-CREATE TABLE IceHockeyPlayer
-(
-	Id LONG,
-	prospectLeague LONG,
-	lchfDraftTeam LONG,
-	khlDraftTeam LONG,
-	whaDraftTeam LONG,
-	prospectTeam LONG,
-	Equivalent LONG
-);
-
-CREATE TABLE FormerMunicipality
-(
-	Id LONG,
-	presentMunicipality LONG,
-	municipalityAbsorbedBy LONG,
-	Equivalent LONG
-);
-
-CREATE TABLE Document
-(
-	Id LONG,
-	hasAnnotation LONG,
 	Equivalent LONG,
-	galleryItem LONG
+	sisterStation LONG,
+	network LONG
 );
 
-CREATE TABLE TennisLeague
+CREATE TABLE Cycad
 (
 	Id LONG
 );
 
-CREATE TABLE MilitaryConflict
+CREATE TABLE BeachVolleyballPlayer
 (
-	Id LONG,
-	isPartOfMilitaryConflict LONG
+	Id LONG
 );
 
-CREATE TABLE Q36180
+CREATE TABLE Q349
+(
+	Id LONG,
+	Equivalent LONG,
+	currentWorldChampion LONG
+);
+
+CREATE TABLE DesignedArtifact
+(
+	Id LONG,
+	relatedMeanOfTransportation LONG,
+	Equivalent LONG,
+	discharge DOUBLE,
+	weight LONG,
+	dischargeAverage DOUBLE,
+	mass LONG
+);
+
+CREATE TABLE LandmarksOrHistoricalBuildings
 (
 	Id LONG,
 	Equivalent LONG
 );
 
-CREATE TABLE CyclingLeague
-(
-	Id LONG
-);
-
-CREATE TABLE Gene
+CREATE TABLE Automobile
 (
 	Id LONG,
-	geneLocation LONG,
-	orthologousGene LONG,
-	Equivalent LONG
+	Equivalent LONG,
+	automobilePlatform LONG
 );
 
-CREATE TABLE River
+CREATE TABLE RiverBodyOfWater
 (
 	Id LONG,
-	rightTributary LONG,
+	Equivalent LONG,
 	leftTributary LONG,
 	riverBranch LONG,
+	rightTributary LONG,
 	riverBranchOf LONG
+);
+
+CREATE TABLE Asteroid
+(
+	Id LONG,
+	Equivalent LONG
+);
+
+CREATE TABLE CollegeOrUniversity
+(
+	Id LONG,
+	sisterCollege LONG,
+	Equivalent LONG
+);
+
+CREATE TABLE Q386724
+(
+	Id LONG,
+	Equivalent LONG,
+	subsequentWork LONG,
+	previousWork LONG,
+	basedOn LONG
 );
 
 CREATE TABLE PopulatedPlace
@@ -235,26 +218,25 @@ CREATE TABLE PopulatedPlace
 	neighboringMunicipality LONG
 );
 
-CREATE TABLE Automobile
+CREATE TABLE Q215627
+(
+	Id LONG,
+	movie LONG
+);
+
+CREATE TABLE HighDiver
+(
+	Id LONG
+);
+
+CREATE TABLE Q634
 (
 	Id LONG,
 	Equivalent LONG,
-	automobilePlatform LONG,
-	fuelCapacity LONG,
-	wheelbase LONG
-);
-
-CREATE TABLE TVEpisode
-(
-	Id LONG,
-	Equivalent LONG
-);
-
-CREATE TABLE Skyscraper
-(
-	Id LONG,
-	contractor LONG,
-	Equivalent LONG
+	periapsis LONG,
+	volume LONG,
+	apoapsis LONG,
+	meanRadius LONG
 );
 
 CREATE TABLE Beach
@@ -262,105 +244,67 @@ CREATE TABLE Beach
 	Id LONG
 );
 
-CREATE TABLE Work
+CREATE TABLE Sculptor
 (
-	Id LONG,
-	subsequentWork LONG,
-	previousWork LONG,
-	basedOn LONG
+	Id LONG
 );
 
-CREATE TABLE Person
+CREATE TABLE Q25324
 (
 	Id LONG,
-	detractor LONG,
-	ethnicity LONG,
-	colleague LONG,
-	dubber LONG,
-	seiyu LONG,
-	spouse LONG,
-	copilote LONG,
-	friend LONG,
-	collaboration LONG,
-	relation LONG,
-	coemperor LONG,
-	cousurper LONG,
-	sibling LONG,
-	influencedBy LONG,
-	student LONG,
-	opponent LONG,
-	parent LONG,
-	influenced LONG,
-	partner LONG,
-	usurper LONG,
-	relative LONG
+	Equivalent LONG
 );
 
-CREATE TABLE Mountain
+CREATE TABLE Q95074
 (
 	Id LONG,
-	Equivalent LONG,
-	parentMountainPeak LONG
+	Equivalent LONG
 );
 
-CREATE TABLE OlympicResult
+CREATE TABLE HistoricalRegion
 (
 	Id LONG,
-	winterAppearances LONG,
-	summerAppearances LONG,
-	otherAppearances LONG
+	Equivalent LONG
 );
 
 CREATE TABLE Infrastructure
 (
 	Id LONG,
-	caterer LONG,
-	length LONG,
-	road LONG,
-	subsequentInfrastructure LONG,
-	previousInfrastructure LONG
+	previousInfrastructure LONG,
+	subsequentInfrastructure LONG
 );
 
-CREATE TABLE Organisation
+CREATE TABLE Q48806
 (
 	Id LONG,
-	parentOrganisation LONG,
-	affiliation LONG,
-	childOrganisation LONG
+	Equivalent LONG
 );
 
-CREATE TABLE Vodka
+CREATE TABLE Lawyer
+(
+	Id LONG,
+	Equivalent LONG
+);
+
+CREATE TABLE Beverage
 (
 	Id LONG
 );
 
-CREATE TABLE Animal
+CREATE TABLE PowerStation
 (
 	Id LONG,
+	Equivalent LONG
+);
+
+CREATE TABLE Q729
+(
+	Id LONG,
+	Equivalent LONG,
 	sire LONG,
 	damsire LONG,
 	grandsire LONG,
-	Equivalent LONG,
 	dam LONG
-);
-
-CREATE TABLE MilitaryUnit
-(
-	Id LONG,
-	Equivalent LONG,
-	commandStructure LONG,
-	march LONG
-);
-
-CREATE TABLE Engine
-(
-	Id LONG,
-	displacement LONG,
-	acceleration LONG,
-	powerOutput LONG,
-	topSpeed LONG,
-	co2Emission LONG,
-	torqueOutput LONG
 );
 
 CREATE TABLE Canal
@@ -370,49 +314,39 @@ CREATE TABLE Canal
 	hasJunctionWith LONG
 );
 
-CREATE TABLE GolfLeague
+CREATE TABLE OrganisationMember
 (
 	Id LONG
 );
 
-CREATE TABLE Saint
+CREATE TABLE School
 (
 	Id LONG,
-	suppreddedDate DATE,
-	beatifiedDate DATE,
-	canonizedDate DATE,
-	Equivalent LONG
+	Equivalent LONG,
+	rival LONG
 );
 
-CREATE TABLE ChemicalSubstance
+CREATE TABLE Q11204
 (
 	Id LONG,
-	boilingPoint LONG,
-	solventWithBadSolubility LONG,
-	solventWithMediocreSolubility LONG,
-	notSolubleIn LONG,
-	density LONG,
-	meltingPoint LONG,
-	solventWithGoodSolubility LONG
+	Equivalent LONG,
+	house LONG
 );
 
 CREATE TABLE SpaceMission
 (
 	Id LONG,
-	missionDuration LONG,
-	spacestation LONG,
+	Equivalent LONG,
 	previousMission LONG,
+	nextMission LONG,
 	spacecraft LONG,
-	landingVehicle LONG,
-	nextMission LONG
+	landingVehicle LONG
 );
 
-CREATE TABLE RouteOfTransportation
+CREATE TABLE Hotel
 (
 	Id LONG,
-	routeJunction LONG,
-	routeStart LONG,
-	routeEnd LONG
+	Equivalent LONG
 );
 
 CREATE TABLE Case
@@ -420,238 +354,54 @@ CREATE TABLE Case
 	Id LONG
 );
 
-CREATE TABLE Legislature
+CREATE TABLE Q41176
 (
 	Id LONG,
-	house LONG
+	Equivalent LONG
 );
 
-CREATE TABLE TrackList
-(
-	Id LONG
-);
-
-CREATE TABLE PoliticalParty
+CREATE TABLE Place
 (
 	Id LONG,
-	splitFromParty LONG,
 	Equivalent LONG,
-	mergedIntoParty LONG
+	eastPlace LONG,
+	land LONG,
+	subregion LONG,
+	northPlace LONG,
+	locatedInArea LONG,
+	northEastPlace LONG,
+	northWestPlace LONG,
+	previousEntity LONG,
+	mainIsland LONG,
+	namedByLanguage LONG,
+	southPlace LONG,
+	nextEntity LONG,
+	subdivision LONG,
+	closeTo LONG,
+	westPlace LONG,
+	southWestPlace LONG,
+	hasInsidePlace LONG,
+	supply LONG,
+	southEastPlace LONG,
+	hasOutsidePlace LONG
 );
 
-CREATE TABLE PlayWright
+CREATE TABLE Mosque
 (
 	Id LONG,
 	Equivalent LONG
 );
 
-CREATE TABLE HumanGeneLocation
-(
-	Id LONG
-);
-
-CREATE TABLE MusicGenre
+CREATE TABLE SocialPerson
 (
 	Id LONG,
-	musicFusionGenre LONG,
 	Equivalent LONG,
-	Equivalent LONG,
-	derivative LONG,
-	musicSubgenre LONG,
-	stylisticOrigin LONG
+	parentOrganisation LONG,
+	affiliation LONG,
+	childOrganisation LONG
 );
 
-CREATE TABLE LifeCycleEvent
-(
-	Id LONG
-);
-
-CREATE TABLE RocketEngine
-(
-	Id LONG
-);
-
-CREATE TABLE TennisPlayer
-(
-	Id LONG,
-	rankingsDoubles VARCHAR(255),
-	rankingsSingles VARCHAR(255),
-	Equivalent LONG
-);
-
-CREATE TABLE Article
-(
-	Id LONG,
-	Equivalent LONG
-);
-
-CREATE TABLE SquashPlayer
-(
-	Id LONG,
-	Equivalent LONG
-);
-
-CREATE TABLE Garden
-(
-	Id LONG,
-	Equivalent LONG
-);
-
-CREATE TABLE Governor
-(
-	Id LONG,
-	Equivalent LONG
-);
-
-CREATE TABLE BrownDwarf
-(
-	Id LONG,
-	Equivalent LONG
-);
-
-CREATE TABLE Intercommunality
-(
-	Id LONG,
-	shape LONG,
-	Equivalent LONG
-);
-
-CREATE TABLE InformationObject
-(
-	Id LONG,
-	Equivalent LONG
-);
-
-CREATE TABLE Q212980
-(
-	Id LONG,
-	Equivalent LONG
-);
-
-CREATE TABLE PersonalEvent
-(
-	Id LONG
-);
-
-CREATE TABLE Q6607
-(
-	Id LONG,
-	Equivalent LONG
-);
-
-CREATE TABLE Q2159907
-(
-	Id LONG,
-	Equivalent LONG
-);
-
-CREATE TABLE MotorsportRacer
-(
-	Id LONG
-);
-
-CREATE TABLE ArtificialSatellite
-(
-	Id LONG
-);
-
-CREATE TABLE Q1930187
-(
-	Id LONG,
-	Equivalent LONG
-);
-
-CREATE TABLE Q24354
-(
-	Id LONG,
-	Equivalent LONG
-);
-
-CREATE TABLE Q3957
-(
-	Id LONG,
-	Equivalent LONG
-);
-
-CREATE TABLE Zoo
-(
-	Id LONG,
-	Equivalent LONG
-);
-
-CREATE TABLE BritishRoyalty
-(
-	Id LONG
-);
-
-CREATE TABLE Artist
-(
-	Id LONG,
-	training LONG,
-	afiAward LONG,
-	Equivalent LONG,
-	cesarAward LONG,
-	academyAward LONG,
-	baftaAward LONG,
-	tonyAward LONG,
-	goyaAward LONG,
-	mentor LONG,
-	polishFilmAward LONG,
-	emmyAward LONG,
-	grammyAward LONG,
-	filmFareAward LONG,
-	goldenGlobeAward LONG,
-	disciple LONG,
-	gaudiAward LONG,
-	associatedAct LONG
-);
-
-CREATE TABLE centimetre
-(
-	Id LONG
-);
-
-CREATE TABLE Location
-(
-	Id LONG,
-	Equivalent LONG
-);
-
-CREATE TABLE Vicar
-(
-	Id LONG
-);
-
-CREATE TABLE SoccerManager
-(
-	Id LONG,
-	Equivalent LONG
-);
-
-CREATE TABLE Parish,_Deanery
-(
-	Id LONG,
-	diocese LONG
-);
-
-CREATE TABLE Q25324
-(
-	Id LONG,
-	Equivalent LONG
-);
-
-CREATE TABLE Q13561328
-(
-	Id LONG,
-	Equivalent LONG
-);
-
-CREATE TABLE BowlingLeague
-(
-	Id LONG
-);
-
-CREATE TABLE RugbyClub
+CREATE TABLE SoccerClubSeason
 (
 	Id LONG
 );
@@ -662,82 +412,290 @@ CREATE TABLE Q38720
 	Equivalent LONG
 );
 
+CREATE TABLE SportsSeason
+(
+	Id LONG
+);
+
+CREATE TABLE Municipality
+(
+	Id LONG
+);
+
+CREATE TABLE MusicalWork
+(
+	Id LONG,
+	Equivalent LONG
+);
+
+CREATE TABLE RouteStop
+(
+	Id LONG,
+	routePrevious LONG,
+	routeNext LONG
+);
+
+CREATE TABLE Q188451
+(
+	Id LONG,
+	Equivalent LONG,
+	musicSubgenre LONG,
+	stylisticOrigin LONG,
+	musicFusionGenre LONG,
+	derivative LONG
+);
+
+CREATE TABLE float
+(
+	Id LONG
+);
+
+CREATE TABLE Q34442
+(
+	Id LONG,
+	Equivalent LONG,
+	spurOf LONG
+);
+
+CREATE TABLE MilitaryStructure
+(
+	Id LONG
+);
+
+CREATE TABLE Q1949963
+(
+	Id LONG,
+	Equivalent LONG
+);
+
+CREATE TABLE Country
+(
+	Id LONG,
+	Equivalent LONG,
+	twinCountry LONG
+);
+
+CREATE TABLE BobsleighAthlete
+(
+	Id LONG
+);
+
+CREATE TABLE PersonalEvent
+(
+	Id LONG
+);
+
+CREATE TABLE Q15061650
+(
+	Id LONG,
+	Equivalent LONG
+);
+
 CREATE TABLE Bacteria
 (
 	Id LONG
 );
 
-CREATE TABLE WomensTennisAssociationTournament
-(
-	Id LONG
-);
-
-CREATE TABLE GeologicalPeriod
+CREATE TABLE Q4936952
 (
 	Id LONG,
-	Equivalent LONG
-);
-
-CREATE TABLE Q32815
-(
-	Id LONG,
-	Equivalent LONG
-);
-
-CREATE TABLE Agent
-(
-	Id LONG,
-	regionalCouncil LONG,
 	Equivalent LONG,
-	ideology LONG,
-	owns LONG,
-	roleInEvent LONG,
-	generalCouncil LONG
+	drainsFrom LONG,
+	organSystem LONG,
+	branchFrom LONG,
+	drainsTo LONG,
+	branchTo LONG
 );
 
-CREATE TABLE Manga
-(
-	Id LONG,
-	Equivalent LONG
-);
-
-CREATE TABLE Reptile
+CREATE TABLE BaseballTeam
 (
 	Id LONG
 );
 
-CREATE TABLE Q174782
-(
-	Id LONG,
-	Equivalent LONG
-);
-
-CREATE TABLE ClericalAdministrativeRegion
-(
-	Id LONG,
-	placeOfWorship LONG
-);
-
-CREATE TABLE RaceHorse
-(
-	Id LONG,
-	jockey LONG
-);
-
-CREATE TABLE Q515716
-(
-	Id LONG,
-	Equivalent LONG
-);
-
-CREATE TABLE ElectionDiagram
+CREATE TABLE CurlingLeague
 (
 	Id LONG
 );
 
-CREATE TABLE Skater
+CREATE TABLE RailwayTunnel
 (
 	Id LONG,
 	Equivalent LONG
+);
+
+CREATE TABLE Brewery
+(
+	Id LONG
+);
+
+CREATE TABLE Newspaper
+(
+	Id LONG,
+	Equivalent LONG,
+	sisterNewspaper LONG
+);
+
+CREATE TABLE Q33999
+(
+	Id LONG,
+	goldenRaspberryAward LONG,
+	Equivalent LONG,
+	nationalFilmAward LONG,
+	arielAward LONG,
+	iftaAward LONG,
+	screenActorsGuildAward LONG,
+	naacpImageAward LONG,
+	geminiAward LONG,
+	goldenCalfAward LONG,
+	laurenceOlivierAward LONG
+);
+
+CREATE TABLE Q6607
+(
+	Id LONG,
+	Equivalent LONG,
+	Superclass LONG
+);
+
+CREATE TABLE Species
+(
+	Id LONG,
+	superTribus LONG,
+	family LONG,
+	tribus LONG,
+	fossil LONG,
+	subTribus LONG
+);
+
+CREATE TABLE ConcentrationCamp
+(
+	Id LONG,
+	numberOfDeaths VARCHAR(255)
+);
+
+CREATE TABLE CricketTeam
+(
+	Id LONG
+);
+
+CREATE TABLE Q33829
+(
+	Id LONG,
+	Equivalent LONG
+);
+
+CREATE TABLE OlympicResult
+(
+	Id LONG,
+	winterAppearances LONG,
+	summerAppearances LONG,
+	otherAppearances LONG
+);
+
+CREATE TABLE Artist
+(
+	Id LONG,
+	Equivalent LONG,
+	mentor LONG,
+	disciple LONG,
+	associatedAct LONG
+);
+
+CREATE TABLE kilowatt
+(
+	Id LONG
+);
+
+CREATE TABLE ChartsPlacements
+(
+	Id LONG
+);
+
+CREATE TABLE Department
+(
+	Id LONG
+);
+
+CREATE TABLE Situation
+(
+	Id LONG,
+	Equivalent LONG
+);
+
+CREATE TABLE CapitalOfRegion
+(
+	Id LONG
+);
+
+CREATE TABLE Q41291
+(
+	Id LONG,
+	Equivalent LONG,
+	comparable LONG
+);
+
+CREATE TABLE Q8502
+(
+	Id LONG,
+	Equivalent LONG,
+	parentMountainPeak LONG
+);
+
+CREATE TABLE Q7278
+(
+	Id LONG,
+	splitFromParty LONG,
+	Equivalent LONG,
+	mergedIntoParty LONG
+);
+
+CREATE TABLE GivenName
+(
+	Id LONG,
+	nameDay DATE,
+	Equivalent LONG
+);
+
+CREATE TABLE cubicCentimetre
+(
+	Id LONG
+);
+
+CREATE TABLE Concept
+(
+	Id LONG
+);
+
+CREATE TABLE ChemicalObject
+(
+	Id LONG,
+	Equivalent LONG,
+	solventWithBadSolubility LONG,
+	solventWithMediocreSolubility LONG,
+	flashPoint VARCHAR(255),
+	solubility VARCHAR(255),
+	notSolubleIn LONG,
+	solventWithGoodSolubility LONG
+);
+
+CREATE TABLE MythologicalFigure
+(
+	Id LONG,
+	Equivalent LONG
+);
+
+CREATE TABLE Cemetery
+(
+	Id LONG,
+	Equivalent LONG
+);
+
+CREATE TABLE Q3914
+(
+	Id LONG,
+	lowerAge VARCHAR(255),
+	ageRange VARCHAR(255),
+	classes VARCHAR(255),
+	upperAge VARCHAR(255)
 );
 

@@ -222,54 +222,65 @@ public class OntologyGraph {
 
         // Collapse equivalent classes
         Set<OntologyGraphNode> skipSet = new HashSet<OntologyGraphNode>();
+        Map<OntologyGraphNode, OntologyGraphNode> equivalenceMap
+                = new HashMap<OntologyGraphNode, OntologyGraphNode>();
 
+        int counter = 0;
         for (OntologyGraphNode clss : classes) {
             if (skipSet.contains(clss))
                 continue;
             Set<OntologyGraphNode> equivalentClasses
                     = clss.getNextNodes(EdgeType.EQUIVALENTTO);
             for (OntologyGraphNode equivalentClass : equivalentClasses) {
+                if (clss == equivalentClass)
+                    continue;
                 skipSet.add(equivalentClass);
-                Set<OntologyGraphEdge> edges = equivalentClass.getEdges();
+                counter++;
+                if (equivalentClass.toString().equals("http://dbpedia.org/ontology/Work")
+                        || clss.toString().equals("http://dbpedia.org/ontology/Work"))
+                    System.out.println("http://dbpedia.org/ontology/Work\n" + counter);
+                equivalenceMap.put(equivalentClass, clss);
+                Set<OntologyGraphEdge> equivalentClassEdges = equivalentClass.getEdges();
                 // Connect edges of equivalent classes
-                for (OntologyGraphEdge edge : edges) {
+                for (OntologyGraphEdge edge : equivalentClassEdges) {
                     //if (edge.isInverse())
                         //continue;
                     this.edges.remove(edge);
-                    if (clss.edgeExists(edge) || edge.getNextNode().equals(clss)
-                            || edge.getEdgeType() == EdgeType.EQUIVALENTTO)
+                    if (clss.edgeExists(edge) || edge.getNextNode().equals(clss))
                         continue;
                     clss.addConnection(edge);
                     this.edges.add(clss.lastEdgeAdded());
                 }
-
-                // Connect edges to equivalent classes (edges going to equivalent classes)
-                List<OntologyGraphEdge> edgesToRemove = new ArrayList<OntologyGraphEdge>();
-                List<OntologyGraphEdge> edgesToAdd = new ArrayList<OntologyGraphEdge>();
-                for (OntologyGraphEdge edge : this.edges) {
-                    if (edge.getNextNode().equals(equivalentClass)) {
-                        OntologyGraphNode subject = edge.getPreviousNode();
-                        edgesToRemove.add(edge);
-                        if (subject.edgeExists(edge, clss)) {
-                            continue;
-                        }
-
-                        subject.addConnection(edge);
-                        edgesToAdd.add(subject.lastEdgeAdded());
-                    }
+            }
+        }
+        
+        for (OntologyGraphNode clss : skipSet) {
+            classes.remove(clss);
+        }
+        
+        // Connect edges to equivalent classes (edges going to equivalent classes)
+        List<OntologyGraphEdge> edgesToRemove = new ArrayList<OntologyGraphEdge>();
+        List<OntologyGraphEdge> edgesToAdd = new ArrayList<OntologyGraphEdge>();
+        for (OntologyGraphEdge edge : this.edges) {
+            if (equivalenceMap.containsKey(edge.getNextNode())) {
+                OntologyGraphNode equivalentClass = edge.getNextNode();
+                OntologyGraphNode clss = equivalenceMap.get(equivalentClass);
+                OntologyGraphNode subject = edge.getPreviousNode();
+                edgesToRemove.add(edge);
+                if (subject.edgeExists(edge, clss)) {
+                    continue;
                 }
 
-                for (OntologyGraphEdge edge : edgesToRemove)
-                    this.edges.remove(edge);
-                for (OntologyGraphEdge edge : edgesToAdd)
-                    this.edges.add(edge);
-
-
+                subject.addConnection(edge, clss);
+                edgesToAdd.add(subject.lastEdgeAdded());
             }
         }
 
-        for (OntologyGraphNode clss : skipSet) {
-            classes.remove(clss);
+        for (OntologyGraphEdge edge : edgesToRemove) {
+            this.edges.remove(edge);
+        }
+        for (OntologyGraphEdge edge : edgesToAdd) {
+            this.edges.add(edge);
         }
 
         for (OntologyGraphEdge edge : edges) {

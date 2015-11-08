@@ -364,4 +364,8 @@ public class OntologyGraphNode implements OntologyGraphObject {
         public String toString() {
             return object.toString();
         }
+
+         public  void getOWLClassExpression(){
+             ((OntologyEntity)object).getOWLClassExpression();
+         }
 }

@@ -35,19 +35,28 @@ public class Main {
 			System.out.println(p + ": " + p.getDomains(ontology).size() + " - " + p.getRanges(ontology).size());
 		}*/
 		
-		//Ontology ontology = new Ontology("movieontology-instances.owl");
+		//Ontology ontology = new Ontology("FlyAtlas-Vocabulary.owl");
 		//Ontology ontology = new Ontology("pc.rdf");
-                //Ontology ontology = new Ontology("dbpedia_2015-04.owl");
+                Ontology ontology = new Ontology("test.rdf");
+
 		//Ontology ontology = new Ontology("movieontology-instances (small).owl");
-                Ontology ontology = new Ontology("countries.owl");
+                //Ontology ontology = new Ontology("countries.owl");
                 //Ontology ontology = new Ontology("countries2.owl");
+             //Axiom.processAxioms(ontology.getOWLOntology());
+             // Axiom.processAnnotation(ontology.getOWLOntology());
+                //Axiom.processProperties(ontology.getOWLOntology());
                 OntologyGraph graph = new OntologyGraph(ontology);
-                graph.save("Edges.txt");
-                graph.saveAsGraph();
-                int noOfPartitions = 5;
+
+           //     System.err.println("LLLLLLLLLLLLLLLLLL");
+           //     Axiom.processClasses(ontology.getOWLOntology(),graph);
+                // OntologyGraph graph = new OntologyGraph(ontology);
+               // graph.iterate();
+             //   graph.save("Edges.txt");
+             //   graph.saveAsGraph();
+               // int noOfPartitions = 5;
                 //Process p = Runtime.getRuntime().exec("gpmetis graph.txt " + noOfPartitions);
-                gpmetis("graph.txt", noOfPartitions);
-                graph.generateSchema(noOfPartitions);
+              //  gpmetis("graph.txt", noOfPartitions);
+              //  graph.generateSchema(noOfPartitions);
 		//System.out.println();
 		//System.out.println(graph);
 		//graph.save("Graph Edges.txt");

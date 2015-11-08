@@ -26,12 +26,20 @@ import eg.edu.alexu.ehr.ontology.api.wrapper.object.values.OntologyValue;
 import eg.edu.alexu.ehr.util.Pair;
 import eg.edu.alexu.ehr.util.io.BufferedFileReader;
 import eg.edu.alexu.ehr.util.io.BufferedFileWriter;
+import org.semanticweb.owlapi.model.ClassExpressionType;
+import org.semanticweb.owlapi.model.EntityType;
+import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.model.OWLClassExpression;
+import org.semanticweb.owlapi.model.OWLDataExactCardinality;
+import org.semanticweb.owlapi.model.OWLDataMaxCardinality;
+import org.semanticweb.owlapi.model.OWLDataMinCardinality;
+import org.semanticweb.owlapi.model.OWLEntity;
+import org.semanticweb.owlapi.model.OWLObjectMaxCardinality;
+import org.semanticweb.owlapi.model.OWLOntology;
 
 public class OntologyGraph {
 
     private Ontology ontology;
-
-    private OntologyGraphNode root;
 
     private Set<OntologyGraphNode> classes;
 
@@ -57,6 +65,124 @@ public class OntologyGraph {
 
     public OntologyGraph(Ontology ontology) {
         build(ontology);
+    }
+
+    private OntologyProperty getOntologyProperty(OWLClassExpression expr) {
+        if (expr instanceof OWLObjectMaxCardinality) {
+            OWLObjectMaxCardinality d = (OWLObjectMaxCardinality) expr;
+            return new OntologyProperty(d.getProperty());
+        } else if (expr instanceof OWLDataMinCardinality) {
+            OWLDataMinCardinality d = (OWLDataMinCardinality) expr;
+            return new OntologyProperty(d.getProperty());
+        } else if (expr instanceof OWLDataMaxCardinality) {
+            OWLDataMaxCardinality d = (OWLDataMaxCardinality) expr;
+            return new OntologyProperty(d.getProperty());
+        } else if (expr instanceof OWLDataExactCardinality) {
+            OWLDataExactCardinality d = (OWLDataExactCardinality) expr;
+            return new OntologyProperty(d.getProperty());
+        }
+
+        return null;
+    }
+
+    private Cardinality getObjectMaxCardinality(OWLClassExpression expr,
+            Cardinality c) {
+
+        OWLObjectMaxCardinality d = (OWLObjectMaxCardinality) expr;
+
+        if (c == null) {
+            c = new Cardinality();
+            c.setMax(d.getCardinality());
+        } else {
+            c.setMax(d.getCardinality());
+        }
+        return c;
+    }
+
+    private Cardinality getDataMinCardinality(OWLClassExpression expr,
+            Cardinality c) {
+
+        OWLDataMinCardinality d = (OWLDataMinCardinality) expr;
+
+        if (c == null) {
+            c = new Cardinality();
+            c.setMin(d.getCardinality());
+        } else {
+            c.setMin(d.getCardinality());
+        }
+        return c;
+    }
+
+    private Cardinality getDataMaxCardinality(OWLClassExpression expr,
+            Cardinality c) {
+
+        OWLDataMaxCardinality d = (OWLDataMaxCardinality) expr;
+
+        if (c == null) {
+            c = new Cardinality();
+            c.setMax(d.getCardinality());
+        } else {
+            c.setMax(d.getCardinality());
+        }
+        return c;
+    }
+
+    private Cardinality getDataExactCardinality(OWLClassExpression expr,
+            Cardinality c) {
+
+        OWLDataExactCardinality d = (OWLDataExactCardinality) expr;
+
+        if (c == null) {
+            c = new Cardinality();
+            c.setMax(d.getCardinality());
+            c.setMin(d.getCardinality());
+        } else {
+            c.setMax(d.getCardinality());
+            c.setMin(d.getCardinality());
+        }
+        return c;
+    }
+
+    public Map<OntologyProperty, Cardinality> getCardinalityInfo() {
+        Map<OntologyProperty, Cardinality> card = new HashMap<OntologyProperty, Cardinality>();
+        OWLOntology owlontolgy = ontology.getOWLOntology();
+        if (owlontolgy != null) {
+            for (OWLEntity ent : owlontolgy.getSignature()) {
+                //   System.out.println(" getCardinalityInfo "+ ent.getIRI());
+                if (ent.getEntityType() == EntityType.CLASS) {
+                    OWLClass cls = (OWLClass) ent;
+
+                    for (OWLClassExpression expr : cls.getSuperClasses(
+                            owlontolgy)) {
+                        //      System.out.println("getCardinalityInfo "+expr.getClassExpressionType() +"\t"+ expr+ ":");
+                        OntologyProperty prop = getOntologyProperty(expr);
+                        Cardinality c = card.get(prop);
+                        if (expr.getClassExpressionType()
+                                == ClassExpressionType.DATA_MIN_CARDINALITY) {
+                            c = getDataMinCardinality(expr, c);
+                            card.put(prop, c);
+                        } else if (expr.getClassExpressionType()
+                                == ClassExpressionType.DATA_MAX_CARDINALITY) {
+                            c = getDataMaxCardinality(expr, c);
+                            card.put(prop, c);
+                        } else if (expr.getClassExpressionType()
+                                == ClassExpressionType.DATA_EXACT_CARDINALITY) {
+                            c = getDataExactCardinality(expr, c);
+                            card.put(prop, c);
+                        } else if (expr.getClassExpressionType()
+                                == ClassExpressionType.OBJECT_MAX_CARDINALITY) {
+                            System.out.println("getCardinalityInfo " + expr.
+                                    getClassExpressionType() + "\t" + expr + ":");
+
+                            c = getObjectMaxCardinality(expr, c);
+                            card.put(prop, c);
+                        }
+
+                    }
+                }
+            }
+        }
+        return card;
     }
 
     public void build(Ontology ontology) {
@@ -124,9 +250,14 @@ public class OntologyGraph {
         //System.out.println("Datatypes read.");
 
         //System.out.println("Reading properties.");
+        Map<OntologyProperty, Cardinality> cardinfo
+                = getCardinalityInfo();
         int noOfProperties = 0;
         //System.out.println("Number of Properties = " + properties.size());
         for (OntologyProperty property : properties) {
+            //check the cardanlity
+
+            System.out.println("C--" + property + " " + cardinfo.get(property));
             Set<OntologyClass> domains = property.getDomains(ontology);
             Set<OntologyEntity> ranges = property.getRanges(ontology);
 
@@ -206,17 +337,19 @@ public class OntologyGraph {
 
                 //System.out.println("Connecting instances to properties.");
                 // Individual properties
-                for (OntologyProperty property : keys) {
-                    Set<OntologyValue> values = indValues.get(property);
-                    for (OntologyValue value : values) {
-                        addValue(value, valueMap);
-                        OntologyGraphNode individual2 = valueMap.get(value);
-                        individual.addConnection(property, individual2);
-                        connectIndividualEdgeToClassEdge(individual, property, individual2);
-                        noOfedges++;
-                        edges.add(individual.lastEdgeAdded());
-                    }
-                }
+                // should not be commented
+//                for (OntologyProperty property : keys) {
+//                    Set<OntologyValue> values = indValues.get(property);
+//                    for (OntologyValue value : values) {
+//                        addValue(value, valueMap);
+//                        OntologyGraphNode individual2 = valueMap.get(value);
+//                        individual.addConnection(property, individual2);
+//                        connectIndividualEdgeToClassEdge(individual, property,
+//                                individual2);
+//                        noOfedges++;
+//                        edges.add(individual.lastEdgeAdded());
+//                    }
+//                }
             }
         }
 
@@ -226,33 +359,37 @@ public class OntologyGraph {
                 = new HashMap<OntologyGraphNode, OntologyGraphNode>();
 
         for (OntologyGraphNode clss : classes) {
-            if (skipSet.contains(clss))
+            if (skipSet.contains(clss)) {
                 continue;
+            }
             Set<OntologyGraphNode> equivalentClasses
                     = clss.getNextNodes(EdgeType.EQUIVALENTTO);
             for (OntologyGraphNode equivalentClass : equivalentClasses) {
-                if (clss == equivalentClass)
+                if (clss == equivalentClass) {
                     continue;
+                }
                 skipSet.add(equivalentClass);
                 equivalenceMap.put(equivalentClass, clss);
-                Set<OntologyGraphEdge> equivalentClassEdges = equivalentClass.getEdges();
+                Set<OntologyGraphEdge> equivalentClassEdges = equivalentClass.
+                        getEdges();
                 // Connect edges of equivalent classes
                 for (OntologyGraphEdge edge : equivalentClassEdges) {
                     //if (edge.isInverse())
-                        //continue;
+                    //continue;
                     this.edges.remove(edge);
-                    if (clss.edgeExists(edge) || edge.getNextNode().equals(clss))
+                    if (clss.edgeExists(edge) || edge.getNextNode().equals(clss)) {
                         continue;
+                    }
                     clss.addConnection(edge);
                     this.edges.add(clss.lastEdgeAdded());
                 }
             }
         }
-        
+
         for (OntologyGraphNode clss : skipSet) {
             classes.remove(clss);
         }
-        
+
         // Connect edges to equivalent classes (edges going to equivalent classes)
         List<OntologyGraphEdge> edgesToRemove = new ArrayList<OntologyGraphEdge>();
         List<OntologyGraphEdge> edgesToAdd = new ArrayList<OntologyGraphEdge>();
@@ -283,7 +420,11 @@ public class OntologyGraph {
             uriToNodeMap.put(uri, edge);
         }
 
-        root = classes.iterator().next();
+        for (OntologyGraphNode clss : classes) {
+            Set<OntologyGraphNode> superclasses = clss.getNextNodes(
+                    EdgeType.SUPERCLASS);
+            int i = 0;
+        }
 
         System.out.println("Number of nodes: " + (classes.size() + datatypes.
                 size()));
@@ -339,8 +480,9 @@ public class OntologyGraph {
         for (OntologyGraphEdge edge : edges) {
             for (OntologyGraphNode clss : classes) {
                 OntologyGraphEdge propertyEdge = classPropertyEdges.get(clss);
-                if (propertyEdge == null)
+                if (propertyEdge == null) {
                     continue;
+                }
                 individualToClassPropertyMap.put(edge, propertyEdge);
                 propertyEdge.incrementWeight(OntologyGraphEdge.propertyWeight);
             }
@@ -468,7 +610,7 @@ public class OntologyGraph {
 
     private boolean skipEdge(OntologyGraphEdge edge) {
         return edge.isDisjoint() || edge.isInstance()
-                        || edge.isInverse() || edge.isSubclass();
+                || edge.isInverse() || edge.isSubclass();
     }
 
     public void saveAsGraph() {
@@ -490,8 +632,9 @@ public class OntologyGraph {
                 reverseIndex.put(datatype, indexCounter);
             }
             for (OntologyGraphEdge edge : edges) {
-                if (skipEdge(edge))
+                if (skipEdge(edge)) {
                     continue;
+                }
                 bw.writeln(edge + ": " + ++indexCounter);
                 reverseIndex.put(edge, indexCounter);
             }
@@ -506,8 +649,9 @@ public class OntologyGraph {
 
             int noOfEdges = 0;
             for (OntologyGraphEdge edge : edges) {
-                if (skipEdge(edge))
+                if (skipEdge(edge)) {
                     continue;
+                }
                 OntologyGraphNode subject = edge.getPreviousNode();
                 OntologyGraphNode object = edge.getNextNode();
                 if (subject.isValue() || object.isValue()) {
@@ -526,8 +670,10 @@ public class OntologyGraph {
                 } else {
                     float newWeight = adjacencyArray[subjectNumber].get(
                             predicateNumber) + edge.getWeight();
-                    adjacencyArray[subjectNumber].put(predicateNumber, newWeight);
-                    adjacencyArray[predicateNumber].put(subjectNumber, newWeight);
+                    adjacencyArray[subjectNumber].
+                            put(predicateNumber, newWeight);
+                    adjacencyArray[predicateNumber].
+                            put(subjectNumber, newWeight);
                 }
 
                 if (!adjacencyArray[predicateNumber].containsKey(objectNumber)) {
@@ -601,96 +747,97 @@ public class OntologyGraph {
         generateSchema("ontology.sql", partitionsPath);
     }
 
-    /*public void generateSchema(String schemaPath, String partitionsPath) {
-        BufferedFileWriter writer = null;
-        BufferedFileReader reader = null;
-        try {
-            writer = new BufferedFileWriter(schemaPath);
-            reader = new BufferedFileReader(partitionsPath);
-            Map<Integer, OntologyGraphObject> idMap = readIds();
-
-            String line;
-            int nodeId = 0;
-            Set<Partition> partitions = new HashSet<Partition>();
-            Map<Integer, Partition> map = new HashMap<Integer, Partition>();
-            while ((line = reader.readLine()) != null) {
-                int partitionId = Integer.parseInt(line);
-                OntologyGraphObject node = idMap.get(++nodeId);
-                if (map.containsKey(partitionId)) {
-                    map.get(partitionId).add(node);
-                } else {
-                    Partition partition = new Partition(partitionId);
-                    partition.add(node);
-                    map.put(partitionId, partition);
-                    partitions.add(partition);
-                }
-            }
-            reader.close();
-
-            writer.writeln("CREATE DATABASE Ontology");
-            writer.writeln();
-            //noOfObjectsInSet
-            for (Partition partition : partitions) {
-                Set<OntologyGraphObject> nodes = partition.getAllNodes();
-
-                OntologyGraphNode subject = null;// = (OntologyGraphNode)nodes.iterator().next();
-                for (OntologyGraphObject node : nodes) {
-                    if (node instanceof OntologyGraphNode) {
-                        subject = (OntologyGraphNode)node;
-                        break;
-                    }
-                }
-                if (subject == null)
-                    break;
-                
-                int noOfSubjects = 0;
-                for (OntologyGraphObject objectNode : nodes) {
-                    if (!(objectNode instanceof OntologyGraphNode))
-                        continue;
-                    OntologyGraphNode node = (OntologyGraphNode)objectNode;
-                    if (!node.isClass()) {
-                        continue;
-                    }
-                    int tmpNoOfSubjects = noOfObjectsInSet(node, nodes);
-                    if (tmpNoOfSubjects > noOfSubjects) {
-                        subject = node;
-                        noOfSubjects = tmpNoOfSubjects;
-                    }
-                }
-
-                String tableName = subject.getLabel();
-                writer.writeln("CREATE TABLE " + tableName);
-                writer.writeln("(");
-
-                List<Pair<String, String>> labelsAndDatatypes
-                        = labelsAndDatatypes(subject, nodes);
-                Iterator<Pair<String, String>> iterator = labelsAndDatatypes.
-                        iterator();
-                    //Pair<String, String> labelAndDatatype = iterator.next();
-
-                    //writer.write("\t" + labelAndDatatype.getFirst()
-                //        + " " + labelAndDatatype.getSecond());
-                writer.write("\tId LONG");
-
-                while (iterator.hasNext()) {
-                    Pair<String, String> labelAndDatatype = iterator.next();
-
-                    writer.writeln(",");
-                    writer.write("\t" + labelAndDatatype.getFirst()
-                            + " " + labelAndDatatype.getSecond());
-                }
-                writer.writeln();
-                writer.writeln(");");
-                writer.writeln();
-            }
-            writer.close();
-
-        } catch (IOException ex) {
-            Logger.getLogger(OntologyGraph.class.getName()).
-                    log(Level.SEVERE, null, ex);
-        }
-    }*/
-
+    /*
+     * public void generateSchema(String schemaPath, String partitionsPath) {
+     * BufferedFileWriter writer = null;
+     * BufferedFileReader reader = null;
+     * try {
+     * writer = new BufferedFileWriter(schemaPath);
+     * reader = new BufferedFileReader(partitionsPath);
+     * Map<Integer, OntologyGraphObject> idMap = readIds();
+     *
+     * String line;
+     * int nodeId = 0;
+     * Set<Partition> partitions = new HashSet<Partition>();
+     * Map<Integer, Partition> map = new HashMap<Integer, Partition>();
+     * while ((line = reader.readLine()) != null) {
+     * int partitionId = Integer.parseInt(line);
+     * OntologyGraphObject node = idMap.get(++nodeId);
+     * if (map.containsKey(partitionId)) {
+     * map.get(partitionId).add(node);
+     * } else {
+     * Partition partition = new Partition(partitionId);
+     * partition.add(node);
+     * map.put(partitionId, partition);
+     * partitions.add(partition);
+     * }
+     * }
+     * reader.close();
+     *
+     * writer.writeln("CREATE DATABASE Ontology");
+     * writer.writeln();
+     * //noOfObjectsInSet
+     * for (Partition partition : partitions) {
+     * Set<OntologyGraphObject> nodes = partition.getAllNodes();
+     *
+     * OntologyGraphNode subject = null;// = (OntologyGraphNode)nodes.iterator().next();
+     * for (OntologyGraphObject node : nodes) {
+     * if (node instanceof OntologyGraphNode) {
+     * subject = (OntologyGraphNode)node;
+     * break;
+     * }
+     * }
+     * if (subject == null)
+     * break;
+     *
+     * int noOfSubjects = 0;
+     * for (OntologyGraphObject objectNode : nodes) {
+     * if (!(objectNode instanceof OntologyGraphNode))
+     * continue;
+     * OntologyGraphNode node = (OntologyGraphNode)objectNode;
+     * if (!node.isClass()) {
+     * continue;
+     * }
+     * int tmpNoOfSubjects = noOfObjectsInSet(node, nodes);
+     * if (tmpNoOfSubjects > noOfSubjects) {
+     * subject = node;
+     * noOfSubjects = tmpNoOfSubjects;
+     * }
+     * }
+     *
+     * String tableName = subject.getLabel();
+     * writer.writeln("CREATE TABLE " + tableName);
+     * writer.writeln("(");
+     *
+     * List<Pair<String, String>> labelsAndDatatypes
+     * = labelsAndDatatypes(subject, nodes);
+     * Iterator<Pair<String, String>> iterator = labelsAndDatatypes.
+     * iterator();
+     * //Pair<String, String> labelAndDatatype = iterator.next();
+     *
+     * //writer.write("\t" + labelAndDatatype.getFirst()
+     * // + " " + labelAndDatatype.getSecond());
+     * writer.write("\tId LONG");
+     *
+     * while (iterator.hasNext()) {
+     * Pair<String, String> labelAndDatatype = iterator.next();
+     *
+     * writer.writeln(",");
+     * writer.write("\t" + labelAndDatatype.getFirst()
+     * + " " + labelAndDatatype.getSecond());
+     * }
+     * writer.writeln();
+     * writer.writeln(");");
+     * writer.writeln();
+     * }
+     * writer.close();
+     *
+     * } catch (IOException ex) {
+     * Logger.getLogger(OntologyGraph.class.getName()).
+     * log(Level.SEVERE, null, ex);
+     * }
+     * }
+     */
     public void generateSchema(String schemaPath, String partitionsPath) {
         BufferedFileWriter writer = null;
         BufferedFileReader reader = null;
@@ -721,70 +868,7 @@ public class OntologyGraph {
             writer.writeln();
             //noOfObjectsInSet
             for (Partition partition : partitions) {
-                Set<OntologyGraphObject> graphObjects = partition.getAllNodes();
-
-                OntologyGraphNode subject = null;// = (OntologyGraphNode)nodes.iterator().next();
-                for (OntologyGraphObject graphObject : graphObjects) {
-                    if (graphObject instanceof OntologyGraphNode) {
-                        subject = (OntologyGraphNode)graphObject;
-                        break;
-                    }
-                }
-                if (subject == null)
-                    continue;
-
-                int noOfObjects = 0;
-                int noOfNodes = 0;
-                for (OntologyGraphObject objectNode : graphObjects) {
-                    if (!(objectNode instanceof OntologyGraphNode))
-                        continue;
-                    noOfNodes++;
-                    OntologyGraphNode node = (OntologyGraphNode)objectNode;
-                    if (!node.isClass()) {
-                        continue;
-                    }
-                    int tmpNoOfSubjects = noOfObjectsInSet(node, graphObjects);
-                    if (tmpNoOfSubjects > noOfObjects) {
-                        subject = node;
-                        noOfObjects = tmpNoOfSubjects;
-                    }
-                }
-
-                String tableName = subject.getLabel();
-                writer.writeln("CREATE TABLE " + tableName);
-                writer.writeln("(");
-
-                List<Pair<String, String>> labelsAndDatatypes
-                        = labelsAndDatatypes(subject, graphObjects);
-                Iterator<Pair<String, String>> iterator = labelsAndDatatypes.
-                        iterator();
-                    //Pair<String, String> labelAndDatatype = iterator.next();
-
-                    //writer.write("\t" + labelAndDatatype.getFirst()
-                //        + " " + labelAndDatatype.getSecond());
-                writer.write("\tId LONG");
-
-                while (iterator.hasNext()) {
-                    Pair<String, String> labelAndDatatype = iterator.next();
-
-                    writer.writeln(",");
-                    writer.write("\t" + labelAndDatatype.getFirst()
-                            + " " + labelAndDatatype.getSecond());
-                }
-                writer.writeln();
-                writer.writeln(");");
-                writer.writeln();
-
-                if (noOfNodes - noOfObjects > 0) {
-                    writer.writeln("CREATE TABLE " + tableName + "Triple");
-                    writer.writeln("(");
-                    writer.writeln("\tId LONG,");
-                    writer.writeln("\tSubject LONG,");
-                    writer.writeln("\tPredicate LONG,");
-                    writer.writeln("\tObject LONG,");
-                    writer.writeln(")");
-
-                }
+                writer.writeln(partition.toSchema());
             }
             writer.close();
 
@@ -800,9 +884,10 @@ public class OntologyGraph {
         List<Pair<String, String>> ret
                 = new ArrayList<Pair<String, String>>(edges.size());
         for (OntologyGraphEdge edge : edges) {
-            if (skipEdge(edge))
-                    continue;
-            
+            if (skipEdge(edge)) {
+                continue;
+            }
+
             OntologyGraphNode next = edge.getNextNode();
             if (!set.contains(next)) {
                 continue;
@@ -877,6 +962,30 @@ public class OntologyGraph {
 
     }
 
+    private static class Cardinality {
+
+        public Cardinality() {
+        }
+
+        int min;
+
+        int max;
+
+        void setMin(int min) {
+            this.min = min;
+        }
+
+        void setMax(int max) {
+            this.max = max;
+        }
+
+        @Override
+        public String toString() {
+            return "[" + min + "," + max + "]";
+        }
+
+    }
+
     private class Partition {
 
         private int id;
@@ -923,6 +1032,80 @@ public class OntologyGraph {
         @Override
         public String toString() {
             return "" + id;
+        }
+
+        public String toSchema() {
+            String DDL = "";
+            Set<OntologyGraphObject> graphObjects = getAllNodes();
+
+            OntologyGraphNode subject = null;// = (OntologyGraphNode)nodes.iterator().next();
+            for (OntologyGraphObject graphObject : graphObjects) {
+                if (graphObject instanceof OntologyGraphNode) {
+                    subject = (OntologyGraphNode) graphObject;
+                    break;
+                }
+            }
+            if (subject == null) {
+                return DDL;
+            }
+
+            int noOfObjects = 0;
+            int noOfNodes = 0;
+            for (OntologyGraphObject objectNode : graphObjects) {
+                if (!(objectNode instanceof OntologyGraphNode)) {
+                    continue;
+                }
+                noOfNodes++;
+                OntologyGraphNode node = (OntologyGraphNode) objectNode;
+                if (!node.isClass()) {
+                    continue;
+                }
+                int tmpNoOfSubjects = noOfObjectsInSet(node, graphObjects);
+                if (tmpNoOfSubjects > noOfObjects) {
+                    subject = node;
+                    noOfObjects = tmpNoOfSubjects;
+                }
+            }
+
+            String tableName = subject.getLabel();
+            DDL = DDL + "CREATE TABLE " + tableName;
+            DDL = DDL + "(" + "\n";
+
+            List<Pair<String, String>> labelsAndDatatypes
+                    = labelsAndDatatypes(subject, graphObjects);
+            Iterator<Pair<String, String>> iterator = labelsAndDatatypes.
+                    iterator();
+                    //Pair<String, String> labelAndDatatype = iterator.next();
+
+            //writer.write("\t" + labelAndDatatype.getFirst()
+            //        + " " + labelAndDatatype.getSecond());
+            DDL = DDL + "\tId LONG";
+
+            while (iterator.hasNext()) {
+                Pair<String, String> labelAndDatatype = iterator.next();
+
+                DDL = DDL + (",\n");
+                DDL = DDL + "\t" + labelAndDatatype.getFirst()
+                        + " " + labelAndDatatype.getSecond();
+
+            }
+
+            DDL = DDL + "\n";
+            DDL = DDL + ");\n";
+            DDL = DDL + "\n";
+
+            if (noOfNodes - noOfObjects > 0) {
+                DDL = DDL + ("CREATE TABLE " + tableName + "Triple") + "\n";
+                DDL = DDL + ("(") + "\n";
+                DDL = DDL + ("\tId LONG," + "\n");
+                DDL = DDL + ("\tSubject LONG,") + "\n";
+
+                DDL = DDL + ("\tPredicate LONG,") + "\n";
+                DDL = DDL + ("\tObject LONG,") + "\n";
+                DDL = DDL + (")") + "\n";
+
+            }
+            return DDL;
         }
 
     }

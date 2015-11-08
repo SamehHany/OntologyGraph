@@ -15,4 +15,5 @@ public class OntologyObject {
         public String toString() {
             return null;
         }
+        
 }

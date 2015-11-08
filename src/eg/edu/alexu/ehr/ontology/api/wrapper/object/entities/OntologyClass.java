@@ -1,6 +1,5 @@
 package eg.edu.alexu.ehr.ontology.api.wrapper.object.entities;
 
-import java.net.URI;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -40,6 +39,7 @@ public class OntologyClass extends OntologyEntity {
 				((OWLClass)entity).getEquivalentClasses(ontology.getOWLOntology());
 		Set<OntologyClass> set = new HashSet<OntologyClass>(equivalentClasses.size());
 		for (OWLClassExpression clss : equivalentClasses)
+                    if (clss instanceof OWLClass)
 			set.add(new OntologyClass((OWLClass)clss));
 		
 		return set;

@@ -23,9 +23,11 @@ import uk.ac.manchester.cs.owl.owlapi.OWLObjectPropertyImpl;
 
 public class OntologyProperty {
 	private OWLProperty property;
+        private int cardinality;
 	private boolean isObjectProperty;
 	
 	public OntologyProperty(OWLProperty property) {
+                cardinality = -1;
 		this.property = property;
 		if (property instanceof OWLObjectPropertyImpl)
 			isObjectProperty = true;
@@ -34,31 +36,49 @@ public class OntologyProperty {
 	}
 	
 	public OntologyProperty(OWLDataProperty property) {
+                cardinality = 1;
 		this.property = (OWLProperty)property;
 		isObjectProperty = false;
 	}
 	
 	public OntologyProperty(OWLObjectProperty property) {
+                cardinality = 1;
+		this.property = (OWLProperty)property;
+		isObjectProperty = true;
+	}
+
+        public OntologyProperty(OWLDataProperty property, int cardinality) {
+                this.cardinality = cardinality;
+		this.property = (OWLProperty)property;
+		isObjectProperty = false;
+	}
+
+	public OntologyProperty(OWLObjectProperty property, int cardinality) {
+                this.cardinality = cardinality;
 		this.property = (OWLProperty)property;
 		isObjectProperty = true;
 	}
 	
 	public OntologyProperty(OWLDataPropertyExpression property) {
+                cardinality = 1;
 		this.property = (OWLProperty)property;
 		isObjectProperty = false;
 	}
 	
 	public OntologyProperty(OWLObjectPropertyExpression property) {
+                cardinality = 1;
 		this.property = (OWLProperty)property;
 		isObjectProperty = true;
 	}
 	
 	public OntologyProperty(String uri) {
+                cardinality = 1;
 		property = new OWLObjectPropertyImpl(IRI.create(uri));
 		isObjectProperty = true;
 	}
 	
 	public OntologyProperty(String uri, boolean isObject) {
+                cardinality = 1;
 		if (isObject) {
 			property = new OWLObjectPropertyImpl(IRI.create(uri));
 			isObjectProperty = true;
@@ -116,6 +136,18 @@ public class OntologyProperty {
 		
 		return set;
 	}
+
+        public void setCardinality(int cardinality) {
+            this.cardinality = cardinality;
+        }
+
+        public void incrementCardinality() {
+            cardinality++;
+        }
+
+        public void decrementCardinality() {
+            cardinality--;
+        }
 	
 	public IRI getIRI() {
 		return property.getIRI();
@@ -153,4 +185,6 @@ public class OntologyProperty {
 	public String toString() {
 		return property.getIRI().toString();
 	}
+
+        
 }

@@ -1,11 +1,14 @@
 package eg.edu.alexu.ehr.ontology.api.wrapper.object.entities;
 
 import java.net.URI;
-
-import org.semanticweb.owlapi.model.IRI;
-import org.semanticweb.owlapi.model.OWLEntity;
-
 import eg.edu.alexu.ehr.ontology.api.wrapper.object.OntologyObject;
+import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.OWLCardinalityRestriction;
+import org.semanticweb.owlapi.model.OWLClassExpression;
+import org.semanticweb.owlapi.model.OWLDataMaxCardinality;
+import org.semanticweb.owlapi.model.OWLDataMinCardinality;
+import org.semanticweb.owlapi.model.OWLEntity;
+import org.semanticweb.owlapi.model.OWLObjectExactCardinality;
 
 abstract public class OntologyEntity extends OntologyObject { // Class or datatype
 	protected OWLEntity entity;
@@ -49,4 +52,19 @@ abstract public class OntologyEntity extends OntologyObject { // Class or dataty
 	public String toString() {
 		return entity.getIRI().toString();
 	}
+        public  void getOWLClassExpression(){
+
+           for( OWLClassExpression o: entity.getNestedClassExpressions()){
+               if (o instanceof  OWLDataMinCardinality)
+                   System.out.print("data min"+o);
+                if (o instanceof  OWLDataMaxCardinality)
+                   System.out.print("data max"+o);
+                 if (o instanceof  OWLObjectExactCardinality)
+                   System.out.print("object exact"+o);
+                 if(o instanceof OWLCardinalityRestriction)
+                          System.out.print("card exact"+o);
+           }
+int i=0;
+        }
+
 }

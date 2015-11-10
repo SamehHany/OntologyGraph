@@ -107,7 +107,10 @@ public class OntologyProperty {
 		Set<OntologyClass> set = new HashSet<OntologyClass>(domains.size());
 		for (OWLNamedObject domain : domains)
 			set.add(new OntologyClass((OWLClass)domain));
-		
+
+                Set<OntologyClass> discoveredDOmains = ontology.getDiscoveredDomains(this);
+                //set.addAll(discoveredDOmains);
+
 		return set;
 	}
 	
@@ -180,14 +183,30 @@ public class OntologyProperty {
 	@Override
 	public int hashCode() {
 		return property.hashCode();
+                        //^ (cardinality == null ? 0 : cardinality.hashCode());
 	}
 	
 	@Override
 	public boolean equals(Object obj) {
             if (obj == null)
                 return false;
-            return property.equals(((OntologyProperty)obj).property);
+            OntologyProperty otherProp = (OntologyProperty)obj;
+            return property.equals(otherProp.property)
+                    && (cardinality == null ? otherProp.cardinality == null
+                    : cardinality.equals(otherProp.cardinality));
 	}
+
+        /*@Override
+	public int hashCode() {
+		return property.hashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+            if (obj == null)
+                return false;
+            return property.equals(((OntologyProperty)obj).property);
+	}*/
 	
 	@Override
 	public String toString() {

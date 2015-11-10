@@ -2,21 +2,24 @@ package eg.edu.alexu.ehr.ontology.api.wrapper.object.entities;
 
 import java.util.HashSet;
 import java.util.Set;
-
+import eg.edu.alexu.ehr.ontology.api.wrapper.Ontology;
+import eg.edu.alexu.ehr.ontology.api.wrapper.object.values.OntologyIndividual;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLIndividual;
-
-import eg.edu.alexu.ehr.ontology.api.wrapper.Ontology;
-import eg.edu.alexu.ehr.ontology.api.wrapper.object.values.OntologyIndividual;
 import uk.ac.manchester.cs.owl.owlapi.OWLClassImpl;
 
 public class OntologyClass extends OntologyEntity {
 	
 	public OntologyClass(OWLClass clss) {
 		super((OWLEntity)clss);
+		isClass = true;
+	}
+
+        public OntologyClass(OWLEntity clss) {
+		super(clss);
 		isClass = true;
 	}
 	

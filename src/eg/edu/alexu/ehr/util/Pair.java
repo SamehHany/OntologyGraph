@@ -25,4 +25,25 @@ public class Pair<T1, T2> {
     public T2 getSecond() {
         return second;
     }
+
+    @Override
+    public int hashCode() {
+        int firstHash = first == null ? 0 : first.hashCode();
+        int secondHash = second == null ? 0 : second.hashCode();
+        return firstHash ^ secondHash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null)
+            return false;
+        Pair<T1, T2> pair = (Pair<T1, T2>)obj;
+
+        boolean firstEquals = first == null ? pair.first == null
+                : first.equals(pair.first);
+        boolean secondEquals = second == null ? pair.second == null
+                : second.equals(pair.second);
+
+        return firstEquals && secondEquals;
+    }
 }

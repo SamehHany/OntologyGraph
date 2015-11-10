@@ -4,6 +4,7 @@ import java.io.IOException;
 import eg.edu.alexu.ehr.ontology.api.wrapper.Ontology;
 import eg.edu.alexu.ehr.ontology.graph.OntologyGraph;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
+import static eg.edu.alexu.ehr.ontology.Axiom.*;
 
 public class Main {
 
@@ -40,7 +41,7 @@ public class Main {
 		//Ontology ontology = new Ontology("FlyAtlas-Vocabulary.owl");
         //Ontology ontology = new Ontology("pc.rdf");
         //Ontology ontology = new Ontology("test.rdf");
-        Ontology ontology = new Ontology("wine.rdf");
+        Ontology ontology = new Ontology("test.rdf");
 
 		//Ontology ontology = new Ontology("movieontology-instances (small).owl");
         //Ontology ontology = new Ontology("countries.owl");
@@ -48,7 +49,18 @@ public class Main {
         //Axiom.processAxioms(ontology.getOWLOntology());
         // Axiom.processAnnotation(ontology.getOWLOntology());
         //Axiom.processProperties(ontology.getOWLOntology());
+
         OntologyGraph graph = new OntologyGraph(ontology);
+        graph.toTable("test/graph.sql");
+        graph.save("test/Edges.txt");
+
+        processProperties(ontology.getOWLOntology());
+        processAnnotation(ontology.getOWLOntology());
+        processAxioms(ontology.getOWLOntology());
+
+        //DLSyntaxObjectRenderer render = new DLSyntaxObjectRenderer();
+
+        
 
            //     System.err.println("LLLLLLLLLLLLLLLLLL");
         //     Axiom.processClasses(ontology.getOWLOntology(),graph);

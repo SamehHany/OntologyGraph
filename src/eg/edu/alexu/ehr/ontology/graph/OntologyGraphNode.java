@@ -94,6 +94,10 @@ public class OntologyGraphNode implements OntologyGraphObject {
             return false;
         }
 
+        public boolean isDataType() {
+            return nodeType == NodeType.DATATYPE;
+        }
+
         public boolean isClass() {
             return nodeType == NodeType.CLASS;
         }

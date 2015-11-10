@@ -1,5 +1,6 @@
 package eg.edu.alexu.ehr.ontology.graph;
 
+import eg.edu.alexu.ehr.ontology.api.wrapper.Cardinality;
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -67,124 +68,6 @@ public class OntologyGraph {
         build(ontology);
     }
 
-    private OntologyProperty getOntologyProperty(OWLClassExpression expr) {
-        if (expr instanceof OWLObjectMaxCardinality) {
-            OWLObjectMaxCardinality d = (OWLObjectMaxCardinality) expr;
-            return new OntologyProperty(d.getProperty());
-        } else if (expr instanceof OWLDataMinCardinality) {
-            OWLDataMinCardinality d = (OWLDataMinCardinality) expr;
-            return new OntologyProperty(d.getProperty());
-        } else if (expr instanceof OWLDataMaxCardinality) {
-            OWLDataMaxCardinality d = (OWLDataMaxCardinality) expr;
-            return new OntologyProperty(d.getProperty());
-        } else if (expr instanceof OWLDataExactCardinality) {
-            OWLDataExactCardinality d = (OWLDataExactCardinality) expr;
-            return new OntologyProperty(d.getProperty());
-        }
-
-        return null;
-    }
-
-    private Cardinality getObjectMaxCardinality(OWLClassExpression expr,
-            Cardinality c) {
-
-        OWLObjectMaxCardinality d = (OWLObjectMaxCardinality) expr;
-
-        if (c == null) {
-            c = new Cardinality();
-            c.setMax(d.getCardinality());
-        } else {
-            c.setMax(d.getCardinality());
-        }
-        return c;
-    }
-
-    private Cardinality getDataMinCardinality(OWLClassExpression expr,
-            Cardinality c) {
-
-        OWLDataMinCardinality d = (OWLDataMinCardinality) expr;
-
-        if (c == null) {
-            c = new Cardinality();
-            c.setMin(d.getCardinality());
-        } else {
-            c.setMin(d.getCardinality());
-        }
-        return c;
-    }
-
-    private Cardinality getDataMaxCardinality(OWLClassExpression expr,
-            Cardinality c) {
-
-        OWLDataMaxCardinality d = (OWLDataMaxCardinality) expr;
-
-        if (c == null) {
-            c = new Cardinality();
-            c.setMax(d.getCardinality());
-        } else {
-            c.setMax(d.getCardinality());
-        }
-        return c;
-    }
-
-    private Cardinality getDataExactCardinality(OWLClassExpression expr,
-            Cardinality c) {
-
-        OWLDataExactCardinality d = (OWLDataExactCardinality) expr;
-
-        if (c == null) {
-            c = new Cardinality();
-            c.setMax(d.getCardinality());
-            c.setMin(d.getCardinality());
-        } else {
-            c.setMax(d.getCardinality());
-            c.setMin(d.getCardinality());
-        }
-        return c;
-    }
-
-    public Map<OntologyProperty, Cardinality> getCardinalityInfo() {
-        Map<OntologyProperty, Cardinality> card = new HashMap<OntologyProperty, Cardinality>();
-        OWLOntology owlontolgy = ontology.getOWLOntology();
-        if (owlontolgy != null) {
-            for (OWLEntity ent : owlontolgy.getSignature()) {
-                //   System.out.println(" getCardinalityInfo "+ ent.getIRI());
-                if (ent.getEntityType() == EntityType.CLASS) {
-                    OWLClass cls = (OWLClass) ent;
-
-                    for (OWLClassExpression expr : cls.getSuperClasses(
-                            owlontolgy)) {
-                        //      System.out.println("getCardinalityInfo "+expr.getClassExpressionType() +"\t"+ expr+ ":");
-                        OntologyProperty prop = getOntologyProperty(expr);
-                        Cardinality c = card.get(prop);
-                        if (expr.getClassExpressionType()
-                                == ClassExpressionType.DATA_MIN_CARDINALITY) {
-                            c = getDataMinCardinality(expr, c);
-                            card.put(prop, c);
-                        } else if (expr.getClassExpressionType()
-                                == ClassExpressionType.DATA_MAX_CARDINALITY) {
-                            c = getDataMaxCardinality(expr, c);
-                            card.put(prop, c);
-                        } else if (expr.getClassExpressionType()
-                                == ClassExpressionType.DATA_EXACT_CARDINALITY) {
-                            c = getDataExactCardinality(expr, c);
-                            card.put(prop, c);
-                        } else if (expr.getClassExpressionType()
-                                == ClassExpressionType.OBJECT_MAX_CARDINALITY) {
-                            System.out.println("getCardinalityInfo " + expr.
-                                    getClassExpressionType() + "\t" + expr + ":");
-
-                            c = getObjectMaxCardinality(expr, c);
-                            card.put(prop, c);
-                        }
-
-                    }
-                }
-            }
-        }
-        return card;
-    }
-
     public void build(Ontology ontology) {
         System.out.println("Building...");
         this.ontology = ontology;
@@ -250,14 +133,14 @@ public class OntologyGraph {
         //System.out.println("Datatypes read.");
 
         //System.out.println("Reading properties.");
-        Map<OntologyProperty, Cardinality> cardinfo
-                = getCardinalityInfo();
+        //Map<OntologyProperty, Cardinality> cardinfo
+                //= ontology.getCardinalityInfo();
         int noOfProperties = 0;
         //System.out.println("Number of Properties = " + properties.size());
         for (OntologyProperty property : properties) {
             //check the cardanlity
 
-            System.out.println("C--" + property + " " + cardinfo.get(property));
+            System.out.println("C--" + property + " " + property.getCardinality());
             Set<OntologyClass> domains = property.getDomains(ontology);
             Set<OntologyEntity> ranges = property.getRanges(ontology);
 
@@ -958,30 +841,6 @@ public class OntologyGraph {
             Logger.getLogger(OntologyGraph.class.getName()).
                     log(Level.SEVERE, null, ex);
             return null;
-        }
-
-    }
-
-    private static class Cardinality {
-
-        public Cardinality() {
-        }
-
-        int min;
-
-        int max;
-
-        void setMin(int min) {
-            this.min = min;
-        }
-
-        void setMax(int max) {
-            this.max = max;
-        }
-
-        @Override
-        public String toString() {
-            return "[" + min + "," + max + "]";
         }
 
     }

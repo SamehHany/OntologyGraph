@@ -25,6 +25,7 @@ public class OntologyProperty {
 	private OWLProperty property;
         private Cardinality cardinality;
 	private boolean isObjectProperty;
+        private boolean rangeIsEmpty;
 	
 	public OntologyProperty(OWLProperty property) {
                 cardinality = new Cardinality(-1, -1);
@@ -33,60 +34,72 @@ public class OntologyProperty {
 			isObjectProperty = true;
 		else
 			isObjectProperty = false;
+                rangeIsEmpty = false;
 	}
 	
 	public OntologyProperty(OWLDataProperty property) {
                 cardinality = new Cardinality(-1, -1);
 		this.property = (OWLProperty)property;
 		isObjectProperty = false;
+                rangeIsEmpty = false;
 	}
 	
 	public OntologyProperty(OWLObjectProperty property) {
                 cardinality = new Cardinality(-1, -1);
 		this.property = (OWLProperty)property;
 		isObjectProperty = true;
+                rangeIsEmpty = false;
 	}
 
         public OntologyProperty(OWLDataProperty property, Cardinality cardinality) {
-                this.cardinality = cardinality;
+                this.cardinality = cardinality == null ? new Cardinality(-1, -1)
+                        : cardinality;
 		this.property = (OWLProperty)property;
 		isObjectProperty = false;
+                rangeIsEmpty = false;
 	}
 
 	public OntologyProperty(OWLObjectProperty property, Cardinality cardinality) {
-                this.cardinality = cardinality;
+                this.cardinality = cardinality == null ? new Cardinality(-1, -1)
+                        : cardinality;
 		this.property = (OWLProperty)property;
 		isObjectProperty = true;
+                rangeIsEmpty = false;
 	}
         
         public OntologyProperty(OWLDataProperty property, int minCard, int maxCard) {
                 cardinality = new Cardinality(minCard, maxCard);
 		this.property = (OWLProperty)property;
 		isObjectProperty = false;
+                rangeIsEmpty = false;
 	}
 
 	public OntologyProperty(OWLObjectProperty property, int minCard, int maxCard) {
                 cardinality = new Cardinality(minCard, maxCard);
 		this.property = (OWLProperty)property;
 		isObjectProperty = true;
+                rangeIsEmpty = false;
 	}
 	
 	public OntologyProperty(OWLDataPropertyExpression property) {
                 cardinality = new Cardinality(-1, -1);
 		this.property = (OWLProperty)property;
 		isObjectProperty = false;
+                rangeIsEmpty = false;
 	}
 	
 	public OntologyProperty(OWLObjectPropertyExpression property) {
                 cardinality = new Cardinality(-1, -1);
 		this.property = (OWLProperty)property;
 		isObjectProperty = true;
+                rangeIsEmpty = false;
 	}
 	
 	public OntologyProperty(String uri) {
                 cardinality = new Cardinality(-1, -1);
 		property = new OWLObjectPropertyImpl(IRI.create(uri));
 		isObjectProperty = true;
+                rangeIsEmpty = false;
 	}
 	
 	public OntologyProperty(String uri, boolean isObject) {
@@ -99,6 +112,7 @@ public class OntologyProperty {
 			property = new OWLDataPropertyImpl(IRI.create(uri));
 			isObjectProperty = false;
 		}
+                rangeIsEmpty = false;
 	}
 	
 	public Set<OntologyClass> getDomains(Ontology ontology) {
@@ -109,13 +123,24 @@ public class OntologyProperty {
 			set.add(new OntologyClass((OWLClass)domain));
 
                 Set<OntologyClass> discoveredDOmains = ontology.getDiscoveredDomains(this);
-                //set.addAll(discoveredDOmains);
+                if (discoveredDOmains != null)
+                    set.addAll(discoveredDOmains);
 
 		return set;
 	}
 	
 	public Set<OntologyEntity> getRanges(Ontology ontology) {
 		Set<OWLNamedObject> ranges = property.getRanges(ontology.getOWLOntology());
+                if (ranges.size() == 0 || ranges == null) {
+                    System.out.println("WARNING: range is empty for "
+                            + property);
+                    ranges = new HashSet<OWLNamedObject>();
+                    OWLDatatype stringDatatype = new OWLDatatypeImpl(IRI.create(
+                            "http://www.w3.org/TR/2001/" +
+                                    "REC-xmlschema-2-20010502/#string"));
+                    ranges.add(stringDatatype);
+                    rangeIsEmpty = true;
+                }
 		
 		Set<OntologyEntity> set = new HashSet<OntologyEntity>(ranges.size());
 		for (OWLNamedObject range : ranges) {
@@ -179,6 +204,22 @@ public class OntologyProperty {
 	public boolean isDataProperty() {
 		return !isObjectProperty;
 	}
+
+        public void setRangeIsEmpty(boolean rangeIsEmpty) {
+            this.rangeIsEmpty = rangeIsEmpty;
+        }
+
+        public void setRangeIsEmpty() {
+            rangeIsEmpty = true;
+        }
+
+        public void resetRangeIsEmpty() {
+            rangeIsEmpty = false;
+        }
+
+        public boolean rangeIsEmpty() {
+            return rangeIsEmpty;
+        }
 	
 	@Override
 	public int hashCode() {

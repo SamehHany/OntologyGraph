@@ -1,0 +1,43 @@
+<!DOCTYPE owl [
+     <!ENTITY vin  "http://www.gogo.com" >
+   
+     <!ENTITY owl  "http://www.w3.org/2002/07/owl#" >
+     <!ENTITY xsd  "http://www.w3.org/2001/XMLSchema#" >
+   ]>
+
+<rdf:RDF
+  xmlns     = "&vin;"
+  xmlns:vin = "&vin;"
+  xml:base  = "&vin;"
+  
+  xmlns:owl = "&owl;"
+  xmlns:rdf = "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  xmlns:rdfs= "http://www.w3.org/2000/01/rdf-schema#"
+  >
+
+
+
+
+<owl:Class rdf:ID="ContentLocation">
+      <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">1503</rdfs:comment>
+      <rdfs:label xml:lang="en">Content location</rdfs:label>
+      <rdfs:comment xml:lang="en">Content location</rdfs:comment>
+      <rdfs:subClassOf rdf:ID="DSDA">
+         <owl:Restriction>
+            <owl:onProperty>
+               <owl:DatatypeProperty rdf:ID="contentLocationType"></owl:DatatypeProperty>
+            </owl:onProperty>
+            <owl:cardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#int">1</owl:cardinality>
+         </owl:Restriction>
+      </rdfs:subClassOf>
+      <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Something"></rdfs:subClassOf>
+     <rdfs:subClassOf>
+         <owl:Restriction>
+            <owl:onProperty>
+               <owl:DatatypeProperty rdf:ID="contentLocationValue"></owl:DatatypeProperty>
+            </owl:onProperty>
+            <owl:cardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#int">1</owl:cardinality>
+         </owl:Restriction>
+      </rdfs:subClassOf>
+   </owl:Class>
+ </rdf:RDF>

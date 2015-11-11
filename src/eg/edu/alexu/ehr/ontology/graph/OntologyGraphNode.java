@@ -1,6 +1,7 @@
 package eg.edu.alexu.ehr.ontology.graph;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -18,7 +19,7 @@ public class OntologyGraphNode implements OntologyGraphObject {
 	private OntologyObject object;
 	NodeType nodeType;
 	//private Map<EdgeType, List<OntologyGraphEdge>> edges;
-	private List<OntologyGraphEdge> []classRelations;
+	private List<OntologyGraphEdge> []edgesByType;
 	private Map<String, List<OntologyGraphEdge>> properties;
         private Set<OntologyGraphEdge> allEdges;
         private OntologyGraphEdge lastEdgeAdded;
@@ -29,9 +30,9 @@ public class OntologyGraphNode implements OntologyGraphObject {
 		setNodeType(object);
 		label = "";
 		EdgeType edgeType = EdgeType.PROPERTY;
-		classRelations = (List<OntologyGraphEdge>[])(new List[edgeType.noOfValues()]);
+		edgesByType = (List<OntologyGraphEdge>[])(new List[edgeType.noOfValues()]);
 		for (int i = 0; i < edgeType.noOfValues(); i++)
-			classRelations[i] = new LinkedList<OntologyGraphEdge>();
+			edgesByType[i] = new LinkedList<OntologyGraphEdge>();
 		properties = new HashMap<String, List<OntologyGraphEdge>>();
                 allEdges = new HashSet<OntologyGraphEdge>();
 	}
@@ -68,9 +69,9 @@ public class OntologyGraphNode implements OntologyGraphObject {
 		setNodeType(object);
 		this.label = label;
 		EdgeType edgeType = EdgeType.PROPERTY;
-		classRelations = (List<OntologyGraphEdge>[])(new List[edgeType.noOfValues()]);
+		edgesByType = (List<OntologyGraphEdge>[])(new List[edgeType.noOfValues()]);
 		for (int i = 0; i < edgeType.noOfValues(); i++)
-			classRelations[i] = new LinkedList<OntologyGraphEdge>();
+			edgesByType[i] = new LinkedList<OntologyGraphEdge>();
 		properties = new HashMap<String, List<OntologyGraphEdge>>();
                 allEdges = new HashSet<OntologyGraphEdge>();
 	}
@@ -83,7 +84,7 @@ public class OntologyGraphNode implements OntologyGraphObject {
 		setNodeType(object);
 		this.label = label;
 		EdgeType edgeType = EdgeType.PROPERTY;
-		classRelations = (List<OntologyGraphEdge>[])(new List[edgeType.noOfValues()]);
+		edgesByType = (List<OntologyGraphEdge>[])(new List[edgeType.noOfValues()]);
 		properties = new HashMap<String, List<OntologyGraphEdge>>();
                 allEdges = new HashSet<OntologyGraphEdge>();
 	}
@@ -117,7 +118,7 @@ public class OntologyGraphNode implements OntologyGraphObject {
 
         public Set<OntologyGraphEdge> getEdges(EdgeType connection) {
             int index = connection.value();
-            List<OntologyGraphEdge> list = classRelations[index];
+            List<OntologyGraphEdge> list = edgesByType[index];
             Set<OntologyGraphEdge> set = new HashSet<OntologyGraphEdge>(list.size());
             for (OntologyGraphEdge edge : list)
                 set.add(edge);
@@ -146,7 +147,7 @@ public class OntologyGraphNode implements OntologyGraphObject {
 
         public Set<OntologyGraphNode> getNextNodes(EdgeType connection) {
             int index = connection.value();
-            List<OntologyGraphEdge> list = classRelations[index];
+            List<OntologyGraphEdge> list = edgesByType[index];
             Set<OntologyGraphNode> set = new HashSet<OntologyGraphNode>(list.size());
             for (OntologyGraphEdge edge : list) {
                 set.add(edge.getNextNode());
@@ -207,6 +208,8 @@ public class OntologyGraphNode implements OntologyGraphObject {
 			list.add(edge);
 			properties.put(uri, list);
 		}
+                int index = edge.getEdgeType().value();
+		edgesByType[index].add(edge);
                 allEdges.add(edge);
                 lastEdgeAdded = edge;
 	}
@@ -223,6 +226,8 @@ public class OntologyGraphNode implements OntologyGraphObject {
 			list.add(edge);
 			properties.put(uri, list);
 		}
+                int index = edge.getEdgeType().value();
+		edgesByType[index].add(edge);
                 allEdges.add(edge);
                 lastEdgeAdded = edge;
 	}
@@ -234,7 +239,7 @@ public class OntologyGraphNode implements OntologyGraphObject {
 		OntologyGraphEdge edge = new OntologyGraphEdge(edgeType, this, node);
 		String uri = edge.getURIAsStr();
 		int index = edgeType.value();
-		classRelations[index].add(edge);
+		edgesByType[index].add(edge);
                 allEdges.add(edge);
                 lastEdgeAdded = edge;
 	}
@@ -245,7 +250,7 @@ public class OntologyGraphNode implements OntologyGraphObject {
 		OntologyGraphEdge edge = new OntologyGraphEdge(edgeType, this, node);
 		String uri = edge.getURIAsStr();
 		int index = edgeType.value();
-		classRelations[index].add(edge);
+		edgesByType[index].add(edge);
                 allEdges.add(edge);
                 lastEdgeAdded = edge;
 	}
@@ -264,6 +269,21 @@ public class OntologyGraphNode implements OntologyGraphObject {
                     addConnection(edgeType, object);
                 }
 	}
+
+        public void removeConnection(OntologyGraphEdge edge) {
+            List<OntologyGraphEdge> remove = new ArrayList<OntologyGraphEdge>();
+            for (OntologyGraphEdge localEdge : allEdges) {
+                if (localEdge.equals(edge)) {
+                    remove.add(localEdge);
+                    EdgeType edgeType = edge.getEdgeType();
+                    int index = edgeType.value();
+                    edgesByType[index].remove(edge);
+                }
+            }
+
+            for (OntologyGraphEdge localEdge : remove)
+                allEdges.remove(localEdge);
+        }
 
         public boolean edgeExists(OntologyGraphEdge edge) {
             for (OntologyGraphEdge e : allEdges) {

@@ -64,6 +64,22 @@ public class OntologyGraphEdge implements OntologyGraphObject {
             this.isInverse = isInverse;
             hashCode();
         }
+
+        public boolean rangeIsEmpty() {
+            return property == null ? false : property.rangeIsEmpty();
+        }
+
+        public void setRangeIsEMpty(boolean rangeIsEmpty) {
+            property.setRangeIsEmpty(rangeIsEmpty);
+        }
+
+        public void setRangeIsEMpty() {
+            property.setRangeIsEmpty();
+        }
+
+        public void resetRangeIsEMpty() {
+            property.resetRangeIsEmpty();
+        }
         
         public void setIsInverse() {
             isInverse = true;

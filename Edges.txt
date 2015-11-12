@@ -63,6 +63,10 @@ http://www.w3.org/2002/03owlt/miscellaneous/consistent001#Winery -- "1.0"@Instan
 http://www.w3.org/2002/03owlt/miscellaneous/consistent001#Winery -- "1.0"@Instance -- <http://www.w3.org/2002/03owlt/miscellaneous/consistent001#Cotturi>
 http://www.w3.org/2002/03owlt/miscellaneous/consistent001#Winery -- "1.0"@Instance -- <http://www.w3.org/2002/03owlt/miscellaneous/consistent001#Beringer>
 http://www.w3.org/2002/03owlt/miscellaneous/consistent001#Winery -- "1.0"@Instance -- <http://www.w3.org/2002/03owlt/miscellaneous/consistent001#Stonleigh>
+http://www.w3.org/2002/03owlt/miscellaneous/consistent001#Anjou -- "100.0"@http://www.w3.org/2002/03owlt/miscellaneous/consistent001#hasSugar -- http://www.w3.org/2002/03owlt/miscellaneous/consistent001#WineSugar
+http://www.w3.org/2002/03owlt/miscellaneous/consistent001#Anjou -- "100.0"@http://www.w3.org/2002/03owlt/miscellaneous/consistent001#hasBody -- http://www.w3.org/2002/03owlt/miscellaneous/consistent001#WineBody
+http://www.w3.org/2002/03owlt/miscellaneous/consistent001#Anjou -- "100.0"@http://www.w3.org/2002/03owlt/miscellaneous/consistent001#hasColor -- http://www.w3.org/2002/03owlt/miscellaneous/consistent001#WineColor
+http://www.w3.org/2002/03owlt/miscellaneous/consistent001#Anjou -- "100.0"@http://www.w3.org/2002/03owlt/miscellaneous/consistent001#hasFlavor -- http://www.w3.org/2002/03owlt/miscellaneous/consistent001#WineFlavor
 http://www.w3.org/2002/03owlt/miscellaneous/consistent001#Anjou -- "1.0"@Instance -- <http://www.w3.org/2002/03owlt/miscellaneous/consistent001#RoseDAnjou>
 http://www.w3.org/2002/03owlt/miscellaneous/consistent001#Anjou -- "200.0"@http://www.w3.org/2002/03owlt/miscellaneous/consistent001#hasMaker -- http://www.w3.org/2002/03owlt/miscellaneous/consistent001#Winery
 http://www.w3.org/2002/03owlt/miscellaneous/consistent001#Muscadet -- "1.0"@Instance -- <http://www.w3.org/2002/03owlt/miscellaneous/consistent001#SevreEtMaineMuscadet>
@@ -175,6 +179,8 @@ http://www.w3.org/2002/03owlt/miscellaneous/consistent001#Wine -- "100.0"@http:/
 http://www.w3.org/2002/03owlt/miscellaneous/consistent001#Wine -- "1.0"@Subclass -- http://www.w3.org/2002/03owlt/miscellaneous/consistent001#DessertWine
 http://www.w3.org/2002/03owlt/miscellaneous/consistent001#Wine -- "1.0"@Subclass -- http://www.w3.org/2002/03owlt/miscellaneous/consistent001#EarlyHarvest
 http://www.w3.org/2002/03owlt/miscellaneous/consistent001#Wine -- "100.0"@http://www.w3.org/2002/03owlt/miscellaneous/consistent001#madeFromGrape -- http://www.w3.org/2002/03owlt/miscellaneous/consistent001#WineGrape
+http://www.w3.org/2002/03owlt/miscellaneous/consistent001#Wine -- "100.0"@http://www.w3.org/2002/03owlt/miscellaneous/consistent001#locatedIn -- http://www.w3.org/2002/03owlt/miscellaneous/consistent001#Region
+http://www.w3.org/2002/03owlt/miscellaneous/consistent001#Wine -- "100.0"@http://www.w3.org/2002/03owlt/miscellaneous/consistent001#hasMaker -- http://www.w3.org/TR/2001/REC-xmlschema-2-20010502/#string
 http://www.w3.org/2002/03owlt/miscellaneous/consistent001#Wine -- "100.0"@http://www.w3.org/2002/03owlt/miscellaneous/consistent001#hasWineDescriptor -- http://www.w3.org/2002/03owlt/miscellaneous/consistent001#WineDescriptor
 http://www.w3.org/2002/03owlt/miscellaneous/consistent001#Wine -- "1.0"@Superclass -- http://www.w3.org/2002/03owlt/miscellaneous/consistent002#PotableLiquid
 http://www.w3.org/2002/03owlt/miscellaneous/consistent001#IceWine -- "200.0"@http://www.w3.org/2002/03owlt/miscellaneous/consistent001#hasColor -- http://www.w3.org/2002/07/owl#Thing

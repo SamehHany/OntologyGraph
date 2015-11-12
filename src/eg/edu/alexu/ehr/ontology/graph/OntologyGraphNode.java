@@ -349,14 +349,28 @@ public class OntologyGraphNode implements OntologyGraphObject {
         }
 
         public String getSQLDatatype() {
-            if (label.equals("double"))
+            if (label.equalsIgnoreCase("double"))
                 return "DOUBLE";
-            else if (label.equals("date"))
+            else if (label.equalsIgnoreCase("date"))
                 return "DATE";
-            else if (label.equals("dateTime"))
+            else if (label.equalsIgnoreCase("dateTime"))
                 return "DATETIME";
-            else if (label.equals("int"))
+            else if (label.equalsIgnoreCase("int")
+                    || label.equalsIgnoreCase("uint")
+                    || label.equalsIgnoreCase("int4")
+                    || label.equalsIgnoreCase("uint4")
+                    || label.equalsIgnoreCase("integer")
+                    || label.equalsIgnoreCase("positiveInteger")
+                    || label.equalsIgnoreCase("signedInteger")
+                    || label.equalsIgnoreCase("unsignedInteger"))
                 return "INT";
+            else if (label.equalsIgnoreCase("int8")
+                    || label.equalsIgnoreCase("uint8")
+                    || label.equalsIgnoreCase("integer8")
+                    || label.equalsIgnoreCase("long")
+                    || label.equalsIgnoreCase("longint")
+                    || label.equalsIgnoreCase("longinteger"))
+                return "INT8";
             else
                 return "VARCHAR(255)";
         }

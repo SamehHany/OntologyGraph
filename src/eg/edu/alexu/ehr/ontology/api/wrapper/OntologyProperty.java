@@ -221,13 +221,13 @@ public class OntologyProperty {
             return rangeIsEmpty;
         }
 	
-	@Override
+	/*@Override
 	public int hashCode() {
-		return property.hashCode();
-                        //^ (cardinality == null ? 0 : cardinality.hashCode());
-	}
+		return property.hashCode()
+                        ^ (cardinality == null ? 0 : cardinality.hashCode());
+	}*/
 	
-	@Override
+	/*@Override
 	public boolean equals(Object obj) {
             if (obj == null)
                 return false;
@@ -235,7 +235,7 @@ public class OntologyProperty {
             return property.equals(otherProp.property)
                     && (cardinality == null ? otherProp.cardinality == null
                     : cardinality.equals(otherProp.cardinality));
-	}
+	}*/
 
         /*@Override
 	public int hashCode() {

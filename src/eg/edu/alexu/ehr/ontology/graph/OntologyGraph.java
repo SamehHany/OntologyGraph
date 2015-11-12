@@ -65,13 +65,13 @@ public class OntologyGraph {
                 Set<OntologyGraphEdge> edges = clss.getEdges(EdgeType.PROPERTY);
                 w.writeln();
                 w.writeln("CREATE TABLE " + clss.getLabel() + "(");
-                w.write("\tid LONG PRIMARY KEY");
+                w.write("\tid INT8 PRIMARY KEY");
                 for (OntologyGraphEdge edge : edges) {
                     OntologyGraphNode object = edge.getNextNode();
                     if (object.isClass()) {
                         w.writeln(",");
                         w.write("\t" + edge.getLabel() +
-                                " LONG REFERENCES " + object.getLabel() +
+                                " INT8 REFERENCES " + object.getLabel() +
                                 "(id)");
                     }
                     else if (object.isDataType()) {

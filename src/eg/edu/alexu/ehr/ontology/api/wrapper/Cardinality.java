@@ -13,7 +13,10 @@ public class Cardinality {
     private int min;
     private int max;
 
-    public Cardinality() { }
+    public Cardinality() {
+        min = -1;
+        max = -1;
+    }
 
     public Cardinality(int min, int max) {
         this.min = min;

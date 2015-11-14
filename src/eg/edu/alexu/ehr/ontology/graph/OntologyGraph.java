@@ -186,13 +186,15 @@ public class OntologyGraph {
         for (OntologyProperty property : properties) {
             //check the cardanlity
 
-            System.out.println("C--" + property + " " + property.
-                    getCardinality());
+            //System.out.println("C--" + property + " " + property.
+                    //getCardinality());
             Set<OntologyClass> domains = property.getDomains(ontology);
             Set<OntologyEntity> ranges = property.getRanges(ontology);
 
             //System.out.println("Property: " + ++noOfProperties);
             for (OntologyClass domain : domains) {
+                System.out.println("C--" + property + " - " + domain + " "
+                        + property.getCardinality(ontology, domain));
                 OntologyGraphNode domainNode = entityMap.get(domain);
                 for (OntologyEntity range : ranges) {
                     OntologyGraphNode rangeNode;

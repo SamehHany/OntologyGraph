@@ -43,6 +43,7 @@ public class Ontology {
     private Map<OntologyProperty, Set<OWLObject>> discoveredRages;
 
     public Ontology(String pathToOWLFile) {
+        map = new HashMap();
         File file = new File(pathToOWLFile);
         OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
         OWLOntology ontology = null;
@@ -56,6 +57,7 @@ public class Ontology {
     }
 
     public Ontology(OWLOntology ontology) {
+        map = new HashMap();
         this.ontology = ontology;
     }
 
@@ -78,23 +80,27 @@ public class Ontology {
     }
 
     private void discoverDomains(
-            Map<OWLPropertyExpression, List<Pair<Cardinality, OWLEntity>>> card,
+            Map<Pair<OWLPropertyExpression, OWLEntity>, Cardinality> card,
             Set<OntologyProperty> set) {
         discoveredDomains = new HashMap<OntologyProperty, Set<OntologyClass>>();
-        for (OWLPropertyExpression property : card.keySet()) {
+        for (Pair<OWLPropertyExpression, OWLEntity> pair : card.keySet()) {
+            OWLPropertyExpression property = pair.getFirst();
+            OWLEntity entity = pair.getSecond();
+            
             OntologyProperty ontologyProperty = null;
 
             if (property instanceof OWLDataPropertyImpl) {
                 ontologyProperty
-                        = new OntologyProperty((OWLDataProperty) property,
-                                card.get(property).getFirst());
+                        = new OntologyProperty((OWLDataProperty) property);
             } else if (property instanceof OWLObjectPropertyImpl) {
                 ontologyProperty
-                        = new OntologyProperty((OWLObjectProperty) property,
-                                card.get(property).getFirst());
+                        = new OntologyProperty((OWLObjectProperty) property);
             }
-
+            
             set.add(ontologyProperty);
+            addCardinality(ontologyProperty,
+                    new OntologyClass(entity), card.get(pair));
+            
             Set<OntologyClass> domain = null;
             if (discoveredDomains.containsKey(ontologyProperty)) {
                 domain = discoveredDomains.get(ontologyProperty);
@@ -103,34 +109,53 @@ public class Ontology {
                 discoveredDomains.put(ontologyProperty, domain);
             }
 
-            domain.add(new OntologyClass(card.get(property).getSecond()));
+            domain.add(new OntologyClass(entity));
         }
     }
 
     public Set<OntologyProperty> getProperties() {
-        Map<OWLPropertyExpression, List<Pair<Cardinality, OWLEntity>>> card
+        Pair<Map<Pair<OWLPropertyExpression, OWLEntity>, Cardinality>,
+                Map<OWLPropertyExpression, List<OWLEntity>>> pair
                 = getCardinalityInfo();
+        /* Returns a pair containing the Map of property, entity pairs to a
+         * cardinality and a map of a property to a list of entities
+         */
 
-        Set<OWLDataProperty> dataPropertySet = ontology.
-                getDataPropertiesInSignature();
-        Set<OWLObjectProperty> objectPropertySet = ontology.
-                getObjectPropertiesInSignature();
-        Set<OntologyProperty> set = new HashSet<OntologyProperty>(
-                dataPropertySet.size()
+        Map<Pair<OWLPropertyExpression, OWLEntity>, Cardinality> card
+                = pair.getFirst();
+        Map<OWLPropertyExpression, List<OWLEntity>> propEntMap
+                = pair.getSecond();
+
+        Set<OWLDataProperty> dataPropertySet = ontology.getDataPropertiesInSignature();
+        Set<OWLObjectProperty> objectPropertySet = ontology.getObjectPropertiesInSignature();
+        Set<OntologyProperty> set = new HashSet<OntologyProperty>(dataPropertySet.size()
                 + objectPropertySet.size());
         for (OWLDataProperty property : dataPropertySet) {
-            List<Pair<Cardinality, OWLEntity>> list = card.get(property);
-            for (Pair<Cardinality, OWLEntity> pair : list) {
-                set.add(new OntologyProperty(property, pair == null ? null
-                        : pair.getFirst()));
+            OntologyProperty ontProp = new OntologyProperty(property);
+            set.add(ontProp);
+            if (!propEntMap.containsKey(property)) {
+                addCardinality(ontProp, new Cardinality());
+                
+                continue;
+            }
+
+            for (OWLEntity ent : propEntMap.get(property)) {
+                Cardinality c = card.get(new Pair(property, ent));
+                addCardinality(ontProp, new OntologyClass(ent), c);
             }
         }
         for (OWLObjectProperty property : objectPropertySet) {
-            List<Pair<Cardinality, OWLEntity>> list = card.get(property);
+            OntologyProperty ontProp = new OntologyProperty(property);
+            set.add(ontProp);
+            if (!propEntMap.containsKey(property)) {
+                addCardinality(ontProp, new Cardinality());
+                
+                continue;
+            }
 
-            for (Pair<Cardinality, OWLEntity> pair : list) {
-                set.add(new OntologyProperty(property, pair == null ? null
-                        : pair.getFirst()));
+            for (OWLEntity ent : propEntMap.get(property)) {
+                Cardinality c = card.get(new Pair(property, ent));
+                addCardinality(ontProp, new OntologyClass(ent), c);
             }
         }
 
@@ -268,10 +293,12 @@ public class Ontology {
         return c;
     }
 
-    private Map<OWLPropertyExpression, List<Pair<Cardinality, OWLEntity>>>
+    private Pair<Map<Pair<OWLPropertyExpression, OWLEntity>, Cardinality>, Map<OWLPropertyExpression, List<OWLEntity>>>
             getCardinalityInfo() {
-        Map<OWLPropertyExpression, List<Pair<Cardinality, OWLEntity>>> card
-                = new HashMap<OWLPropertyExpression, List<Pair<Cardinality, OWLEntity>>>();
+        Map<Pair<OWLPropertyExpression, OWLEntity>, Cardinality> card
+                = new HashMap();
+        Map<OWLPropertyExpression, List<OWLEntity>> propEntMap
+                = new HashMap();
         if (ontology != null) {
             for (OWLEntity ent : ontology.getSignature()) {
                 //   System.out.println(" getCardinalityInfo "+ ent.getIRI());
@@ -285,6 +312,14 @@ public class Ontology {
                         if (prop == null) {
                             continue;
                         }
+
+                        if (!propEntMap.containsKey(prop)) {
+                            List<OWLEntity> list = new ArrayList<OWLEntity>();
+                            propEntMap.put(prop, list);
+                        }
+
+                        propEntMap.get(prop).add(ent);
+
                         Cardinality c = new Cardinality();
 
                         /*
@@ -298,11 +333,11 @@ public class Ontology {
                 }
             }
         }
-        return card;
+        return new Pair(card, propEntMap);
     }
 
     private void calcCardinality(OWLClassExpression expr, Cardinality c,
-            Map<OWLPropertyExpression, List<Pair<Cardinality, OWLEntity>>> card,
+            Map<Pair<OWLPropertyExpression, OWLEntity>, Cardinality> card,
             OWLPropertyExpression prop, OWLEntity ent) {
         switch (expr.getClassExpressionType()) {
             case DATA_MIN_CARDINALITY:
@@ -327,13 +362,37 @@ public class Ontology {
                 int x = 0; // do nothing
         }
 
-        if (card.containsKey(prop)) {
-            card.get(prop).add(new Pair(c, ent));
-        } else {
-            List list = new ArrayList<Pair<Cardinality, OWLEntity>>();
-            card.put(prop, list);
-            list.add(new Pair(c, ent));
-        }
+        card.put(new Pair(prop, ent), c);
+    }
+    
+    private Map<Pair<OntologyProperty, OntologyClass>, Cardinality> map;
+    
+    private void addCardinality(OntologyProperty property, OntologyClass clss,
+            Cardinality cardinality) {
+        Pair<OntologyProperty, OntologyClass> pair = new Pair(property, clss);
+        map.put(pair, cardinality);
+    }
+    
+    private void addCardinality(OntologyProperty property,
+            Cardinality cardinality) {
+        Pair<OntologyProperty, OntologyClass> pair = new Pair(property, null);
+        map.put(pair, cardinality);
+    }
+    
+    private void removeCardinality(OntologyProperty property,
+            OntologyClass clss) {
+        Pair<OntologyProperty, OntologyClass> pair = new Pair(property, clss);
+        map.remove(pair);
+    }
+    
+    public Cardinality getCardinality(OntologyProperty property,
+            OntologyClass clss) {
+        Pair<OntologyProperty, OntologyClass> pair = new Pair(property, clss);
+        
+        Cardinality card = map.containsKey(pair) ? map.get(pair)
+                : map.get(new Pair(property, null));
+        
+        return card != null ? card : new Cardinality();
     }
 
     @Override

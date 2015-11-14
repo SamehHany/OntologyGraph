@@ -23,12 +23,11 @@ import uk.ac.manchester.cs.owl.owlapi.OWLObjectPropertyImpl;
 
 public class OntologyProperty {
 	private OWLProperty property;
-        private Cardinality cardinality;
 	private boolean isObjectProperty;
         private boolean rangeIsEmpty;
 	
 	public OntologyProperty(OWLProperty property) {
-                cardinality = new Cardinality(-1, -1);
+                //cardinality = new Cardinality(-1, -1);
 		this.property = property;
 		if (property instanceof OWLObjectPropertyImpl)
 			isObjectProperty = true;
@@ -38,72 +37,72 @@ public class OntologyProperty {
 	}
 	
 	public OntologyProperty(OWLDataProperty property) {
-                cardinality = new Cardinality(-1, -1);
+                //cardinality = new Cardinality(-1, -1);
 		this.property = (OWLProperty)property;
 		isObjectProperty = false;
                 rangeIsEmpty = false;
 	}
 	
 	public OntologyProperty(OWLObjectProperty property) {
-                cardinality = new Cardinality(-1, -1);
+                //cardinality = new Cardinality(-1, -1);
 		this.property = (OWLProperty)property;
 		isObjectProperty = true;
                 rangeIsEmpty = false;
 	}
 
-        public OntologyProperty(OWLDataProperty property, Cardinality cardinality) {
-                this.cardinality = cardinality == null ? new Cardinality(-1, -1)
-                        : cardinality;
+        /*public OntologyProperty(OWLDataProperty property, Cardinality cardinality) {
+               // this.cardinality = cardinality == null ? new Cardinality(-1, -1)
+                        //: cardinality;
 		this.property = (OWLProperty)property;
 		isObjectProperty = false;
                 rangeIsEmpty = false;
-	}
+	}*/
 
-	public OntologyProperty(OWLObjectProperty property, Cardinality cardinality) {
-                this.cardinality = cardinality == null ? new Cardinality(-1, -1)
-                        : cardinality;
+	/*public OntologyProperty(OWLObjectProperty property, Cardinality cardinality) {
+                //this.cardinality = cardinality == null ? new Cardinality(-1, -1)
+                        //: cardinality;
 		this.property = (OWLProperty)property;
 		isObjectProperty = true;
                 rangeIsEmpty = false;
-	}
+	}*/
         
-        public OntologyProperty(OWLDataProperty property, int minCard, int maxCard) {
-                cardinality = new Cardinality(minCard, maxCard);
+        /*public OntologyProperty(OWLDataProperty property, int minCard, int maxCard) {
+                //cardinality = new Cardinality(minCard, maxCard);
 		this.property = (OWLProperty)property;
 		isObjectProperty = false;
                 rangeIsEmpty = false;
-	}
+	}*/
 
-	public OntologyProperty(OWLObjectProperty property, int minCard, int maxCard) {
-                cardinality = new Cardinality(minCard, maxCard);
+	/*public OntologyProperty(OWLObjectProperty property, int minCard, int maxCard) {
+                //cardinality = new Cardinality(minCard, maxCard);
 		this.property = (OWLProperty)property;
 		isObjectProperty = true;
                 rangeIsEmpty = false;
-	}
+	}*/
 	
 	public OntologyProperty(OWLDataPropertyExpression property) {
-                cardinality = new Cardinality(-1, -1);
+                //cardinality = new Cardinality(-1, -1);
 		this.property = (OWLProperty)property;
 		isObjectProperty = false;
                 rangeIsEmpty = false;
 	}
 	
 	public OntologyProperty(OWLObjectPropertyExpression property) {
-                cardinality = new Cardinality(-1, -1);
+                //cardinality = new Cardinality(-1, -1);
 		this.property = (OWLProperty)property;
 		isObjectProperty = true;
                 rangeIsEmpty = false;
 	}
 	
 	public OntologyProperty(String uri) {
-                cardinality = new Cardinality(-1, -1);
+                //cardinality = new Cardinality(-1, -1);
 		property = new OWLObjectPropertyImpl(IRI.create(uri));
 		isObjectProperty = true;
                 rangeIsEmpty = false;
 	}
 	
 	public OntologyProperty(String uri, boolean isObject) {
-                cardinality = new Cardinality(-1, -1);
+                //cardinality = new Cardinality(-1, -1);
 		if (isObject) {
 			property = new OWLObjectPropertyImpl(IRI.create(uri));
 			isObjectProperty = true;
@@ -177,13 +176,13 @@ public class OntologyProperty {
 		return set;
 	}
 
-        public void setCardinality(Cardinality cardinality) {
+        /*public void setCardinality(Cardinality cardinality) {
             this.cardinality = cardinality;
         }
         
         public Cardinality getCardinality() {
             return cardinality;
-        }
+        }*/
 	
 	public IRI getIRI() {
 		return property.getIRI();
@@ -220,6 +219,10 @@ public class OntologyProperty {
         public boolean rangeIsEmpty() {
             return rangeIsEmpty;
         }
+        
+        public Cardinality getCardinality(Ontology ontology, OntologyClass clss) {
+            return ontology.getCardinality(this, clss);
+        }
 	
 	/*@Override
 	public int hashCode() {
@@ -237,7 +240,7 @@ public class OntologyProperty {
                     : cardinality.equals(otherProp.cardinality));
 	}*/
 
-        /*@Override
+        @Override
 	public int hashCode() {
 		return property.hashCode();
 	}
@@ -247,7 +250,7 @@ public class OntologyProperty {
             if (obj == null)
                 return false;
             return property.equals(((OntologyProperty)obj).property);
-	}*/
+	}
 	
 	@Override
 	public String toString() {

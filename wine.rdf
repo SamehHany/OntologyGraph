@@ -191,7 +191,7 @@ Wine example taken from the guide.
     <rdfs:subClassOf>
       <owl:Restriction>
         <owl:onProperty rdf:resource="#madeFromGrape" />
-        <owl:maxCardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:maxCardinality>
+        <owl:maxCardinality rdf:datatype="&xsd;nonNegativeInteger">2</owl:maxCardinality>
       </owl:Restriction>
     </rdfs:subClassOf>
   </owl:Class>

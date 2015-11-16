@@ -1,5 +1,6 @@
 package eg.edu.alexu.ehr.ontology.graph;
 
+import eg.edu.alexu.ehr.ontology.api.wrapper.Cardinality;
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -66,8 +67,18 @@ public class OntologyGraph {
                 w.writeln();
                 w.writeln("CREATE TABLE " + clss.getLabel() + "(");
                 w.write("\tid INT8 PRIMARY KEY");
+                List<OntologyGraphEdge> binary = new ArrayList();
                 for (OntologyGraphEdge edge : edges) {
                     OntologyGraphNode object = edge.getNextNode();
+                    
+                    OntologyProperty property = edge.getProperty();
+                    OntologyClass domain = clss.getAsClass();
+                    Cardinality card
+                            = property.getCardinality(ontology, domain);
+                    if (card.getMin() > 1 || card.getMax() > 1) {
+                        binary.add(edge);
+                        continue;
+                    }
                     if (object.isClass()) {
                         w.writeln(",");
                         w.write("\t" + edge.getLabel() +
@@ -82,6 +93,21 @@ public class OntologyGraph {
                 }
                 w.writeln();
                 w.writeln(");");
+                
+                
+                for (OntologyGraphEdge edge : binary) {
+                    OntologyGraphNode object = edge.getNextNode();
+                    String secondLabel
+                            = edge.getLabel().substring(0, 1).toUpperCase()
+                            + edge.getLabel().substring(1);
+                    w.writeln();
+                    w.writeln("CREATE TABLE " + clss.getLabel()
+                            + secondLabel + "(");
+                    
+                    w.writeln("\tINT8 REFERENCES " + clss.getLabel() + ",");
+                    w.writeln("\tINT8 REFERENCES " + object.getLabel());
+                    w.writeln(");");
+                }
             }
             w.close();
 

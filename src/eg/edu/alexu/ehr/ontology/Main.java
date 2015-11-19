@@ -28,8 +28,9 @@ public class Main {
         graph.toTable("graph.sql");
         graph.save("Edges.txt");*/
         
-        Plan plan = new Plan();
-        plan.build("query-plans/get-all-movie-info.json");
+        Plan plan = new Plan("query-plans/get-all-movie-info.json");
+        //plan.build("query-plans/get-all-movie-info.json");
+        int x = 0;
         
     }
 

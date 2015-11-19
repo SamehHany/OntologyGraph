@@ -41,9 +41,10 @@ public class Ontology {
     private Map<OntologyProperty, Set<OntologyClass>> discoveredDomains;
 
     private Map<OntologyProperty, Set<OWLObject>> discoveredRages;
+    
+    private Set<OWLClass> classesHaveValue;
 
     public Ontology(String pathToOWLFile) {
-        map = new HashMap();
         File file = new File(pathToOWLFile);
         OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
         OWLOntology ontology = null;
@@ -57,7 +58,6 @@ public class Ontology {
     }
 
     public Ontology(OWLOntology ontology) {
-        map = new HashMap();
         this.ontology = ontology;
     }
 
@@ -73,7 +73,13 @@ public class Ontology {
         Set<OWLClass> classes = ontology.getClassesInSignature();
         Set<OntologyClass> set = new HashSet<OntologyClass>(classes.size());
         for (OWLClass clss : classes) {
-            set.add(new OntologyClass(clss));
+            boolean hasValue = false;
+            for (OWLClassExpression expr : clss.getSuperClasses(
+                            ontology)) {
+                if (expr instanceof OWLObjectHasValue)
+                            hasValue = true;
+            }
+            set.add(new OntologyClass(clss, hasValue));
         }
 
         return set;
@@ -114,6 +120,8 @@ public class Ontology {
     }
 
     public Set<OntologyProperty> getProperties() {
+        map = new HashMap();
+        classesHaveValue = new HashSet();
         Pair<Map<Pair<OWLPropertyExpression, OWLEntity>, Cardinality>,
                 Map<OWLPropertyExpression, List<OWLEntity>>> pair
                 = getCardinalityInfo();
@@ -194,7 +202,9 @@ public class Ontology {
         } else if (expr instanceof OWLDataExactCardinality) {
             OWLDataExactCardinality d = (OWLDataExactCardinality) expr;
             return d.getProperty();
-        } else if (expr instanceof OWLObjectHasValue) {
+        } /*else if (expr instanceof OWLObjectIntersectionOf) {
+            System.out.println("INTERSECTION FOUND");
+        }*/ else if (expr instanceof OWLObjectHasValue) {
             OWLObjectHasValue d = (OWLObjectHasValue) expr;
             return d.getProperty();
         } else if (expr instanceof OWLRestriction) {

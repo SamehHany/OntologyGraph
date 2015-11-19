@@ -1,0 +1,63 @@
+{"Report":[
+   {
+     "Plan": {
+       "Node Type": "Nested Loop",
+       "Join Type": "Inner",
+       "Startup Cost": 0.86,
+       "Total Cost": 455.00,
+       "Plan Rows": 2,
+       "Plan Width": 4,
+       "Actual Startup Time": 0.172,
+       "Actual Total Time": 0.203,
+       "Actual Rows": 4,
+       "Actual Loops": 1,
+       "Plans": [
+         {
+           "Node Type": "Index Scan",
+           "Parent Relationship": "Outer",
+           "Scan Direction": "Forward",
+           "Index Name": "title_idx_title",
+           "Relation Name": "title",
+           "Alias": "qview1",
+           "Startup Cost": 0.43,
+           "Total Cost": 36.25,
+           "Plan Rows": 3,
+           "Plan Width": 4,
+           "Actual Startup Time": 0.016,
+           "Actual Total Time": 0.017,
+           "Actual Rows": 1,
+           "Actual Loops": 1,
+           "Index Cond": "(title = 'Finding Nemo'::text)",
+           "Rows Removed by Index Recheck": 0,
+           "Filter": "((id IS NOT NULL) AND (kind_id = 1))",
+           "Rows Removed by Filter": 1
+         },
+         {
+           "Node Type": "Index Scan",
+           "Parent Relationship": "Inner",
+           "Scan Direction": "Forward",
+           "Index Name": "movie_info_idx_mid",
+           "Relation Name": "movie_info",
+           "Alias": "qview2",
+           "Startup Cost": 0.43,
+           "Total Cost": 139.47,
+           "Plan Rows": 4,
+           "Plan Width": 4,
+           "Actual Startup Time": 0.126,
+           "Actual Total Time": 0.143,
+           "Actual Rows": 4,
+           "Actual Loops": 1,
+           "Index Cond": "(movie_id = qview1.id)",
+           "Rows Removed by Index Recheck": 0,
+           "Filter": "(info_type_id = 3)",
+           "Rows Removed by Filter": 606
+         }
+       ]
+     },
+     "Planning Time": 0.235,
+     "Triggers": [
+     ],
+     "Execution Time": 0.241
+   }
+ ]
+}

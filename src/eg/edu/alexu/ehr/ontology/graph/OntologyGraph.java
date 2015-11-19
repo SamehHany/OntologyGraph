@@ -63,6 +63,8 @@ public class OntologyGraph {
             BufferedFileWriter w = new BufferedFileWriter(fileName);
             w.writeln("CREATE DATABASE Ontology");
             for (OntologyGraphNode clss : classes) {
+                if (clss.hasValue())
+                    continue;
                 Set<OntologyGraphEdge> edges = clss.getEdges(EdgeType.PROPERTY);
                 w.writeln();
                 w.writeln("CREATE TABLE " + clss.getLabel() + "(");

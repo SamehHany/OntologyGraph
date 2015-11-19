@@ -27,6 +27,16 @@ public class BufferedFileReader {
         return reader.readLine();
     }
     
+    public String read() throws IOException {
+        BufferedReader reader = new BufferedReader(new FileReader(path));
+        StringBuilder strBuffer = new StringBuilder();
+        String line = null;
+        while ((line = reader.readLine()) != null) {
+            strBuffer.append(line + String.format("%n"));
+        }
+        return strBuffer.toString();
+    }
+    
     public void close() throws IOException {
         reader.close();
     }

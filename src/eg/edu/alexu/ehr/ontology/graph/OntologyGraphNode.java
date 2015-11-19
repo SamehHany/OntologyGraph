@@ -115,6 +115,14 @@ public class OntologyGraphNode implements OntologyGraphObject {
 
             return set;
         }
+        
+        public boolean hasValue() {
+            if (isClass()) {
+                return ((OntologyClass)object).hasValue();
+            }
+            
+            return false;
+        }
 
         public Set<OntologyGraphEdge> getEdges(EdgeType connection) {
             int index = connection.value();

@@ -1,0 +1,113 @@
+ <explain xmlns="http://www.postgresql.org/2009/explain">
+   <Query>
+     <Plan>
+       <Node-Type>Nested Loop</Node-Type>
+       <Join-Type>Inner</Join-Type>
+       <Startup-Cost>5.55</Startup-Cost>
+       <Total-Cost>467.35</Total-Cost>
+       <Plan-Rows>22</Plan-Rows>
+       <Plan-Width>19</Plan-Width>
+       <Actual-Startup-Time>0.111</Actual-Startup-Time>
+       <Actual-Total-Time>0.488</Actual-Total-Time>
+       <Actual-Rows>25</Actual-Rows>
+       <Actual-Loops>1</Actual-Loops>
+       <Plans>
+         <Plan>
+           <Node-Type>Nested Loop</Node-Type>
+           <Parent-Relationship>Outer</Parent-Relationship>
+           <Join-Type>Inner</Join-Type>
+           <Startup-Cost>5.12</Startup-Cost>
+           <Total-Cost>455.78</Total-Cost>
+           <Plan-Rows>22</Plan-Rows>
+           <Plan-Width>8</Plan-Width>
+           <Actual-Startup-Time>0.090</Actual-Startup-Time>
+           <Actual-Total-Time>0.333</Actual-Total-Time>
+           <Actual-Rows>25</Actual-Rows>
+           <Actual-Loops>1</Actual-Loops>
+           <Plans>
+             <Plan>
+               <Node-Type>Index Scan</Node-Type>
+               <Parent-Relationship>Outer</Parent-Relationship>
+               <Scan-Direction>Forward</Scan-Direction>
+               <Index-Name>title_idx_title</Index-Name>
+               <Relation-Name>title</Relation-Name>
+               <Alias>qview1</Alias>
+               <Startup-Cost>0.43</Startup-Cost>
+               <Total-Cost>36.25</Total-Cost>
+               <Plan-Rows>3</Plan-Rows>
+               <Plan-Width>4</Plan-Width>
+               <Actual-Startup-Time>0.016</Actual-Startup-Time>
+               <Actual-Total-Time>0.017</Actual-Total-Time>
+               <Actual-Rows>1</Actual-Rows>
+               <Actual-Loops>1</Actual-Loops>
+               <Index-Cond>(title = 'Finding Nemo'::text)</Index-Cond>
+               <Rows-Removed-by-Index-Recheck>0</Rows-Removed-by-Index-Recheck>
+               <Filter>((id IS NOT NULL) AND (kind_id = 1))</Filter>
+               <Rows-Removed-by-Filter>1</Rows-Removed-by-Filter>
+             </Plan>
+             <Plan>
+               <Node-Type>Bitmap Heap Scan</Node-Type>
+               <Parent-Relationship>Inner</Parent-Relationship>
+               <Relation-Name>cast_info</Relation-Name>
+               <Alias>qview2</Alias>
+               <Startup-Cost>4.70</Startup-Cost>
+               <Total-Cost>139.66</Total-Cost>
+               <Plan-Rows>18</Plan-Rows>
+               <Plan-Width>8</Plan-Width>
+               <Actual-Startup-Time>0.073</Actual-Startup-Time>
+               <Actual-Total-Time>0.312</Actual-Total-Time>
+               <Actual-Rows>25</Actual-Rows>
+               <Actual-Loops>1</Actual-Loops>
+               <Recheck-Cond>(movie_id = qview1.id)</Recheck-Cond>
+               <Rows-Removed-by-Index-Recheck>0</Rows-Removed-by-Index-Recheck>
+               <Filter>((person_id IS NOT NULL) AND ((2 = role_id) OR (1 = role_id)))</Filter>
+               <Rows-Removed-by-Filter>276</Rows-Removed-by-Filter>
+               <Exact-Heap-Blocks>284</Exact-Heap-Blocks>
+               <Lossy-Heap-Blocks>0</Lossy-Heap-Blocks>
+               <Plans>
+                 <Plan>
+                   <Node-Type>Bitmap Index Scan</Node-Type>
+                   <Parent-Relationship>Outer</Parent-Relationship>
+                   <Index-Name>cast_info_idx_mid</Index-Name>
+                   <Startup-Cost>0.00</Startup-Cost>
+                   <Total-Cost>4.69</Total-Cost>
+                   <Plan-Rows>34</Plan-Rows>
+                   <Plan-Width>0</Plan-Width>
+                   <Actual-Startup-Time>0.039</Actual-Startup-Time>
+                   <Actual-Total-Time>0.039</Actual-Total-Time>
+                   <Actual-Rows>301</Actual-Rows>
+                   <Actual-Loops>1</Actual-Loops>
+                   <Index-Cond>(movie_id = qview1.id)</Index-Cond>
+                 </Plan>
+               </Plans>
+             </Plan>
+           </Plans>
+         </Plan>
+         <Plan>
+           <Node-Type>Index Scan</Node-Type>
+           <Parent-Relationship>Inner</Parent-Relationship>
+           <Scan-Direction>Forward</Scan-Direction>
+           <Index-Name>name_pkey</Index-Name>
+           <Relation-Name>name</Relation-Name>
+           <Alias>qview3</Alias>
+           <Startup-Cost>0.43</Startup-Cost>
+           <Total-Cost>0.46</Total-Cost>
+           <Plan-Rows>1</Plan-Rows>
+           <Plan-Width>19</Plan-Width>
+           <Actual-Startup-Time>0.003</Actual-Startup-Time>
+           <Actual-Total-Time>0.003</Actual-Total-Time>
+           <Actual-Rows>1</Actual-Rows>
+           <Actual-Loops>25</Actual-Loops>
+           <Index-Cond>(id = qview2.person_id)</Index-Cond>
+           <Rows-Removed-by-Index-Recheck>0</Rows-Removed-by-Index-Recheck>
+           <Filter>(name IS NOT NULL)</Filter>
+           <Rows-Removed-by-Filter>0</Rows-Removed-by-Filter>
+         </Plan>
+       </Plans>
+     </Plan>
+     <Planning-Time>0.373</Planning-Time>
+     <Triggers>
+     </Triggers>
+     <Execution-Time>0.529</Execution-Time>
+   </Query>
+ </explain>

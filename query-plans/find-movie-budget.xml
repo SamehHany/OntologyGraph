@@ -1,0 +1,63 @@
+ <explain xmlns="http://www.postgresql.org/2009/explain">
+   <Query>
+     <Plan>
+       <Node-Type>Nested Loop</Node-Type>
+       <Join-Type>Inner</Join-Type>
+       <Startup-Cost>0.86</Startup-Cost>
+       <Total-Cost>454.74</Total-Cost>
+       <Plan-Rows>1</Plan-Rows>
+       <Plan-Width>47</Plan-Width>
+       <Actual-Startup-Time>0.141</Actual-Startup-Time>
+       <Actual-Total-Time>0.191</Actual-Total-Time>
+       <Actual-Rows>1</Actual-Rows>
+       <Actual-Loops>1</Actual-Loops>
+       <Plans>
+         <Plan>
+           <Node-Type>Index Scan</Node-Type>
+           <Parent-Relationship>Outer</Parent-Relationship>
+           <Scan-Direction>Forward</Scan-Direction>
+           <Index-Name>title_idx_title</Index-Name>
+           <Relation-Name>title</Relation-Name>
+           <Alias>qview1</Alias>
+           <Startup-Cost>0.43</Startup-Cost>
+           <Total-Cost>36.25</Total-Cost>
+           <Plan-Rows>3</Plan-Rows>
+           <Plan-Width>4</Plan-Width>
+           <Actual-Startup-Time>0.015</Actual-Startup-Time>
+           <Actual-Total-Time>0.016</Actual-Total-Time>
+           <Actual-Rows>1</Actual-Rows>
+           <Actual-Loops>1</Actual-Loops>
+           <Index-Cond>(title = 'Finding Nemo'::text)</Index-Cond>
+           <Rows-Removed-by-Index-Recheck>0</Rows-Removed-by-Index-Recheck>
+           <Filter>((id IS NOT NULL) AND (kind_id = 1))</Filter>
+           <Rows-Removed-by-Filter>1</Rows-Removed-by-Filter>
+         </Plan>
+         <Plan>
+           <Node-Type>Index Scan</Node-Type>
+           <Parent-Relationship>Inner</Parent-Relationship>
+           <Scan-Direction>Forward</Scan-Direction>
+           <Index-Name>movie_info_idx_mid</Index-Name>
+           <Relation-Name>movie_info</Relation-Name>
+           <Alias>qview2</Alias>
+           <Startup-Cost>0.43</Startup-Cost>
+           <Total-Cost>139.47</Total-Cost>
+           <Plan-Rows>1</Plan-Rows>
+           <Plan-Width>47</Plan-Width>
+           <Actual-Startup-Time>0.108</Actual-Startup-Time>
+           <Actual-Total-Time>0.157</Actual-Total-Time>
+           <Actual-Rows>1</Actual-Rows>
+           <Actual-Loops>1</Actual-Loops>
+           <Index-Cond>(movie_id = qview1.id)</Index-Cond>
+           <Rows-Removed-by-Index-Recheck>0</Rows-Removed-by-Index-Recheck>
+           <Filter>((info IS NOT NULL) AND (info_type_id = 105))</Filter>
+           <Rows-Removed-by-Filter>609</Rows-Removed-by-Filter>
+         </Plan>
+       </Plans>
+     </Plan>
+     <Planning-Time>0.218</Planning-Time>
+     <Triggers>
+     </Triggers>
+     <Execution-Time>0.223</Execution-Time>
+   </Query>
+ </explain>
+

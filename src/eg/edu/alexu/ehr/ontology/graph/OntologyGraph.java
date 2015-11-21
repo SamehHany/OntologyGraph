@@ -61,18 +61,30 @@ public class OntologyGraph {
     public void toTable(String fileName) {
         try {
             BufferedFileWriter w = new BufferedFileWriter(fileName);
-            w.writeln("CREATE DATABASE Ontology");
+            //w.writeln("CREATE DATABASE Ontology");
+            String schemaName = "ontology";
+            w.writeln("CREATE SCHEMA IF NOT EXISTS " + schemaName + ";");
+            List<String> foreignKeys = new ArrayList();
             for (OntologyGraphNode clss : classes) {
-                if (clss.hasValue())
+                if (clss.hasValue()) {
                     continue;
+                }
                 Set<OntologyGraphEdge> edges = clss.getEdges(EdgeType.PROPERTY);
+                String tableName = clss.getLabel().replaceAll("[-.]", "");
                 w.writeln();
-                w.writeln("CREATE TABLE " + clss.getLabel() + "(");
-                w.write("\tid INT8 PRIMARY KEY");
+                w.writeln("CREATE TABLE " + schemaName + "." + tableName + "(");
+                w.write("\tid SERIAL PRIMARY KEY");
                 List<OntologyGraphEdge> binary = new ArrayList();
-                for (OntologyGraphEdge edge : edges) {
+                Iterator it = edges.iterator();
+                if (it.hasNext()) {
+                    w.write(",");
+                }
+                while (it.hasNext()) {
+                    OntologyGraphEdge edge = (OntologyGraphEdge) it.next();
                     OntologyGraphNode object = edge.getNextNode();
-                    
+                    String foreignTableName
+                            = object.getLabel().replaceAll("[-.]", "");
+
                     OntologyProperty property = edge.getProperty();
                     OntologyClass domain = clss.getAsClass();
                     Cardinality card
@@ -82,41 +94,98 @@ public class OntologyGraph {
                         continue;
                     }
                     if (object.isClass()) {
-                        w.writeln(",");
-                        w.write("\t" + edge.getLabel() +
-                                " INT8 REFERENCES " + object.getLabel() +
-                                "(id)");
-                    }
-                    else if (object.isDataType()) {
-                        w.writeln(",");
+                        w.writeln();
+                        w.write("\t" + edge.getLabel() + " INTEGER");
+                        if (it.hasNext()) {
+                            w.write(",");
+                        }
+
+                        w.write(" -- REFERENCES " + foreignTableName
+                                + "(id)");
+                        foreignKeys.add(getForeignKey(schemaName,
+                                clss.getLabel(), edge.getLabel(),
+                                foreignTableName, "id"));
+
+                    } else if (object.isDataType()) {
+                        w.writeln();
                         w.write("\t" + edge.getLabel() + " "
                                 + edge.getNextNode().getSQLDatatype());
+                        if (it.hasNext()) {
+                            w.write(",");
+                        }
                     }
                 }
                 w.writeln();
                 w.writeln(");");
-                
-                
+
                 for (OntologyGraphEdge edge : binary) {
                     OntologyGraphNode object = edge.getNextNode();
-                    String secondLabel
-                            = edge.getLabel().substring(0, 1).toUpperCase()
-                            + edge.getLabel().substring(1);
+                    String subjectName = clss.getLabel().replaceAll("[-.]", "");
+                    String objectName
+                            = object.getLabel().replaceAll("[-.]", "");
+                    objectName
+                            = objectName.substring(0, 1).toUpperCase()
+                            + objectName.substring(1);
+                    String tableFullName = schemaName + "." + subjectName +
+                            objectName;
                     w.writeln();
-                    w.writeln("CREATE TABLE " + clss.getLabel()
-                            + secondLabel + "(");
+                    w.writeln("CREATE TABLE " + tableFullName + "(");
+
+                    if (object.isClass()) {
+                        w.writeln("\t" + subjectName
+                                + " INTEGER, -- REFERENCES "
+                                + subjectName + "(id)" + ",");
+                        w.writeln("\t" + objectName
+                                + " INTEGER -- REFERENCES "
+                                + objectName + "(id)");
+                        w.writeln(");");
+
+                        foreignKeys.add(getForeignKey(schemaName,
+                                tableFullName, subjectName,
+                                subjectName, "id"));
+                         foreignKeys.add(getForeignKey(schemaName,
+                                tableFullName, objectName,
+                                objectName, "id"));
+                    } else if (object.isDataType()) {
+                        w.writeln("\t" + subjectName + " "
+                                + clss.getSQLDatatype() + ",");
+                        w.writeln("\t" + objectName + " "
+                                + object.getSQLDatatype());
+                        w.writeln(");");
+                    }
                     
-                    w.writeln("\tINT8 REFERENCES " + clss.getLabel() + ",");
-                    w.writeln("\tINT8 REFERENCES " + object.getLabel());
-                    w.writeln(");");
+                     w.writeln();
+                     w.writeln("ALTER TABLE ONLY " + tableFullName);
+                     w.writeln("\tADD CONSTRAINT " + subjectName.toLowerCase() +
+                             "_" + objectName.toLowerCase() + "_pkey" +
+                             " PRIMARY KEY (" + subjectName + ", " +
+                             objectName + ");");
                 }
             }
+
+            w.writeln();
+            w.writeln();
+
+            for (String constraintStmt : foreignKeys) {
+                w.writeln(constraintStmt);
+            }
+
             w.close();
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
+    }
+
+    private String getForeignKey(String schemaName, String table, String attr, String foreignTable,
+            String foreignAttr) {
+        return "ALTER TABLE " + schemaName + "." + table + "\n    "
+                + "ADD CONSTRAINT " + table.toLowerCase() + "_"
+                + attr.toLowerCase() + "_" + foreignTable.toLowerCase()
+                + "_reference" + " FOREIGN KEY (" + attr + ") REFERENCES "
+                + schemaName + "." + foreignTable.toLowerCase() +
+                "(" + foreignAttr.toLowerCase() + ");";
     }
 
     public OntologyGraph(Ontology ontology) {
@@ -126,8 +195,9 @@ public class OntologyGraph {
 
     private void addEdge(OntologyGraphEdge edge) {
         edges.add(edge);
-        if (!edge.isProperty())
+        if (!edge.isProperty()) {
             return;
+        }
         OntologyProperty property = edge.getProperty();
         if (propertyToEdgeMap.containsKey(property)) {
             propertyToEdgeMap.get(property).add(edge);
@@ -169,8 +239,7 @@ public class OntologyGraph {
                         + datatypeSet.size());
 
         propertyToEdgeMap
-                = new HashMap<OntologyProperty,
-                        Set<OntologyGraphEdge>>(properties.size());
+                = new HashMap<OntologyProperty, Set<OntologyGraphEdge>>(properties.size());
 
         //System.out.println("Reading classes.");
         edges = new HashSet<OntologyGraphEdge>(classesSet.size());
@@ -215,7 +284,7 @@ public class OntologyGraph {
             //check the cardanlity
 
             //System.out.println("C--" + property + " " + property.
-                    //getCardinality());
+            //getCardinality());
             Set<OntologyClass> domains = property.getDomains(ontology);
             Set<OntologyEntity> ranges = property.getRanges(ontology);
 
@@ -296,8 +365,7 @@ public class OntologyGraph {
                 Set<OntologyProperty> keys = indValues.keySet();
 
                 //System.out.println("Connecting instances to properties.");
-                 //Individual properties
-                 
+                //Individual properties
                 for (OntologyProperty property : keys) {
                     Set<OntologyValue> values = indValues.get(property);
                     for (OntologyValue value : values) {

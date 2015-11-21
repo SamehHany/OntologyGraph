@@ -12,6 +12,7 @@ import eg.edu.alexu.ehr.ontology.api.wrapper.object.entities.OntologyDatatype;
 import eg.edu.alexu.ehr.util.Pair;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.EntityType;
+import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.model.OWLDataExactCardinality;
@@ -134,8 +135,12 @@ public class Ontology {
         Map<OWLPropertyExpression, List<OWLEntity>> propEntMap
                 = pair.getSecond();
 
-        Set<OWLDataProperty> dataPropertySet = ontology.getDataPropertiesInSignature();
-        Set<OWLObjectProperty> objectPropertySet = ontology.getObjectPropertiesInSignature();
+        Set<OWLDataProperty> dataPropertySet
+                = ontology.getDataPropertiesInSignature();
+        Set<OWLObjectProperty> objectPropertySet
+                = ontology.getObjectPropertiesInSignature();
+        Set<OWLAnnotationProperty> annotationPropertySet
+                = ontology.getAnnotationPropertiesInSignature();
         Set<OntologyProperty> set = new HashSet<OntologyProperty>(dataPropertySet.size()
                 + objectPropertySet.size());
         for (OWLDataProperty property : dataPropertySet) {
@@ -166,6 +171,20 @@ public class Ontology {
                 addCardinality(ontProp, new OntologyClass(ent), c);
             }
         }
+        /*for (OWLAnnotationProperty property : annotationPropertySet) {
+            OntologyProperty ontProp = new OntologyProperty(property);
+            set.add(ontProp);
+            if (!propEntMap.containsKey(property)) {
+                addCardinality(ontProp, new Cardinality());
+                
+                continue;
+            }
+
+            for (OWLEntity ent : propEntMap.get(property)) {
+                Cardinality c = card.get(new Pair(property, ent));
+                addCardinality(ontProp, new OntologyClass(ent), c);
+            }
+        }*/
 
         discoverDomains(card, set);
 

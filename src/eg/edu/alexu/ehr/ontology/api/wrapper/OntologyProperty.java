@@ -7,6 +7,7 @@ import eg.edu.alexu.ehr.ontology.api.wrapper.object.entities.OntologyClass;
 import eg.edu.alexu.ehr.ontology.api.wrapper.object.entities.OntologyDatatype;
 import eg.edu.alexu.ehr.ontology.api.wrapper.object.entities.OntologyEntity;
 import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLDataProperty;
 import org.semanticweb.owlapi.model.OWLDataPropertyExpression;
@@ -49,6 +50,13 @@ public class OntologyProperty {
 		isObjectProperty = true;
                 rangeIsEmpty = false;
 	}
+        
+        /*public OntologyProperty(OWLAnnotationProperty property) {
+                //cardinality = new Cardinality(-1, -1);
+		this.property = (OWLProperty)property;
+		isObjectProperty = false;
+                rangeIsEmpty = false;
+	}*/
 
         /*public OntologyProperty(OWLDataProperty property, Cardinality cardinality) {
                // this.cardinality = cardinality == null ? new Cardinality(-1, -1)

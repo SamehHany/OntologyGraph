@@ -76,6 +76,7 @@ public class OntologyIndividual extends OntologyValue {
 		return uri;
 	}
 	
+        @Override
 	public String getURIAsStr() {
 		return ((OWLIndividual)obj).toString();
 	}

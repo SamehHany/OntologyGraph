@@ -171,20 +171,22 @@ public class Ontology {
                 addCardinality(ontProp, new OntologyClass(ent), c);
             }
         }
-        /*for (OWLAnnotationProperty property : annotationPropertySet) {
+        for (OWLAnnotationProperty property : annotationPropertySet) {
             OntologyProperty ontProp = new OntologyProperty(property);
+            OWLDataProperty dataProperty
+                    = new OWLDataPropertyImpl(property.getIRI());
             set.add(ontProp);
-            if (!propEntMap.containsKey(property)) {
+            if (!propEntMap.containsKey(dataProperty)) {
                 addCardinality(ontProp, new Cardinality());
                 
                 continue;
             }
 
-            for (OWLEntity ent : propEntMap.get(property)) {
-                Cardinality c = card.get(new Pair(property, ent));
+            for (OWLEntity ent : propEntMap.get(dataProperty)) {
+                Cardinality c = card.get(new Pair(dataProperty, ent));
                 addCardinality(ontProp, new OntologyClass(ent), c);
             }
-        }*/
+        }
 
         discoverDomains(card, set);
 

@@ -50,13 +50,31 @@ public class OntologyClass extends OntologyEntity {
         this.hasValue = hasValue;
     }
 
-    public Set<OntologyClass> getSubclasses(Ontology ontology) {
+    public Set<OntologyClass> getSubClasses(Ontology ontology) {
         Set<OWLClassExpression> subclasses = ((OWLClass) entity).getSubClasses(ontology.getOWLOntology());
         Set<OntologyClass> set = new HashSet<OntologyClass>(subclasses.size());
         for (OWLClassExpression subclass : subclasses) {
             set.add(new OntologyClass((OWLClass) subclass));
         }
 
+        return set;
+    }
+    
+    public Set<OntologyClass> getAllDescendants(Ontology ontology) {
+        Set<OntologyClass> set = new HashSet();
+        
+        return getAllDescendants(this, ontology, set);
+    }
+    
+    private Set<OntologyClass> getAllDescendants(OntologyClass clss,
+            Ontology ontology, Set<OntologyClass> set) {
+        Set<OntologyClass> subclasses = clss.getSubClasses(ontology);
+        set.addAll(subclasses);
+        
+        for (OntologyClass class1 : subclasses) {
+            getAllDescendants(class1, ontology, set);
+        }
+        
         return set;
     }
 

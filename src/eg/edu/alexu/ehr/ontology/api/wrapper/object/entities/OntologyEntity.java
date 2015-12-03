@@ -34,6 +34,7 @@ abstract public class OntologyEntity extends OntologyObject { // Class or dataty
 		return ((OWLEntity)entity).getIRI().toURI();
 	}
 	
+        @Override
 	public String getURIAsStr() {
 		return ((OWLEntity)entity).getIRI().toString();
 	}

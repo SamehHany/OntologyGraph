@@ -7,6 +7,7 @@ import eg.edu.alexu.ehr.ontology.api.wrapper.Ontology;
 import eg.edu.alexu.ehr.ontology.api.wrapper.OntologyProperty;
 import eg.edu.alexu.ehr.ontology.api.wrapper.object.entities.OntologyClass;
 import eg.edu.alexu.ehr.ontology.api.wrapper.object.entities.OntologyEntity;
+import java.util.HashSet;
 
 public class OntologyGraphEdge implements OntologyGraphObject {
 	private EdgeType edgeType;
@@ -18,7 +19,7 @@ public class OntologyGraphEdge implements OntologyGraphObject {
 	private Integer hash;
         private boolean isInverse;
 
-        private OntologyGraphEdge inverseEdge;
+        private Set<OntologyGraphEdge> inverseEdges;
         
         private static final float initWeight = 1.0f;
         public static final float propertyWeight = 100.0f;
@@ -56,7 +57,7 @@ public class OntologyGraphEdge implements OntologyGraphObject {
                 this.label = getLabelOfObject();
             else
                 this.label = label;
-            inverseEdge = null;
+            inverseEdges = new HashSet();
             if (edgeType == EdgeType.PROPERTY)
                 weight = propertyWeight;
             else
@@ -94,13 +95,16 @@ public class OntologyGraphEdge implements OntologyGraphObject {
         }
 
         public void inverseOf(OntologyGraphEdge inverseEdge) {
-            this.inverseEdge = inverseEdge;
+            this.inverseEdges.add(inverseEdge);
         }
 
         public boolean isInverse(OntologyGraphEdge edge) {
-            if (inverseEdge == null)
+            if (inverseEdges.contains(edge))
+                return true;
+            return false;
+            /*if (inverseEdge == null)
                 return false;
-            return inverseEdge.equals(edge);
+            return inverseEdge.equals(edge);*/
         }
 	
 	public float getWeight() {
@@ -158,6 +162,16 @@ public class OntologyGraphEdge implements OntologyGraphObject {
 	public EdgeType getEdgeType() {
 		return edgeType;
 	}
+        
+        public Set<OntologyGraphEdge> getInverseEdges() {
+            return inverseEdges;
+        }
+        
+        public OntologyGraphEdge getInverseEdge() {
+            if (inverseEdges == null || inverseEdges.size() == 0)
+                return null;
+            return inverseEdges.iterator().next();
+        }
 	
 	public boolean isSubclass() {
 		return edgeType == EdgeType.SUBCLASS;

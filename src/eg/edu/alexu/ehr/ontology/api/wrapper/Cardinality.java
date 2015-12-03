@@ -14,8 +14,8 @@ public class Cardinality {
     private int max;
 
     public Cardinality() {
-        min = -1;
-        max = -1;
+        min = 1;
+        max = Integer.MAX_VALUE;
     }
 
     public Cardinality(int min, int max) {

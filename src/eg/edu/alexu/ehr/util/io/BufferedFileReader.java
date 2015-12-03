@@ -6,6 +6,7 @@
 package eg.edu.alexu.ehr.util.io;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -21,6 +22,11 @@ public class BufferedFileReader {
     public BufferedFileReader(String path) throws FileNotFoundException {
         this.path = path;
         reader = new BufferedReader(new FileReader(path));
+    }
+    
+    public BufferedFileReader(File file) throws FileNotFoundException {
+        this.path = file.getPath();
+        reader = new BufferedReader(new FileReader(file));
     }
     
     public String readLine() throws IOException {

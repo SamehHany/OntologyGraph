@@ -10,6 +10,10 @@ public class OntologyObject {
 	public boolean isValue() {
 		return !isEntity;
 	}
+        
+        public String getURIAsStr() {
+            return null;
+        }
 
         @Override
         public String toString() {

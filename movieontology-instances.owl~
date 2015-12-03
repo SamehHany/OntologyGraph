@@ -59,10 +59,11 @@
 
     <!-- http://dbpedia.org/ontology/gross -->
 
-    <!--<owl:DataProperty rdf:about="&dbpedia;gross">
+    <owl:DataProperty rdf:about="&dbpedia;gross">
         <rdfs:label xml:lang="el">ακαθάριστα ($)</rdfs:label>
-        <rdfs:label xml:lang="en">gross ($)</rdfs:label>-->
+        <rdfs:label xml:lang="en">gross ($)</rdfs:label>
         <!--<rdfs:domain rdf:resource="&dbpedia;Film"/>-->
+        <rdfs:domain rdf:resource="&mo;Movie"/>
         <!--<rdfs:domain>
             <owl:Class>    
                 <owl:unionOf rdf:parseType="Collection">
@@ -70,12 +71,64 @@
                     <owl:Class rdf:resource="&mo;Movie"/>
                 </owl:unionOf>
             </owl:Class>    
-        </rdfs:domain>
-    </owl:DataProperty>-->
+        </rdfs:domain>-->
+    </owl:DataProperty>
+    
+    
+    
+    <!-- http://purl.org/dc/elements/1.1/contributor -->
+
+    <owl:AnnotationProperty rdf:about="&dc;contributor"/>
     
 
 
+    <!-- http://purl.org/dc/elements/1.1/creator -->
+
+    <owl:AnnotationProperty rdf:about="&dc;creator"/>
     
+
+
+    <!-- http://purl.org/dc/elements/1.1/date -->
+
+    <owl:AnnotationProperty rdf:about="&dc;date"/>
+    
+
+
+    <!-- http://purl.org/dc/elements/1.1/description -->
+
+    <owl:AnnotationProperty rdf:about="&dc;description"/>
+    
+
+
+    <!-- http://purl.org/dc/elements/1.1/publisher -->
+
+    <owl:AnnotationProperty rdf:about="&dc;publisher"/>
+    
+
+
+    <!-- http://www.movieontology.org/2009/10/01/movieontology.owl#belongsToGenre -->
+
+    <owl:AnnotationProperty rdf:about="&mo;belongsToGenre">
+        <rdfs:domain rdf:resource="&mo;Movie"/>
+    </owl:AnnotationProperty>
+    
+
+
+    <!-- http://www.movieontology.org/2009/10/01/movieontology.owl#hasColor -->
+
+    <owl:AnnotationProperty rdf:about="&mo;hasColor"/>
+    
+
+
+    <!-- http://www.movieontology.org/2009/10/01/movieontology.owl#hasComposer -->
+
+    <owl:AnnotationProperty rdf:about="&mo;hasComposer"/>
+    
+
+
+    <!-- http://www.movieontology.org/2009/10/01/movieontology.owl#nominatedFor -->
+
+    <owl:AnnotationProperty rdf:about="&mo;nominatedFor"/>
     
 
 
@@ -119,10 +172,10 @@
 
     <!-- http://www.movieontology.org/2009/10/01/movieontology.owl#belongsToGenre -->
 
-    <!--<owl:ObjectProperty rdf:about="&mo;belongsToGenre">-->
-        <!--<rdfs:domain rdf:resource="&mo;Movie"/>-->
-        <!--<rdfs:range rdf:resource="&mo;Genre"/>
-    </owl:ObjectProperty>-->
+    <owl:ObjectProperty rdf:about="&mo;belongsToGenre">
+        <rdfs:domain rdf:resource="&mo;Movie"/>
+        <rdfs:range rdf:resource="&mo;Genre"/>
+    </owl:ObjectProperty>
     
 
 
@@ -148,6 +201,8 @@
 
     <owl:ObjectProperty rdf:about="&mo;hasActor">
         <owl:inverseOf rdf:resource="&mo;isActorIn"/>
+        <rdfs:domain rdf:resource="&mo;Movie"/>
+        <rdfs:range rdf:resource="&dbpedia;Actor"/>
     </owl:ObjectProperty>
     
 
@@ -193,6 +248,7 @@
 
     <owl:ObjectProperty rdf:about="&mo;hasDirector">
         <rdfs:range rdf:resource="&page;Film_Director"/>
+        <rdfs:domain rdf:resource="&mo;Movie"/>
     </owl:ObjectProperty>
     
 
@@ -201,6 +257,7 @@
 
     <owl:ObjectProperty rdf:about="&mo;hasEditor">
         <rdfs:range rdf:resource="&mo;Editor"/>
+        <rdfs:domain rdf:resource="&mo;Movie"/>
         <owl:inverseOf rdf:resource="&mo;isEditorIn"/>
     </owl:ObjectProperty>
     
@@ -217,6 +274,7 @@
     <!-- http://www.movieontology.org/2009/10/01/movieontology.owl#hasMaleActor -->
 
     <owl:ObjectProperty rdf:about="&mo;hasMaleActor">
+        <rdfs:domain rdf:resource="&mo;Movie"/>
         <rdfs:range rdf:resource="&dbpedia;Actor"/>
         <rdfs:subPropertyOf rdf:resource="&mo;hasActor"/>
     </owl:ObjectProperty>
@@ -227,6 +285,7 @@
 
     <owl:ObjectProperty rdf:about="&mo;hasProducer">
         <rdfs:range rdf:resource="&mo;Producer"/>
+        <rdfs:domain rdf:resource="&mo;Movie"/>
     </owl:ObjectProperty>
     
 
@@ -404,6 +463,7 @@
     <!-- http://www.movieontology.org/2009/10/01/movieontology.owl#nominatedFor -->
 
     <owl:ObjectProperty rdf:about="&mo;nominatedFor">
+        <rdfs:domain rdf:resource="&mo;Movie"/>
         <rdfs:range rdf:resource="&mo;Award"/>
     </owl:ObjectProperty>
     
@@ -547,6 +607,7 @@
 
     <owl:DatatypeProperty rdf:about="&mo;title">
         <rdfs:range rdf:resource="&xsd;string"/>
+        <rdfs:domain rdf:resource="&mo;Movie"/>
     </owl:DatatypeProperty>
     
 

@@ -31,7 +31,7 @@ public class OntologyGraphNode implements OntologyGraphObject {
     public OntologyGraphNode(OntologyObject object) {
         this.object = object;
         setNodeType(object);
-        label = "";
+        label = getLabelFromUri(object.getURIAsStr());
         EdgeType edgeType = EdgeType.PROPERTY;
         edgesByType = (List<OntologyGraphEdge>[]) (new List[edgeType.noOfValues()]);
         for (int i = 0; i < edgeType.noOfValues(); i++) {
@@ -67,6 +67,7 @@ public class OntologyGraphNode implements OntologyGraphObject {
      classRelations = (List<OntologyGraphEdge>[])(new List[edgeType.noOfValues()]);
      properties = new HashMap<String, List<OntologyGraphEdge>>();
      }*/
+    
     public OntologyGraphNode(OntologyObject object, String label) {
         this.object = object;
         setNodeType(object);
@@ -93,6 +94,18 @@ public class OntologyGraphNode implements OntologyGraphObject {
         properties = new HashMap<String, List<OntologyGraphEdge>>();
         allEdges = new HashSet<OntologyGraphEdge>();
     }
+    
+    private String getLabelFromUri(String uri) {
+            int len = uri.length();
+            int end = uri.charAt(len-1) == '/' ? len-1 : len;
+            for (int i = len-1; i >= 0; i--) {
+                char ch = uri.charAt(i);
+                if (ch == '#' || ch == '/')
+                    return uri.substring(i+1, end);
+            }
+
+            return "";
+        }
 
     public boolean isValue() {
         if (nodeType == NodeType.INDIVIDUAL || nodeType == NodeType.LITERAL) {

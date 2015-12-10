@@ -42,7 +42,7 @@ public class Main {
         //graph.toTable("test/graph.sql");
         //graph.save("test/Edges.txt");
         graph.toTable("graph.sql");
-        //graph.save("Edges.txt");
+        graph.save("Edges.txt");
         
         //graph.getData("http://www.movieontology.org/" +
                 //"2009/10/01/movieontology.owl#Movie", "movieontology.obda",

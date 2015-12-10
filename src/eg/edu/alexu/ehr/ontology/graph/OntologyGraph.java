@@ -28,6 +28,7 @@ import eg.edu.alexu.ehr.ontology.api.wrapper.object.values.OntologyIndividual;
 import eg.edu.alexu.ehr.ontology.api.wrapper.object.values.OntologyValue;
 import eg.edu.alexu.ehr.util.Pair;
 import eg.edu.alexu.ehr.util.csv.CSV;
+import eg.edu.alexu.ehr.util.db.Table;
 import eg.edu.alexu.ehr.util.io.BufferedFileReader;
 import eg.edu.alexu.ehr.util.io.BufferedFileWriter;
 import java.io.BufferedReader;
@@ -65,8 +66,11 @@ public class OntologyGraph {
 
     private Map<String, List<String>> tables;
     private Map<OntologyGraphNode, String> nodeTableMap;
-    private Map<OntologyGraphEdge, String> edgeTableMap;
+    private Map<OntologyGraphEdge, Pair<String, String>> edgeTableAttrMap;
     private Map<OntologyGraphEdge, Pair<String, String>> propertyTableMap;
+    private Map<String, String> labelTableMap;
+    
+    private Set<Table> tablesSet;
 
     private static final String propertyQueriesPath = "property-queries/";
     private static final String singlePropertyQueriesPath
@@ -83,8 +87,9 @@ public class OntologyGraph {
     private void initializeTableMaps() {
         tables = new HashMap();
         nodeTableMap = new HashMap();
-        edgeTableMap = new HashMap();
+        edgeTableAttrMap = new HashMap();
         propertyTableMap = new HashMap();
+        labelTableMap = new HashMap();
     }
 
     private void addAttrToTable(String schema, String table, String attr) {
@@ -102,8 +107,9 @@ public class OntologyGraph {
         nodeTableMap.put(node, schema + "." + table);
     }
 
-    private void addTable(OntologyGraphEdge edge, String schema, String table) {
-        edgeTableMap.put(edge, schema + "." + table);
+    private void addTable(OntologyGraphEdge edge, String schema, String table,
+            String attr) {
+        edgeTableAttrMap.put(edge, new Pair(schema + "." + table, attr));
     }
 
     private void addPropertyToSchema(OntologyGraphEdge edge, String schema,
@@ -191,6 +197,22 @@ public class OntologyGraph {
     
     //private String detectDatatype
     
+    private String getReferenceFromToken(String token) {
+        //System.out.println(token);
+        return token.substring(1, token.length()-1);
+    }
+    
+    private String getStringFromToken(String token) {
+        //System.out.println(token);
+        return "\'" + token.substring(1, token.lastIndexOf('\"')) + "\'";
+    }
+    
+    public void populateSchemaWithData() {
+        for (OntologyGraphNode clss: classes) {
+            
+        }
+    }
+    
     public void insertIntoPropertyTables(String outpath) {
         BufferedFileWriter bw = null;
         try {
@@ -209,6 +231,29 @@ public class OntologyGraph {
             BufferedFileReader br = null;
             try {
                 br = new BufferedFileReader(file);
+                br.readLine();
+                String line = br.readLine();
+                while (line != null && line.equals("")) { }
+                List<String> csvLine = CSV.parseLine(line);
+                boolean firstIsReference;
+                boolean secondIsReference;
+                String token = csvLine.get(0);
+                if (token.charAt(0) == '<' &&
+                        token.charAt(token.length()-1) == '>') {
+                    firstIsReference = true;
+                } else {
+                    firstIsReference = false;
+                }
+                token = csvLine.get(1);
+                if (token.charAt(0) == '<' &&
+                        token.charAt(token.length()-1) == '>') {
+                    secondIsReference = true;
+                } else {
+                    secondIsReference = false;
+                }
+                
+                br.close();
+                br = new BufferedFileReader(file);
                 
                 String path = file.getPath();
                 String classLabel = path.split("/")[1].split("_", 2)[0];
@@ -217,18 +262,32 @@ public class OntologyGraph {
                         propertyLabel.lastIndexOf("."));
                 String tableName = propertySchema + "." + classLabel +
                         firstToUpperCase(propertyLabel);
-                String line = br.readLine();
+                line = br.readLine();
                 if (line != null && !createdTables.contains(tableName)) {
                     List<String> labels = CSV.parseLine(line);
                     bw.writeln("CREATE TABLE " + tableName + "(");
-                    boolean first = true;
+                    if (firstIsReference) {
+                        bw.writeln("\t" + labels.get(0) +
+                                " INTEGER,");
+                    } else {
+                        bw.writeln("\t" + labels.get(0) +
+                                " VARCHAR(255),");
+                    }
+                    if (secondIsReference) {
+                        bw.writeln("\t" + labels.get(1) +
+                                " INTEGER");
+                    } else {
+                        bw.writeln("\t" + labels.get(1) +
+                                " VARCHAR(255)");
+                    }
+                    /*boolean first = true;
                     for (String label: labels) {
                         if (!first)
                             bw.writeln(",");
                         first = false;
                         bw.write("\t" + label + " VARCHAR(255)");
-                    }
-                    bw.writeln(")");
+                    }*/
+                    bw.writeln(");");
                     bw.writeln();
                     createdTables.add(tableName);
                 }
@@ -236,13 +295,24 @@ public class OntologyGraph {
                     List<String> list = CSV.parseLine(line);
                     bw.writeln("INSERT INTO " + tableName + " VALUES");
                     bw.write("\t(");
-                    boolean first = true;
+                    if (firstIsReference) {
+                        bw.write(getReferenceFromToken(list.get(0)));
+                    } else {
+                        bw.write(getStringFromToken(list.get(0)));
+                    }
+                    bw.write(", ");
+                    if (secondIsReference) {
+                        bw.write(getReferenceFromToken(list.get(1)));
+                    } else {
+                        bw.write(getStringFromToken(list.get(1)));
+                    }
+                    /*boolean first = true;
                     for (String value: list) {
                         if (!first)
                             bw.write(", ");
                         first = false;
                         bw.write("'" + value + "'");
-                    }
+                    }*/
                     bw.writeln(");");
                 }
                 br.close();
@@ -684,6 +754,7 @@ public class OntologyGraph {
                                 edge.getLabel(), foreignTableName, "id"));
                         addAttrToSchema(schemaName, tableName,
                                 edge.getLabel(), edge);
+                        addTable(edge, schemaName, tableName, edge.getLabel());
 
                     } else if (object.isDataType()) {
                         w.writeln();
@@ -694,6 +765,7 @@ public class OntologyGraph {
                         }
                         addAttrToSchema(schemaName, tableName,
                                 edge.getLabel(), edge);
+                        addTable(edge, schemaName, tableName, edge.getLabel());
                     }
                 }
                 w.writeln();
@@ -704,15 +776,14 @@ public class OntologyGraph {
                     String subjectName = clss.getLabel().replaceAll("[-.]", "");
                     String objectName
                             = object.getLabel().replaceAll("[-.]", "");
-                    objectName = firstToUpperCase(objectName);
+                    //objectName = objectName;
                     String propertyName = firstToUpperCase(edge.getLabel());
-                    String binaryTableName = subjectName + propertyName
-                            + objectName;
+                    String binaryTableName = subjectName + propertyName;
                     String binaryTableFullName = schemaName + "."
                             + binaryTableName;
                     w.writeln();
                     w.writeln("CREATE TABLE " + binaryTableFullName + "(");
-                    addTable(edge, binaryTableName, tableName);
+                    addTable(edge, binaryTableName, tableName, objectName);
 
                     if (object.isClass()) {
                         w.writeln("\t" + subjectName
@@ -797,13 +868,13 @@ public class OntologyGraph {
                 + str.substring(1);
     }
 
-    private String getForeignKey(String schemaName, String table, String attr, String foreignTable,
-            String foreignAttr) {
+    private String getForeignKey(String schemaName, String table, String attr,
+            String foreignTable, String foreignAttr) {
         return "ALTER TABLE ONLY " + schemaName + "." + table + "\n    "
                 + "ADD CONSTRAINT " + table.toLowerCase() + "_"
-                + attr.toLowerCase() + "_" + foreignTable.toLowerCase()
-                + "_reference" + " FOREIGN KEY (" + attr + ") REFERENCES "
-                + schemaName + "." + foreignTable + "(" + foreignAttr + ");";
+                + attr.toLowerCase() + "_reference" +
+                " FOREIGN KEY (" + attr + ") REFERENCES " + schemaName +
+                "." + foreignTable + "(" + foreignAttr + ");";
     }
 
     public OntologyGraph(Ontology ontology) {

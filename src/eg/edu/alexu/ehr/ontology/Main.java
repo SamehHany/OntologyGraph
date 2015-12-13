@@ -41,7 +41,7 @@ public class Main {
         OntologyGraph graph = new OntologyGraph(ontology);
         //graph.toTable("test/graph.sql");
         //graph.save("test/Edges.txt");
-        graph.toTable("graph.sql");
+        graph.toTable("graph.sql", "movieontology.obda");
         graph.save("Edges.txt");
         
         //graph.getData("http://www.movieontology.org/" +

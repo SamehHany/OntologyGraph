@@ -20,6 +20,11 @@ abstract public class OntologyValue extends OntologyObject {
 	public boolean isLiteral() {
 		return !isIndividual;
 	}
+        
+        @Override
+        public String getURIAsStr() {
+            return toString();
+        }
 	
 	@Override
 	public String toString() {

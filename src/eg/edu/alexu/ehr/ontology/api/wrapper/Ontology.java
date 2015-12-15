@@ -44,6 +44,8 @@ public class Ontology {
     private Map<OntologyProperty, Set<OWLObject>> discoveredRages;
     
     private Set<OWLClass> classesHaveValue;
+    
+    private Set<OWLClassExpression> discard;
 
     public Ontology(String pathToOWLFile) {
         File file = new File(pathToOWLFile);
@@ -56,10 +58,14 @@ public class Ontology {
             e.printStackTrace();
         }
         this.ontology = ontology;
+        discard = new HashSet();
+        //getCardinalityInfo();
     }
 
     public Ontology(OWLOntology ontology) {
         this.ontology = ontology;
+        discard = new HashSet();
+        //getCardinalityInfo();
     }
 
     public Set<OntologyClass> getDiscoveredDomains(OntologyProperty property) {
@@ -74,6 +80,8 @@ public class Ontology {
         Set<OWLClass> classes = ontology.getClassesInSignature();
         Set<OntologyClass> set = new HashSet<OntologyClass>(classes.size());
         for (OWLClass clss : classes) {
+            //if (discard.contains(clss))
+            //    continue;
             boolean hasValue = false;
             for (OWLClassExpression expr : clss.getSuperClasses(
                             ontology)) {
@@ -207,29 +215,37 @@ public class Ontology {
     private OWLPropertyExpression getOntologyProperty(OWLClassExpression expr) {
         if (expr instanceof OWLObjectMinCardinality) {
             OWLObjectMinCardinality d = (OWLObjectMinCardinality) expr;
+            discard.add(d);
             return d.getProperty();
         } else if (expr instanceof OWLObjectMaxCardinality) {
             OWLObjectMaxCardinality d = (OWLObjectMaxCardinality) expr;
+            discard.add(d);
             return d.getProperty();
         } else if (expr instanceof OWLObjectExactCardinality) {
             OWLObjectExactCardinality d = (OWLObjectExactCardinality) expr;
+            discard.add(d);
             return d.getProperty();
         } else if (expr instanceof OWLDataMinCardinality) {
             OWLDataMinCardinality d = (OWLDataMinCardinality) expr;
+            discard.add(d);
             return d.getProperty();
         } else if (expr instanceof OWLDataMaxCardinality) {
             OWLDataMaxCardinality d = (OWLDataMaxCardinality) expr;
+            discard.add(d);
             return d.getProperty();
         } else if (expr instanceof OWLDataExactCardinality) {
             OWLDataExactCardinality d = (OWLDataExactCardinality) expr;
+            discard.add(d);
             return d.getProperty();
         } /*else if (expr instanceof OWLObjectIntersectionOf) {
             System.out.println("INTERSECTION FOUND");
         }*/ else if (expr instanceof OWLObjectHasValue) {
             OWLObjectHasValue d = (OWLObjectHasValue) expr;
+            discard.add(d);
             return d.getProperty();
         } else if (expr instanceof OWLRestriction) {
             OWLRestriction d = (OWLRestriction) expr;
+            discard.add(d);
             return d.getProperty();
         }
 

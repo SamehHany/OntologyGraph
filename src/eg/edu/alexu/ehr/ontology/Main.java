@@ -20,6 +20,7 @@ public class Main {
 
     public static void main(String[] args) throws OWLOntologyCreationException, IOException {
         String inputfile = "movieontology-instances.owl";
+        //String inputfile = "wine.rdf";
 	//Ontology ontology = new Ontology("FlyAtlas-Vocabulary.owl");
         //Ontology ontology = new Ontology("pc.rdf");
         //Ontology ontology = new Ontology("test.rdf");

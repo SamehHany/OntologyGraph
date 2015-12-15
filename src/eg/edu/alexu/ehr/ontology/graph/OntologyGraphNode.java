@@ -104,7 +104,7 @@ public class OntologyGraphNode implements OntologyGraphObject {
                     return uri.substring(i+1, end);
             }
 
-            return "";
+            return uri;
         }
 
     public boolean isValue() {

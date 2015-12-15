@@ -711,7 +711,8 @@ public class OntologyGraph {
                         tableName);
 
                 List<OntologyGraphEdge> binary = new ArrayList();
-                Set<String> propertyNames = new HashSet();
+                Set<OntologyGraphEdge> properties = new HashSet();
+                Set<String> binaryPropertyNames = new HashSet();
                 Iterator<OntologyGraphEdge> it = edges.iterator();
                 //if (it.hasNext()) {
                 //w.write(",");
@@ -755,14 +756,16 @@ public class OntologyGraph {
                     Pair<OntologyProperty, OntologyObject> pair
                             = new Pair(edge.getProperty(), object.getObject());
                     usedProperties.add(pair);
-
-                    propertyNames.add(edge.getLabel());
+                    
+                    
                     if (card.getMin() > 1 || card.getMax() > 1) {
                         binary.add(edge);
+                        binaryPropertyNames.add(edge.getLabel());
                         continue;
                     }
-
-                    w.write(",");
+                    
+                    properties.add(edge);
+                    
                     addFieldToTable(w, object, edge, it, tableName,
                             foreignTableName, foreignKeys, propertiesInOBDA);
                 }
@@ -771,8 +774,7 @@ public class OntologyGraph {
 
                 createBinaryTables(w, binary, clss, tableName, foreignKeys);
 
-                insertIds(w, tableName, propertyNames, propertiesInOBDA);
-                insertData();
+                insertValues(w, tableName, properties, propertiesInOBDA);
             }
 
             w.writeln();
@@ -789,15 +791,21 @@ public class OntologyGraph {
         }
 
     }
-    
-    private void insertData() {
-        
-    }
 
-    private void insertIds(BufferedFileWriter w, String tableName,
-            Set<String> propertyNames, Set<String> propertiesInOBDA)
+    private void insertValues(BufferedFileWriter w, String tableName,
+            Set<OntologyGraphEdge> properties, Set<String> propertiesInOBDA)
             throws IOException {
-        if (!(propertyNames.size() > 0))
+        Set<OntologyGraphEdge> tmp = properties;
+        properties = new HashSet();
+        for (OntologyGraphEdge property : tmp) {
+            if (propertiesInOBDA.contains(property.getLabel()))
+                properties.add(property);
+        }
+        
+        if (!(properties.size() > 0))
+            return;
+        
+        /*if (!(propertyNames.size() > 0))
             return;
         int propertyCount = 0;
         for (String propertyName : propertyNames) {
@@ -805,24 +813,51 @@ public class OntologyGraph {
                 propertyCount++;
         }
         if (!(propertyCount > 0))
-            return;
+            return;*/
         w.write("INSERT INTO " + schemaName + "." + tableName
-                + "(id)");
+                + "(id");
+        for (OntologyGraphEdge property : properties) {
+            //if (propertiesInOBDA.contains(propertyName))
+                w.write(", " + property.getLabel());
+        }
+        w.writeln(")");
+        w.write("SELECT x");
+        for (OntologyGraphEdge property : properties) {
+            String propertyLabel = property.getLabel();
+            w.write(", " + fullAttributeName(propertySchema, tableName,
+                    propertyLabel) + "." + propertyLabel + " AS " +
+                    propertyLabel); 
+        }
+        w.writeln();
+        w.write("FROM ");
         boolean first = true;
-        for (String propertyName : propertyNames) {
-            if (!propertiesInOBDA.contains(propertyName))
-                continue;
-            w.writeln();
+        String prevTable = "";
+        for (OntologyGraphEdge property : properties) {
+            String propertyLabel = property.getLabel();
+            String fullTableName = fullTableName(propertySchema, tableName) +
+                    firstToUpperCase(propertyLabel);
             if (!first)
-                w.writeln("UNION");
+                w.writeln(" LEFT OUTER JOIN");
+            
+            w.write(fullTableName);
+            if (!first)
+                w.write(" ON " + prevTable + ".x = " + fullTableName + ".x");
+            prevTable = fullTableName;
             first = false;
-            w.writeln("SELECT x");
-            w.write("FROM " + propertySchema + "." + propertyName);
         }
         w.writeln(";");
         w.write();
         
         
+    }
+    
+    private String fullAttributeName(String schema, String tableName,
+            String propertyLabel) {
+        return propertySchema + "." + tableName + propertyLabel;
+    }
+    
+    private String fullTableName(String schema, String tableName) {
+        return propertySchema + "." + tableName;
     }
 
     private void addFieldToTable(BufferedFileWriter w, OntologyGraphNode object,
@@ -837,9 +872,6 @@ public class OntologyGraph {
         if (object.isClass()) {
             w.writeln();
             w.write("\t" + attrName + " INTEGER");
-            if (it.hasNext()) {
-                w.write(",");
-            }
 
             w.write(" -- REFERENCES " + foreignTableName
                     + "(id)");
@@ -853,9 +885,6 @@ public class OntologyGraph {
             w.writeln();
             w.write("\t" + attrName + " "
                     + edge.getNextNode().getSQLDatatype());
-            if (it.hasNext()) {
-                w.write(",");
-            }
             addAttrToSchema(schemaName, tableName,
                     attrName, edge);
             addTable(edge, schemaName, tableName, attrName);
@@ -870,8 +899,9 @@ public class OntologyGraph {
             String subjectName = clss.getLabel().replaceAll("[-.]", "");
             String objectName
                     = object.getLabel().replaceAll("[-.]", "");
+            String propertyLabel = edge.getLabel();
             //objectName = objectName;
-            String propertyName = firstToUpperCase(edge.getLabel());
+            String propertyName = firstToUpperCase(propertyLabel);
             String binaryTableName = subjectName + propertyName;
             String binaryTableFullName = schemaName + "."
                     + binaryTableName;
@@ -883,7 +913,7 @@ public class OntologyGraph {
                 w.writeln("\t" + subjectName
                         + " INTEGER, -- REFERENCES "
                         + subjectName + "(id)" + ",");
-                w.writeln("\t" + objectName
+                w.writeln("\t" + propertyLabel
                         + " INTEGER -- REFERENCES "
                         + objectName + "(id)");
                 w.writeln(");");
@@ -907,7 +937,7 @@ public class OntologyGraph {
                 w.writeln("\t" + subjectName
                         + " INTEGER, -- REFERENCES "
                         + subjectName + "(id)" + ",");
-                w.writeln("\t" + objectName + " "
+                w.writeln("\t" + propertyLabel + " "
                         + object.getSQLDatatype());
                 w.writeln(");");
             }
@@ -922,6 +952,14 @@ public class OntologyGraph {
                     + "_" + objectName.toLowerCase() + "_pkey"
                     + " PRIMARY KEY (" + subjectName + ", "
                     + objectName + ");");
+            
+            w.writeln();
+            w.writeln("INSERT INTO " + binaryTableFullName + "(id, " +
+                    propertyLabel + ")");
+            //w.writeln("SELECT x, " + propertySchema + "." + binaryTableName +
+            //        "." + propertyLabel + " AS " + propertyLabel);
+            w.writeln("SELECT *");
+            w.writeln("FROM " + propertySchema + "." + binaryTableName + ";");
         }
     }
 

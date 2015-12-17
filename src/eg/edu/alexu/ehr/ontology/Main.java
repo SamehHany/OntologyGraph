@@ -44,6 +44,7 @@ public class Main {
         //graph.save("test/Edges.txt");
         graph.toTable("graph.sql", "movieontology.obda");
         graph.save("Edges.txt");
+        graph.generateOBDAFile(inputfile);
         
         //graph.getData("http://www.movieontology.org/" +
                 //"2009/10/01/movieontology.owl#Movie", "movieontology.obda",

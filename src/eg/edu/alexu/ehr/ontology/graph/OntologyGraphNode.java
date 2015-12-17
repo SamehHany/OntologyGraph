@@ -421,6 +421,36 @@ public class OntologyGraphNode implements OntologyGraphObject {
             return "VARCHAR(255)";
         }
     }
+    
+    public String getDatatypeForOBDA() {
+        if (label.equalsIgnoreCase("byte")) {
+            return "byte";
+        } else if (label.equalsIgnoreCase("double")) {
+            return "double";
+        } else if (label.equalsIgnoreCase("date")) {
+            return "date";
+        } else if (label.equalsIgnoreCase("dateTime")) {
+            return "dateTime";
+        } else if (label.equalsIgnoreCase("int")
+                || label.equalsIgnoreCase("uint")
+                || label.equalsIgnoreCase("int4")
+                || label.equalsIgnoreCase("uint4")
+                || label.equalsIgnoreCase("integer")
+                || label.equalsIgnoreCase("positiveInteger")
+                || label.equalsIgnoreCase("signedInteger")
+                || label.equalsIgnoreCase("unsignedInteger")) {
+            return "integer";
+        } else if (label.equalsIgnoreCase("int8")
+                || label.equalsIgnoreCase("uint8")
+                || label.equalsIgnoreCase("integer8")
+                || label.equalsIgnoreCase("long")
+                || label.equalsIgnoreCase("longint")
+                || label.equalsIgnoreCase("longinteger")) {
+            return "integer";
+        } else {
+            return "string";
+        }
+    }
 
     @Override
     public int hashCode() {

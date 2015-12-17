@@ -5,8 +5,12 @@
         <group>
             <file>file:/mnt/Data/research/ehr/OntologyGraph/src/eg/edu/alexu/ehr/util/csv/CSV.java</file>
             <file>file:/mnt/Data/research/ehr/OntologyGraph/src/eg/edu/alexu/ehr/ontology/graph/OntologyGraph.java</file>
+            <file>file:/mnt/Data/research/ehr/OntologyGraph/src/eg/edu/alexu/ehr/util/io/BufferedFileWriter.java</file>
+            <file>file:/mnt/Data/research/ehr/OntologyGraph/src/eg/edu/alexu/ehr/ontology/api/wrapper/object/OntologyObject.java</file>
+            <file>file:/mnt/Data/research/ehr/OntologyGraph/src/eg/edu/alexu/ehr/ontology/api/wrapper/Ontology.java</file>
             <file>file:/mnt/Data/research/ehr/OntologyGraph/src/eg/edu/alexu/ehr/ontology/graph/OntologyGraphNode.java</file>
             <file>file:/mnt/Data/research/ehr/OntologyGraph/src/eg/edu/alexu/ehr/ontology/graph/OntologyGraphEdge.java</file>
+            <file>file:/mnt/Data/research/ehr/OntologyGraph/src/eg/edu/alexu/ehr/ontology/api/wrapper/object/values/OntologyValue.java</file>
             <file>file:/mnt/Data/research/ehr/OntologyGraph/src/eg/edu/alexu/ehr/ontology/Main.java</file>
         </group>
     </open-files>

@@ -574,7 +574,6 @@ http://www.movieontology.org/2009/10/01/movieontology.owl#SciFi_and_Fantasy -- "
 http://www.movieontology.org/2009/10/01/movieontology.owl#SciFi_and_Fantasy -- "1.0"@Instance -- <http://www.movieontology.org/2009/10/01/movieontology.owl#Sci-Fi>
 http://www.movieontology.org/2009/10/01/movieontology.owl#Editor -- "1.0"@Instance -- <http://www.movieontology.org/2009/10/01/movieontology.owl#editor1>
 http://www.movieontology.org/2009/10/01/movieontology.owl#Editor -- "1.0"@Superclass -- http://dbpedia.org/ontology/Person
-http://www.movieontology.org/2009/10/01/movieontology.owl#Editor -- "100.0"@http://www.movieontology.org/2009/10/01/movieontology.owl#isEditorIn -- http://www.movieontology.org/2009/10/01/movieontology.owl#Movie
 http://www.movieontology.org/2009/10/01/movieontology.owl#Center_American_Company -- "1.0"@Superclass -- http://www.movieontology.org/2009/10/01/movieontology.owl#Location_Company
 http://www.movieontology.org/2009/10/01/movieontology.owl#Central_America -- "1.0"@Instance -- <http://www.movieontology.org/2009/10/01/movieontology.owl#Nicaragua>
 http://www.movieontology.org/2009/10/01/movieontology.owl#Central_America -- "1.0"@Instance -- <http://www.movieontology.org/2009/10/01/movieontology.owl#Honduras>
@@ -711,11 +710,12 @@ http://www.movieontology.org/2009/10/01/movieontology.owl#Southern_Africa -- "1.
 http://www.movieontology.org/2009/10/01/movieontology.owl#Southern_Africa -- "1.0"@Disjoint -- http://www.movieontology.org/2009/10/01/movieontology.owl#Middle_Africa
 http://www.movieontology.org/2009/10/01/movieontology.owl#Southern_Africa -- "1.0"@Disjoint -- http://www.movieontology.org/2009/10/01/movieontology.owl#Western_Africa
 http://www.movieontology.org/2009/10/01/movieontology.owl#Movie -- "100.0"@http://www.movieontology.org/2009/11/09/movieontology.owl#title -- http://www.w3.org/2001/XMLSchema#string
+http://www.movieontology.org/2009/10/01/movieontology.owl#Movie -- "100.0"@http://www.movieontology.org/2009/10/01/movieontology.owl#hasProducer -- http://www.movieontology.org/2009/10/01/movieontology.owl#Producer
+http://www.movieontology.org/2009/10/01/movieontology.owl#Movie -- "100.0"@http://dbpedia.org/ontology/productionStartYear -- http://www.w3.org/2001/XMLSchema#integer
 http://www.movieontology.org/2009/10/01/movieontology.owl#Movie -- "100.0"@http://www.movieontology.org/2009/10/01/movieontology.owl#belongsToGenre -- http://www.w3.org/2001/XMLSchema#string
 http://www.movieontology.org/2009/10/01/movieontology.owl#Movie -- "100.0"@http://dbpedia.org/ontology/gross -- http://www.w3.org/2001/XMLSchema#string
 http://www.movieontology.org/2009/10/01/movieontology.owl#Movie -- "100.0"@http://www.movieontology.org/2009/10/01/movieontology.owl#hasMaleActor -- http://dbpedia.org/ontology/Actor
 http://www.movieontology.org/2009/10/01/movieontology.owl#Movie -- "100.0"@http://www.movieontology.org/2009/10/01/movieontology.owl#hasDirector -- http://dbpedia.org/page/Film_Director
-http://www.movieontology.org/2009/10/01/movieontology.owl#Movie -- "100.0"@http://www.movieontology.org/2009/11/09/movieontology.owl#hasProducer -- http://www.movieontology.org/2009/10/01/movieontology.owl#Producer
 http://www.movieontology.org/2009/10/01/movieontology.owl#Movie -- "100.0"@http://www.movieontology.org/2009/10/01/movieontology.owl#hasActor -- http://dbpedia.org/ontology/Actor
 http://www.movieontology.org/2009/10/01/movieontology.owl#Movie -- "200.0"@http://www.movieontology.org/2009/10/01/movieontology.owl#hasEditor -- http://www.movieontology.org/2009/10/01/movieontology.owl#Editor
 http://www.movieontology.org/2009/10/01/movieontology.owl#Movie -- "1.0"@Instance -- <http://www.movieontology.org/2009/11/09/movieontology.owl#movie1>

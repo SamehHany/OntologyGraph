@@ -260,7 +260,7 @@
     <owl:ObjectProperty rdf:about="&mo;hasEditor">
         <rdfs:range rdf:resource="&mo;Editor"/>
         <rdfs:domain rdf:resource="&mo;Movie"/>
-        <owl:inverseOf rdf:resource="&mo;isEditorIn"/>
+        <!--<owl:inverseOf rdf:resource="&mo;isEditorIn"/>-->
     </owl:ObjectProperty>
     
 
@@ -409,9 +409,9 @@
 
     <!-- http://www.movieontology.org/2009/10/01/movieontology.owl#isEditorIn -->
 
-    <owl:ObjectProperty rdf:about="&mo;isEditorIn">
+    <!--<owl:ObjectProperty rdf:about="&mo;isEditorIn">
         <rdfs:domain rdf:resource="&mo;Editor"/>
-    </owl:ObjectProperty>
+    </owl:ObjectProperty>-->
     
 
 
@@ -614,18 +614,16 @@
 
     <!-- http://www.movieontology.org/2009/10/01/movieontology.owl#title -->
 
-    <!--<owl:DatatypeProperty rdf:about="&mo;title">
-        <rdf:type rdf:resource="&owl;FunctionalProperty" />
+    <owl:DatatypeProperty rdf:about="&mo;title">
         <rdfs:range rdf:resource="&xsd;string"/>
         <rdfs:domain rdf:resource="&mo;Movie"/>
-    </owl:DatatypeProperty>-->
-    
-    
-    
-    <owl:DatatypeProperty rdf:ID="title">
-        <rdf:type rdf:resource="&owl;FunctionalProperty" />
-        <rdfs:range rdf:resource="&xsd;string"/>
     </owl:DatatypeProperty>
+    
+    
+    
+    <!--<owl:DatatypeProperty rdf:ID="title">
+        <rdfs:range rdf:resource="&xsd;string"/>
+    </owl:DatatypeProperty>-->
     
 
 
@@ -1037,26 +1035,52 @@
 
     <!-- http://www.movieontology.org/2009/10/01/movieontology.owl#Movie -->
 
-    <owl:Class rdf:about="&mo;Movie"/>
+    <!--<owl:Class rdf:about="&mo;Movie"/>-->
     
-    <owl:Class rdf:about="&mo;Movie">
+    <owl:Class rdf:about="&www;Movie">
         <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&mo;title"/>
+                <owl:qualifiedCardinality rdf:datatype="&xsd;nonNegativeInteger">1    </owl:qualifiedCardinality>
+                <owl:onDataRange rdf:resource="&xsd;anyURI"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&dbpedia;productionStartYear"/>
+                <owl:minQualifiedCardinality rdf:datatype="&xsd;nonNegativeInteger">1    </owl:minQualifiedCardinality>
+                <owl:onDataRange rdf:resource="&xsd;anyURI"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+    <!--<owl:Class rdf:about="&mo;Movie">
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:about="&mo;title" />
+                <owl:minQualifiedCardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:minQualifiedCardinality>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>-->
+    
+    <!--<owl:Class rdf:about="&mo;Movie">
+        <rdfs:subClassOf>-->
             <!--<owl:Restriction>
                 <owl:onProperty rdf:about="&mo;title" />
                 <owl:cardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:cardinality>
             </owl:Restriction>-->
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="#title" />
+            <!--<owl:Restriction>
+                <owl:onProperty rdf:about="&mo;title" />
                 <owl:cardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:cardinality>
             </owl:Restriction>
-        </rdfs:subClassOf>
+        </rdfs:subClassOf>-->
         <!--<rdfs:subClassOf>
             <owl:Restriction>
                 <owl:onProperty rdf:resource="#hasProducer" />
                 <owl:cardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:cardinality>
             </owl:Restriction>
         </rdfs:subClassOf>-->
-    </owl:Class>
+    <!--</owl:Class>-->
 
 
     <!-- http://www.movieontology.org/2009/10/01/movieontology.owl#Musical_Entertainment -->

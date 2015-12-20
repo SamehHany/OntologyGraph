@@ -709,7 +709,6 @@ http://www.movieontology.org/2009/10/01/movieontology.owl#Southern_Africa -- "1.
 http://www.movieontology.org/2009/10/01/movieontology.owl#Southern_Africa -- "1.0"@Disjoint -- http://www.movieontology.org/2009/10/01/movieontology.owl#Northern_Africa
 http://www.movieontology.org/2009/10/01/movieontology.owl#Southern_Africa -- "1.0"@Disjoint -- http://www.movieontology.org/2009/10/01/movieontology.owl#Middle_Africa
 http://www.movieontology.org/2009/10/01/movieontology.owl#Southern_Africa -- "1.0"@Disjoint -- http://www.movieontology.org/2009/10/01/movieontology.owl#Western_Africa
-http://www.movieontology.org/2009/10/01/movieontology.owl#Movie -- "100.0"@http://www.movieontology.org/2009/11/09/movieontology.owl#title -- http://www.w3.org/2001/XMLSchema#string
 http://www.movieontology.org/2009/10/01/movieontology.owl#Movie -- "100.0"@http://www.movieontology.org/2009/10/01/movieontology.owl#hasProducer -- http://www.movieontology.org/2009/10/01/movieontology.owl#Producer
 http://www.movieontology.org/2009/10/01/movieontology.owl#Movie -- "100.0"@http://dbpedia.org/ontology/productionStartYear -- http://www.w3.org/2001/XMLSchema#integer
 http://www.movieontology.org/2009/10/01/movieontology.owl#Movie -- "100.0"@http://www.movieontology.org/2009/10/01/movieontology.owl#belongsToGenre -- http://www.w3.org/2001/XMLSchema#string
@@ -717,6 +716,7 @@ http://www.movieontology.org/2009/10/01/movieontology.owl#Movie -- "100.0"@http:
 http://www.movieontology.org/2009/10/01/movieontology.owl#Movie -- "100.0"@http://www.movieontology.org/2009/10/01/movieontology.owl#hasMaleActor -- http://dbpedia.org/ontology/Actor
 http://www.movieontology.org/2009/10/01/movieontology.owl#Movie -- "100.0"@http://www.movieontology.org/2009/10/01/movieontology.owl#hasDirector -- http://dbpedia.org/page/Film_Director
 http://www.movieontology.org/2009/10/01/movieontology.owl#Movie -- "100.0"@http://www.movieontology.org/2009/10/01/movieontology.owl#hasActor -- http://dbpedia.org/ontology/Actor
+http://www.movieontology.org/2009/10/01/movieontology.owl#Movie -- "100.0"@http://www.movieontology.org/2009/10/01/movieontology.owl#title -- http://www.w3.org/2001/XMLSchema#string
 http://www.movieontology.org/2009/10/01/movieontology.owl#Movie -- "200.0"@http://www.movieontology.org/2009/10/01/movieontology.owl#hasEditor -- http://www.movieontology.org/2009/10/01/movieontology.owl#Editor
 http://www.movieontology.org/2009/10/01/movieontology.owl#Movie -- "1.0"@Instance -- <http://www.movieontology.org/2009/11/09/movieontology.owl#movie1>
 http://www.movieontology.org/2009/10/01/movieontology.owl#Movie -- "100.0"@http://www.movieontology.org/2009/10/01/movieontology.owl#nominatedFor -- http://www.movieontology.org/2009/10/01/movieontology.owl#Award
@@ -790,6 +790,8 @@ http://www.movieontology.org/2009/10/01/movieontology.owl#Eastern_Africa -- "1.0
 http://www.movieontology.org/2009/10/01/movieontology.owl#Eastern_Africa -- "1.0"@Instance -- <http://www.movieontology.org/2009/10/01/movieontology.owl#Zimbabwe>
 http://www.movieontology.org/2009/10/01/movieontology.owl#Eastern_Africa -- "1.0"@Superclass -- http://www.movieontology.org/2009/10/01/movieontology.owl#Africa
 http://www.movieontology.org/2009/10/01/movieontology.owl#Eastern_Africa -- "1.0"@Instance -- <http://www.movieontology.org/2009/10/01/movieontology.owl#Uganda>
+http://www.movieontology.org/2009/11/09/Movie -- "100.0"@http://www.movieontology.org/2009/10/01/movieontology.owl#title -- http://www.w3.org/2001/XMLSchema#string
+http://www.movieontology.org/2009/11/09/Movie -- "100.0"@http://dbpedia.org/ontology/productionStartYear -- http://www.w3.org/2001/XMLSchema#integer
 http://dbpedia.org/ontology/Person -- "1.0"@Subclass -- http://www.movieontology.org/2009/10/01/movieontology.owl#Editor
 http://dbpedia.org/ontology/Person -- "100.0"@http://dbpedia.org/ontology/birthDate -- http://www.w3.org/2001/XMLSchema#string
 http://dbpedia.org/ontology/Person -- "1.0"@Subclass -- http://www.movieontology.org/2009/10/01/movieontology.owl#Producer

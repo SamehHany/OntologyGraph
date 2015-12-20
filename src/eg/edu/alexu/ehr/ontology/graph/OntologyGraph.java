@@ -977,7 +977,7 @@ public class OntologyGraph {
             w.writeln("    SELECT x FROM");
             String propertyLabel = property.getLabel();
             String fullAttributeName = fullAttributeName(propertySchema,
-                    tableName, propertyLabel);
+                    tableName, propertyLabel + "data");
             w.writeln("    " + fullAttributeName);
             w.write(")");
         }
@@ -998,7 +998,7 @@ public class OntologyGraph {
         for (OntologyGraphEdge property : localProperties) {
             String propertyLabel = property.getLabel();
             String fullAttributeName = fullAttributeName(propertySchema,
-                    tableName, propertyLabel);
+                    tableName, propertyLabel + "data");
 
             w.write(", " + fullAttributeName + "." + propertyLabel + " AS "
                     + propertyLabel);
@@ -1008,7 +1008,8 @@ public class OntologyGraph {
         first = true;
         for (OntologyGraphEdge property : localProperties) {
             String propertyLabel = property.getLabel();
-            String fullTableName = fullTableName(propertySchema, tableName)
+            String fullTableName = fullTableName(propertySchema, tableName +
+                    "data")
                     + firstToUpperCase(propertyLabel);
             w.writeln(" LEFT OUTER JOIN");
 
@@ -1131,8 +1132,9 @@ public class OntologyGraph {
                     propertyLabel + ")");
             //w.writeln("SELECT x, " + propertySchema + "." + binaryTableName +
             //        "." + propertyLabel + " AS " + propertyLabel);
-            w.writeln("SELECT DISTINCT ON (id, " + propertyLabel + ") *");
-            w.writeln("FROM " + propertySchema + "." + binaryTableName + ";");
+            w.writeln("SELECT DISTINCT ON (x, " + propertyLabel + ") *");
+            w.writeln("FROM " + propertySchema + "." + binaryTableName +
+                    "data" + ";");
         }
     }
 

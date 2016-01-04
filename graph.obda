@@ -1,0 +1,519 @@
+[PrefixDeclaration]
+mo:		http://www.movieontology.org/2009/10/01/movieontology.owl#
+owl:		http://www.w3.org/2002/07/owl#
+owl2xml:	http://www.w3.org/2006/12/owl2-xml#
+xsd:		http://www.w3.org/2001/XMLSchema#
+dbpedia:	http://dbpedia.org/ontology/
+rdfs:		http://www.w3.org/2000/01/rdf-schema#
+quest:		http://obda.org/quest#
+mo2:		http://www.movieontology.org/2009/11/09/movieontology.owl#
+imdb:		http://www.imdb.com/
+rdf:		http://www.w3.org/1999/02/22-rdf-syntax-ns#
+www:		http://www.movieontology.org/2009/11/09/
+page:		http://dbpedia.org/page/
+dc:		http://purl.org/dc/elements/1.1/
+
+[SourceDeclaration]
+sourceUri	imdb-obda
+connectionUrl	jdbc:postgresql://localhost/postgres
+username	sameh
+password	""
+driverClass	org.postgresql.Driver
+
+[MappingDeclaration] @collection [[
+mappingId	Southeastern_Asia
+target		{id} a mo:Southeastern_Asia .
+source		select id from ontology.Southeastern_Asia
+
+mappingId	Central_Asia
+target		{id} a mo:Central_Asia .
+source		select id from ontology.Central_Asia
+
+mappingId	Polynesia
+target		{id} a mo:Polynesia .
+source		select id from ontology.Polynesia
+
+mappingId	Fun
+target		{id} a mo:Fun .
+source		select id from ontology.Fun
+
+mappingId	Musical_Entertainment
+target		{id} a mo:Musical_Entertainment .
+source		select id from ontology.Musical_Entertainment
+
+mappingId	Award
+target		{id} a mo:Award .
+source		select id from ontology.Award
+
+mappingId	Intelectual_Entertainment
+target		{id} a mo:Intelectual_Entertainment .
+source		select id from ontology.Intelectual_Entertainment
+
+mappingId	Colorinfo
+target		{id} a mo:Colorinfo .
+source		select id from ontology.Colorinfo
+
+mappingId	Africa
+target		{id} a mo:Africa .
+source		select id from ontology.Africa
+
+mappingId	Oceania
+target		{id} a mo:Oceania .
+source		select id from ontology.Oceania
+
+mappingId	Australia_and_New_Zealand
+target		{id} a mo:Australia_and_New_Zealand .
+source		select id from ontology.Australia_and_New_Zealand
+
+mappingId	East_Asian_Company
+target		{id} a mo:East_Asian_Company .
+source		select id from ontology.East_Asian_Company
+
+mappingId	Thing
+target		{id} a owl:Thing .
+source		select id from ontology.Thing
+
+mappingId	CompanyCountry
+target		{id} a dbpedia:CompanyCountry .
+source		select id from ontology.CompanyCountry
+
+mappingId	Experience
+target		{id} a mo:Experience .
+source		select id from ontology.Experience
+
+mappingId	Northern_Europe
+target		{id} a mo:Northern_Europe .
+source		select id from ontology.Northern_Europe
+
+mappingId	Production_Company
+target		{id} a mo:Production_Company .
+source		select id from ontology.Production_Company
+
+mappingId	TVSeries
+target		{id} a mo:TVSeries .
+source		select id from ontology.TVSeries
+
+mappingId	South_Asian_Company
+target		{id} a mo:South_Asian_Company .
+source		select id from ontology.South_Asian_Company
+
+mappingId	West_European_Company
+target		{id} a mo:West_European_Company .
+source		select id from ontology.West_European_Company
+
+mappingId	Asia
+target		{id} a mo:Asia .
+source		select id from ontology.Asia
+
+mappingId	CompanyCountry
+target		{id} a mo:CompanyCountry .
+source		select id from ontology.CompanyCountry
+
+mappingId	Sensible_Thrilling
+target		{id} a mo:Sensible_Thrilling .
+source		select id from ontology.Sensible_Thrilling
+
+mappingId	North_American_Company
+target		{id} a mo:North_American_Company .
+source		select id from ontology.North_American_Company
+
+mappingId	Europe
+target		{id} a mo:Europe .
+source		select id from ontology.Europe
+
+mappingId	Western_Europe
+target		{id} a mo:Western_Europe .
+source		select id from ontology.Western_Europe
+
+mappingId	TVEntertainment
+target		{id} a mo:TV-Entertainment .
+source		select id from ontology.TVEntertainment
+
+mappingId	Consumable_Product
+target		{id} a mo2:Consumable_Product .
+source		select id from ontology.Consumable_Product
+
+mappingId	Logical_Thrilling
+target		{id} a mo:Logical_Thrilling .
+source		select id from ontology.Logical_Thrilling
+
+mappingId	Sound_Mix
+target		{id} a mo:Sound_Mix .
+source		select id from ontology.Sound_Mix
+
+mappingId	Eastern_Asia
+target		{id} a mo:Eastern_Asia .
+source		select id from ontology.Eastern_Asia
+
+mappingId	Northern_Africa
+target		{id} a mo:Northern_Africa .
+source		select id from ontology.Northern_Africa
+
+mappingId	North_European_Company
+target		{id} a mo:North_European_Company .
+source		select id from ontology.North_European_Company
+
+mappingId	Place
+target		{id} a page:Place .
+source		select id from ontology.Place
+
+mappingId	Middle_Africa
+target		{id} a mo:Middle_Africa .
+source		select id from ontology.Middle_Africa
+
+mappingId	Western_Africa
+target		{id} a mo:Western_Africa .
+source		select id from ontology.Western_Africa
+
+mappingId	Oceanian_Company
+target		{id} a mo:Oceanian_Company .
+source		select id from ontology.Oceanian_Company
+
+mappingId	Costume_Designer
+target		{id} a mo:Costume_Designer .
+source		select id from ontology.Costume_Designer
+
+mappingId	Southern_Europe
+target		{id} a mo:Southern_Europe .
+source		select id from ontology.Southern_Europe
+
+mappingId	Sensible
+target		{id} a mo:Sensible .
+source		select id from ontology.Sensible
+
+mappingId	Information
+target		{id} a mo:Information .
+source		select id from ontology.Information
+
+mappingId	Entertaining_Information
+target		{id} a mo:Entertaining_Information .
+source		select id from ontology.Entertaining_Information
+
+mappingId	Thrilling
+target		{id} a mo:Thrilling .
+source		select id from ontology.Thrilling
+
+mappingId	Eastern_Europe
+target		{id} a mo:Eastern_Europe .
+source		select id from ontology.Eastern_Europe
+
+mappingId	DataProperty
+target		{id} a owl:DataProperty .
+source		select id from ontology.DataProperty
+
+mappingId	Heavy_Sensible
+target		{id} a mo:Heavy_Sensible .
+source		select id from ontology.Heavy_Sensible
+
+mappingId	Writer
+target		{id} a dbpedia:Writer .
+source		select id from ontology.Writer
+
+mappingId	Presentation
+target		{id} a mo:Presentation .
+source		select id from ontology.Presentation
+
+mappingId	Musical_Artist
+target		{id} a dbpedia:Musical_Artist .
+source		select id from ontology.Musical_Artist
+
+mappingId	SciFi_and_Fantasy
+target		{id} a mo:SciFi_and_Fantasy .
+source		select id from ontology.SciFi_and_Fantasy
+
+mappingId	Editor
+target		{id} a mo:Editor .
+source		select id from ontology.Editor
+
+mappingId	Center_American_Company
+target		{id} a mo:Center_American_Company .
+source		select id from ontology.Center_American_Company
+
+mappingId	Central_America
+target		{id} a mo:Central_America .
+source		select id from ontology.Central_America
+
+mappingId	Historical_Information
+target		{id} a mo:Historical_Information .
+source		select id from ontology.Historical_Information
+
+mappingId	SouthEast_Asian_Company
+target		{id} a mo:SouthEast_Asian_Company .
+source		select id from ontology.SouthEast_Asian_Company
+
+mappingId	Certification
+target		{id} a mo:Certification .
+source		select id from ontology.Certification
+
+mappingId	Love
+target		{id} a mo:Love .
+source		select id from ontology.Love
+
+mappingId	Language
+target		{id} a dbpedia:Language .
+source		select id from ontology.Language
+
+mappingId	Colorinfo
+target		{id} a mo2:Colorinfo .
+source		select id from ontology.Colorinfo
+
+mappingId	Western_Asia
+target		{id} a mo:Western_Asia .
+source		select id from ontology.Western_Asia
+
+mappingId	South_European_Company
+target		{id} a mo:South_European_Company .
+source		select id from ontology.South_European_Company
+
+mappingId	Actionreach
+target		{id} a mo:Actionreach .
+source		select id from ontology.Actionreach
+
+mappingId	Location_Company
+target		{id} a mo:Location_Company .
+source		select id from ontology.Location_Company
+
+mappingId	Brute_Action
+target		{id} a mo:Brute_Action .
+source		select id from ontology.Brute_Action
+
+mappingId	SpecialInfo
+target		{id} a mo:Special-Info .
+source		select id from ontology.SpecialInfo
+
+mappingId	Territory
+target		{id} a mo:Territory .
+source		select id from ontology.Territory
+
+mappingId	Porn
+target		{id} a mo:Porn .
+source		select id from ontology.Porn
+
+mappingId	Producer
+target		{id} a mo:Producer .
+source		select id from ontology.Producer
+
+mappingId	South_American_Company
+target		{id} a mo:South_American_Company .
+source		select id from ontology.South_American_Company
+
+mappingId	Northern_America
+target		{id} a mo:Northern_America .
+source		select id from ontology.Northern_America
+
+mappingId	Online_retailer
+target		{id} a mo:Online_retailer .
+source		select id from ontology.Online_retailer
+
+mappingId	Actor
+target		{id} a dbpedia:Actor .
+source		select id from ontology.Actor
+
+mappingId	Documentarial_Information
+target		{id} a mo:Documentarial_Information .
+source		select id from ontology.Documentarial_Information
+
+mappingId	Genre
+target		{id} a mo:Genre .
+source		select id from ontology.Genre
+
+mappingId	Micronesia
+target		{id} a mo:Micronesia .
+source		select id from ontology.Micronesia
+
+mappingId	Entertainment
+target		{id} a mo:Entertainment .
+source		select id from ontology.Entertainment
+
+mappingId	SocialActive
+target		{id} a mo:SocialActive .
+source		select id from ontology.SocialActive
+
+mappingId	LatinAmerica
+target		{id} a mo:LatinAmerica .
+source		select id from ontology.LatinAmerica
+
+mappingId	Southern_Africa
+target		{id} a mo:Southern_Africa .
+source		select id from ontology.Southern_Africa
+
+mappingId	Movie
+target		{id} a mo:Movie .
+source		select id from ontology.Movie
+
+mappingId	InfoTV
+target		{id} a mo:Info-TV .
+source		select id from ontology.InfoTV
+
+mappingId	Film_Director
+target		{id} a page:Film_Director .
+source		select id from ontology.Film_Director
+
+mappingId	America
+target		{id} a mo:America .
+source		select id from ontology.America
+
+mappingId	FastInfo
+target		{id} a mo:Fast-Info .
+source		select id from ontology.FastInfo
+
+mappingId	Kids
+target		{id} a mo:Kids .
+source		select id from ontology.Kids
+
+mappingId	Caribbean
+target		{id} a mo:Caribbean .
+source		select id from ontology.Caribbean
+
+mappingId	Eastern_Africa
+target		{id} a mo:Eastern_Africa .
+source		select id from ontology.Eastern_Africa
+
+mappingId	Movie
+target		{id} a www:Movie .
+source		select id from ontology.Movie
+
+mappingId	Person
+target		{id} a dbpedia:Person .
+source		select id from ontology.Person
+
+mappingId	Imaginational_Entertainment
+target		{id} a mo:Imaginational_Entertainment .
+source		select id from ontology.Imaginational_Entertainment
+
+mappingId	Southern_Asia
+target		{id} a mo:Southern_Asia .
+source		select id from ontology.Southern_Asia
+
+mappingId	Actress
+target		{id} a mo2:Actress .
+source		select id from ontology.Actress
+
+mappingId	South_America
+target		{id} a mo:South_America .
+source		select id from ontology.South_America
+
+mappingId	Old_Action
+target		{id} a mo:Old_Action .
+source		select id from ontology.Old_Action
+
+mappingId	Melanesia
+target		{id} a mo:Melanesia .
+source		select id from ontology.Melanesia
+
+mappingId	birthName
+target		{id} dbpedia:birthName {birthName}^^xsd:string .
+source		select id, birthName from ontology.PersonBirthName
+
+mappingId	isColorOf
+target		{id} mo:isColorOf {isColorOf}^^xsd:string .
+source		select id, isColorOf from ontology.ColorinfoIsColorOf
+
+mappingId	hasProducer
+target		{id} mo:hasProducer {hasProducer} .
+source		select id, hasProducer from ontology.MovieHasProducer
+
+mappingId	isSoundmixOf
+target		{id} mo:isSoundmixOf {isSoundmixOf}^^xsd:string .
+source		select id, isSoundmixOf from ontology.Sound_MixIsSoundmixOf
+
+mappingId	title
+target		{id} mo:title {title}^^xsd:string .
+source		select id, title from ontology.MovieTitle
+
+mappingId	gross
+target		{id} dbpedia:gross {gross}^^xsd:string .
+source		select id, gross from ontology.MovieGross
+
+mappingId	isActorIn
+target		{id} mo:isActorIn {isActorIn} .
+source		select id, isActorIn from ontology.ActorIsActorIn
+
+mappingId	belongsToGenre
+target		{id} mo:belongsToGenre {belongsToGenre}^^xsd:string .
+source		select id, belongsToGenre from ontology.MovieBelongsToGenre
+
+mappingId	title
+target		{id} mo:title {title}^^xsd:string .
+source		select id, title from ontology.Movie
+
+mappingId	isMaleActorIn
+target		{id} mo2:isMaleActorIn {isMaleActorIn} .
+source		select id, isMaleActorIn from ontology.ActorIsMaleActorIn
+
+mappingId	hasEditor
+target		{id} mo:hasEditor {hasEditor} .
+source		select id, hasEditor from ontology.MovieHasEditor
+
+mappingId	isActressIn
+target		{id} mo:isActressIn {isActressIn}^^xsd:string .
+source		select id, isActressIn from ontology.ActressIsActressIn
+
+mappingId	productionStartYear
+target		{id} dbpedia:productionStartYear {productionStartYear}^^xsd:integer .
+source		select id, productionStartYear from ontology.MovieProductionStartYear
+
+mappingId	isCertificationOf
+target		{id} mo:isCertificationOf {isCertificationOf}^^xsd:string .
+source		select id, isCertificationOf from ontology.CertificationIsCertificationOf
+
+mappingId	nominatedFor
+target		{id} mo:nominatedFor {nominatedFor} .
+source		select id, nominatedFor from ontology.MovieNominatedFor
+
+mappingId	enablesConsumptionOf
+target		{id} mo:enablesConsumptionOf {enablesConsumptionOf}^^xsd:string .
+source		select id, enablesConsumptionOf from ontology.Consumable_ProductEnablesConsumptionOf
+
+mappingId	isCostumeDesignerIn
+target		{id} mo:isCostumeDesignerIn {isCostumeDesignerIn}^^xsd:string .
+source		select id, isCostumeDesignerIn from ontology.Costume_DesignerIsCostumeDesignerIn
+
+mappingId	birthDate
+target		{id} dbpedia:birthDate {birthDate}^^xsd:string .
+source		select id, birthDate from ontology.PersonBirthDate
+
+mappingId	containsCompanyCountry
+target		{id} mo:containsCompanyCountry {containsCompanyCountry} .
+source		select id, containsCompanyCountry from ontology.TerritoryContainsCompanyCountry
+
+mappingId	produced
+target		{id} mo:produced {produced}^^xsd:string .
+source		select id, produced from ontology.Production_CompanyProduced
+
+mappingId	hasCompanyLocation
+target		{id} mo2:hasCompanyLocation {hasCompanyLocation}^^xsd:string .
+source		select id, hasCompanyLocation from ontology.Production_CompanyHasCompanyLocation
+
+mappingId	isAwardOf
+target		{id} mo2:isAwardOf {isAwardOf}^^xsd:string .
+source		select id, isAwardOf from ontology.AwardIsAwardOf
+
+mappingId	partOfCompanyTerritory
+target		{id} mo:partOfCompanyTerritory {partOfCompanyTerritory} .
+source		select id, partOfCompanyTerritory from ontology.CompanyCountryPartOfCompanyTerritory
+
+mappingId	hasDirector
+target		{id} mo:hasDirector {hasDirector} .
+source		select id, hasDirector from ontology.MovieHasDirector
+
+mappingId	productionStartYear
+target		{id} dbpedia:productionStartYear {productionStartYear}^^xsd:integer .
+source		select id, productionStartYear from ontology.MovieProductionStartYear
+
+mappingId	isReleasingCompanyCountryOf
+target		{id} mo:isReleasingCompanyCountryOf {isReleasingCompanyCountryOf}^^xsd:string .
+source		select id, isReleasingCompanyCountryOf from ontology.CompanyCountryIsReleasingCompanyCountryOf
+
+mappingId	hasTranslatedMovie
+target		{id} mo:hasTranslatedMovie {hasTranslatedMovie}^^xsd:string .
+source		select id, hasTranslatedMovie from ontology.LanguageHasTranslatedMovie
+
+mappingId	isFilmLocationOf
+target		{id} mo:isFilmLocationOf {isFilmLocationOf}^^xsd:string .
+source		select id, isFilmLocationOf from ontology.PlaceIsFilmLocationOf
+
+mappingId	isComposerIn
+target		{id} mo:isComposerIn {isComposerIn}^^xsd:string .
+source		select id, isComposerIn from ontology.Musical_ArtistIsComposerIn
+]]

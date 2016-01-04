@@ -3,6 +3,8 @@ build/
 *.class
 *.txt
 *.sql
+*~
+*.csv
 
 
 build/

@@ -1,0 +1,1 @@
+#logback.classic pattern: %d{HH:mm:ss.SSS} |-%-5level in %logger{36} - %msg%n

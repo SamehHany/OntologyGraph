@@ -1,0 +1,1 @@
+./ontop query -m input-files/movieontology.obda   -t input-files/movieontology.owl   -q input-files/movieontology-single.q -o output.csv

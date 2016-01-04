@@ -6,6 +6,7 @@ import eg.edu.alexu.ehr.ontology.graph.OntologyGraph;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import static eg.edu.alexu.ehr.ontology.Axiom.*;
 import eg.edu.alexu.ehr.query.Plan;
+import eg.edu.alexu.ehr.util.db.Database;
 import eg.edu.alexu.ehr.util.io.BufferedFileReader;
 import java.io.FileNotFoundException;
 import java.util.HashMap;
@@ -19,8 +20,10 @@ import org.semanticweb.owlapi.model.OWLOntology;
 public class Main {
 
     public static void main(String[] args) throws OWLOntologyCreationException, IOException {
-        String inputfile = "movieontology-instances.owl";
+        //String inputfile = "movieontology-instances.owl";
         //String inputfile = "wine.rdf";
+        //String inputfile = "FlyAtlas-Vocabulary.owl";
+        String inputfile = "countries.owl";
 	//Ontology ontology = new Ontology("FlyAtlas-Vocabulary.owl");
         //Ontology ontology = new Ontology("pc.rdf");
         //Ontology ontology = new Ontology("test.rdf");
@@ -28,7 +31,7 @@ public class Main {
         //Ontology ontology = new Ontology("dbpedia_2015-04.owl");
 
         //Ontology ontology = new Ontology("movieontology-instances (small).owl");
-        Ontology ontology = new Ontology(inputfile);
+        // temp comment: Ontology ontology = new Ontology(inputfile);
         
         //Ontology ontology = new Ontology("wine.rdf");
         //Ontology ontology = new Ontology("countries.owl");
@@ -39,23 +42,44 @@ public class Main {
             System.out.println(o);
         }*/
         
+        Ontology ontology = new Ontology(inputfile);
         OntologyGraph graph = new OntologyGraph(ontology);
         //graph.toTable("test/graph.sql");
         //graph.save("test/Edges.txt");
-        graph.toTable("graph.sql", "movieontology.obda");
+        graph.toSchema("graph.sql", "movieontology.obda");
         graph.save("Edges.txt");
-        graph.generateOBDAFile(inputfile);
+        //graph.generateOBDAFile(inputfile);
+        //System.out.println(graph.replicateAllAttributesInSubclass());
+        
+        /*String sql = OntologyGraph.replicateAttributeInTable("ontology",
+                "PersonBirthName", "Editor", "id", "id", "birthName",
+                "birthName", "text");
+        System.out.println(sql);*/
+        
+        // Database
+        /*String url = "jdbc:postgresql://localhost:5432/postgres";
+        String username = "sameh";
+        Database database = new Database(url, username);
+        //database.connect(url, username);
+        database.executeQuery("select * " +
+                "from title where title = 'Braveheart';");
+        database.executeQuery("select * " +
+                "from title where title = 'X-Men';");
+        
+        //database.getTables("public");
+        database.getAndSaveStats("public");*/
         
         //graph.getData("http://www.movieontology.org/" +
                 //"2009/10/01/movieontology.owl#Movie", "movieontology.obda",
                 //inputfile);
         /*long start = System.currentTimeMillis();
-        graph.getAllData("movieontology.obda", inputfile);
+        graph.getAllData("movieontology.obda");//, inputfile);
         long end = System.currentTimeMillis();
-        System.out.println("Elapsed time: " + (end - start));
-        graph.insertIntoPropertyTables("property-data.sql");*/
+        System.out.println("Elapsed time: " + (end - start));*/
+        //graph.insertIntoPropertyTables("property-data.sql");
         
-        //graph.generateSparqlQueries("movieontology.obda", inputfile);
+        
+        //graph.generateSparqlQueries("movieontology.obda");
         
         //System.out.println("\n Query:");
         //System.out.println(query);

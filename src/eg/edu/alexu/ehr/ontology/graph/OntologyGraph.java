@@ -61,26 +61,29 @@ public class OntologyGraph {
 
     private Map<OntologyGraphNode, Partition> partitionMap;
 
-    private Map<String, OntologyGraphObject> uriToNodeMap;
+    private Map<String, OntologyGraphObject> uriToGraphObjectMap;
 
     private Map<OntologyProperty, Set<OntologyGraphEdge>> propertyToEdgeMap;
 
     private Set<OntologyGraphEdge> edges;
 
-    private int noOfedges;
+    private int noOfedges; // useless
 
     private Map<String, List<String>> tables;
     private Map<OntologyGraphNode, String> nodeTableMap;
     private Map<OntologyGraphEdge, Pair<String, String>> edgeTableAttrMap;
     private Map<OntologyGraphEdge, Pair<String, String>> propertyTableMap;
     private Map<String, String> labelTableMap;
+    private Map<String, OntologyGraphObject> labelObjectMap;
 
     private Set<Table> tablesSet;
 
     private static final String propertyQueriesPath = "property-queries/";
+    private static final String classQueriesPath = "class-queries/";
     private static final String singlePropertyQueriesPath
             = "single-property-queries/";
     private static final String propertyDataPath = "property-data/";
+    private static final String classIdsPath = "class-ids/";
     private static final String queryFileExtension = ".q";
 
     private static final String schemaName = "ontology";
@@ -166,7 +169,7 @@ public class OntologyGraph {
                 return id + ":" + objId;
             }
         }
-        
+
         return uri;
     }
 
@@ -246,8 +249,8 @@ public class OntologyGraph {
                 String attr = tableAttr.getSecond();
                 bw.writeln("mappingId" + getTabs("mappingId", 2)
                         + edge.getLabel());
-                bw.write("target" + getTabs("target", 2) + "{id} " +
-                        getOBDAId(edge.getProperty().getURIAsStr(),
+                bw.write("target" + getTabs("target", 2) + "{id} "
+                        + getOBDAId(edge.getProperty().getURIAsStr(),
                                 reversePrefixes) + " {" + attr
                         + "}");
                 if (objectNode.isDataType()) {
@@ -255,8 +258,8 @@ public class OntologyGraph {
                             + objectNode.getDatatypeForOBDA());
                 }
                 bw.writeln(" .");
-                bw.writeln("source" + getTabs("source", 2) + "select id, " +
-                        attr + " from " + table);
+                bw.writeln("source" + getTabs("source", 2) + "select id, "
+                        + attr + " from " + table);
             }
             bw.writeln("]]");
             bw.close();
@@ -319,7 +322,8 @@ public class OntologyGraph {
         try {
             p.waitFor();
         } catch (InterruptedException ex) {
-            Logger.getLogger(OntologyGraph.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(OntologyGraph.class.getName()).log(Level.SEVERE,
+                    null, ex);
         }
     }
 
@@ -392,8 +396,8 @@ public class OntologyGraph {
                 br = new BufferedFileReader(file);
 
                 String path = file.getPath();
-                String classLabel = path.split("/")[1].split("_", 2)[0];
-                String propertyLabel = path.split("/")[1].split("_", 2)[1];
+                String classLabel = path.split("/")[1].split("$", 2)[0];
+                String propertyLabel = path.split("/")[1].split("$", 2)[1];
                 propertyLabel = propertyLabel.substring(0,
                         propertyLabel.lastIndexOf("."));
                 String tableName = propertySchema + "." + classLabel
@@ -462,21 +466,25 @@ public class OntologyGraph {
                 bw.writeln();
                 br.close();
             } catch (FileNotFoundException ex) {
-                Logger.getLogger(OntologyGraph.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(OntologyGraph.class.getName()).
+                        log(Level.SEVERE, null, ex);
             } catch (IOException ex) {
-                Logger.getLogger(OntologyGraph.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(OntologyGraph.class.getName()).
+                        log(Level.SEVERE, null, ex);
             }
         }
         try {
             bw.close();
         } catch (IOException ex) {
-            Logger.getLogger(OntologyGraph.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(OntologyGraph.class.getName()).log(Level.SEVERE,
+                    null, ex);
         }
     }
 
     private List<Pair<String, OntologyGraphEdge>>
             getAttrFromDB(OntologyGraphNode node,
-                    Set<OntologyGraphEdge> properties, Set<String> propertiesInOBDA,
+                    Set<OntologyGraphEdge> properties,
+                    Set<String> propertiesInOBDA,
                     Map<String, String> prefixes) {
         Map<String, OntologyGraphEdge> labelPropMap
                 = new HashMap();
@@ -519,7 +527,8 @@ public class OntologyGraph {
                     String[] tokens = line.split("\"");
                     propertyName = tokens[tokens.length - 2];
                     String fileName = singlePropertyQueriesPath
-                            + clssName + "_" + propertyName + queryFileExtension;
+                            + clssName + "_" + propertyName
+                            + queryFileExtension;
                     OntologyGraphEdge property = labelPropMap.get(propertyName);
                     if (property == null) {
                         skip = true;
@@ -535,7 +544,9 @@ public class OntologyGraph {
                     bw.writeln(line);
                 }
             }
-            bw.close();
+            if (bw != null) {
+                bw.close();
+            }
             br.close();
 
         } catch (IOException ex) {
@@ -550,26 +561,28 @@ public class OntologyGraph {
      OntologyGraphNode node = (OntologyGraphNode) uriToNodeMap.get(uri);
      return getSparqlQueries(node, obdaPath);
      }*/
-    public void getAllData(String obdaPath, String owlPath) {
+    public void getAllData(String obdaPath) {
         int index = 0;
+        Set<String> entitiesInOBDA = getEntitiesInOBDA(obdaPath);
         for (OntologyGraphNode clss : classes) {
-            System.out.println((index++) + ": " + clss);
-            getData(clss.getURIAsStr(), obdaPath, owlPath);
+            //System.out.println((index++) + ": " + clss);
+            getData(clss.getURIAsStr(), entitiesInOBDA);
+            Map<String, String> prefixes = getPrefixes(obdaPath);
+            generateClassSparqlQueries(prefixes, entitiesInOBDA);
         }
     }
 
-    public void getData(String uri, String obdaPath,
-            String owlPath) {
-        OntologyGraphNode node = (OntologyGraphNode) uriToNodeMap.get(uri);
+    public void getData(String uri, Set<String> entitiesInOBDA) {
+        OntologyGraphNode node = (OntologyGraphNode) uriToGraphObjectMap.get(uri);
         String queries = "";
         Map<String, String> prefixes = getPrefixes(obdaPath);
-        Set<String> propertiesInOBDA = getPropertiesInOBDA(obdaPath);
 
         Set<OntologyGraphEdge> properties = node.getEdges(EdgeType.PROPERTY);
-        generateSparqlQueries(node, properties, prefixes, propertiesInOBDA);
+        generatePropertySparqlQueries(node, properties, prefixes,
+                entitiesInOBDA);
 
         List<Pair<String, OntologyGraphEdge>> propertyFiles
-                = getAttrFromDB(node, properties, propertiesInOBDA, prefixes);
+                = getAttrFromDB(node, properties, entitiesInOBDA, prefixes);
 
         /*for (Pair<String, OntologyGraphEdge> pair : propertyFiles) {
          String filePath = pair.getFirst();
@@ -579,20 +592,72 @@ public class OntologyGraph {
          + property.getPreviousNode().getLabel() + "_"
          + property.getLabel());
          } catch (IOException ex) {
-         Logger.getLogger(OntologyGraph.class.getName()).log(Level.SEVERE, null, ex);
+         Logger.getLogger(OntologyGraph.class.getName()).log(Level.SEVERE, null,
+         ex);
          }
          }*/
     }
 
-    private boolean generateSparqlQueries(OntologyGraphNode node,
-            Set<OntologyGraphEdge> properties, Map<String, String> prefixes,
-            Set<String> propertiesInOBDA) {
+    private boolean generateClassSparqlQueries(Map<String, String> prefixes,
+            Set<String> entitiesInOBDA) {
         String queries = "";
+        for (OntologyGraphNode clss : classes) {
+            String label = clss.getLabel().replaceAll("[-.]", "");
+            String classURI = clss.getAsClass().getURIAsStr();
+            String attr = getAttrStr(prefixes, classURI, label);
+            if (!entitiesInOBDA.contains(attr)) {
+                continue;
+            }
+
+            queries += "[QueryItem=\"" + label + "\"]\n";
+            for (String key : prefixes.keySet()) {
+                queries += "PREFIX " + prefixes.get(key) + ": <" + key + ">\n";
+            }
+
+            String classId = getAttrStr(prefixes, clss.getURIAsStr(),
+                    label);
+
+            queries += "select ?x\n"
+                    + "where {\n"
+                    + "  ?x a " + classId + ".\n"
+                    + "}\n\n";
+
+        }
+
+        try {
+            if (!queries.equals("")) {
+                BufferedFileWriter bw
+                        = new BufferedFileWriter(classQueriesPath
+                                + "all-classes"
+                                + queryFileExtension);
+                bw.write(queries);
+                bw.close();
+            }
+            return true;
+        } catch (IOException ex) {
+            Logger.getLogger(OntologyGraph.class.getName()).log(Level.SEVERE,
+                    null, ex);
+            return false;
+        }
+    }
+    
+    public boolean generateClassSparqlQueries(String obdaPath) {
+        Map<String, String> prefixes = getPrefixes(obdaPath);
+        Set<String> entitiesInOBDA = getEntitiesInOBDA(obdaPath);
+
+        return generateClassSparqlQueries(prefixes, entitiesInOBDA);
+    }
+
+    private boolean generatePropertySparqlQueries(OntologyGraphNode node,
+            Set<OntologyGraphEdge> properties, Map<String, String> prefixes,
+            Set<String> entitiesInOBDA) {
+        String queries = "";
+
         for (OntologyGraphEdge property : properties) {
             String label = property.getLabel();
             String propertyURI = property.getProperty().getURIAsStr();
             String attr = getAttrStr(prefixes, propertyURI, label);
-            if (!propertiesInOBDA.contains(attr)) {
+            if (!entitiesInOBDA.contains(attr)) {
                 continue;
             }
 
@@ -602,7 +667,7 @@ public class OntologyGraph {
             }
 
             String clss = getAttrStr(prefixes, node.getURIAsStr(),
-                    node.getLabel());
+                    node.getLabel().replaceAll("[-.]", ""));
             queries += "select ?x ?" + label + "\n"
                     + "where {\n"
                     + "  ?x a " + clss + ";\n"
@@ -628,31 +693,37 @@ public class OntologyGraph {
         }
     }
 
-    public boolean generateSparqlQueries(OntologyGraphNode node,
-            String obdaPath, String owlPath) {
+    public boolean generatePropertySparqlQueries(OntologyGraphNode node,
+            String obdaPath) {
         Map<String, String> prefixes = getPrefixes(obdaPath);
-        Set<String> propertiesInOBDA = getPropertiesInOBDA(obdaPath);
+        Set<String> propertiesInOBDA = getEntitiesInOBDA(obdaPath);
 
         Set<OntologyGraphEdge> properties = node.getEdges(EdgeType.PROPERTY);
-        return generateSparqlQueries(node, properties, prefixes,
+        return generatePropertySparqlQueries(node, properties, prefixes,
                 propertiesInOBDA);
     }
 
-    public boolean generateSparqlQueries(String obdaPath, String owlPath) {
+    public boolean generatePropertySparqlQueries(String obdaPath) {
         Map<String, String> prefixes = getPrefixes(obdaPath);
-        Set<String> propertiesInOBDA = getPropertiesInOBDA(obdaPath);
+        Set<String> propertiesInOBDA = getEntitiesInOBDA(obdaPath);
 
         boolean succeeded = true;
         for (OntologyGraphNode clss : classes) {
-            Set<OntologyGraphEdge> properties = clss.getEdges(EdgeType.PROPERTY);
-            boolean success = generateSparqlQueries(clss, properties, prefixes,
-                    propertiesInOBDA);
+            Set<OntologyGraphEdge> properties
+                    = clss.getEdges(EdgeType.PROPERTY);
+            boolean success = generatePropertySparqlQueries(clss, properties,
+                    prefixes, propertiesInOBDA);
             if (!success) {
                 succeeded = false;
             }
         }
 
         return succeeded;
+    }
+    
+    public boolean generateSparqlQueries(String obdaPath) {
+        boolean success = generateClassSparqlQueries(obdaPath);
+        return success & generatePropertySparqlQueries(obdaPath);
     }
 
     /*public void getSparqlQueries(OntologyGraphNode node, String obdaPath,
@@ -719,7 +790,7 @@ public class OntologyGraph {
         return map;
     }
 
-    private Set<String> getPropertiesInOBDA(String path) {
+    private Set<String> getEntitiesInOBDA(String path) {
         BufferedFileReader br;
         Set<String> set = new HashSet();
 
@@ -748,9 +819,11 @@ public class OntologyGraph {
             }
 
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(OntologyGraph.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(OntologyGraph.class.getName()).log(Level.SEVERE,
+                    null, ex);
         } catch (IOException ex) {
-            Logger.getLogger(OntologyGraph.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(OntologyGraph.class.getName()).log(Level.SEVERE,
+                    null, ex);
         }
 
         return set;
@@ -778,9 +851,7 @@ public class OntologyGraph {
                     w.write(",");
                 }
 
-                w.write(" -- REFERENCES " + sprclssName
-                        + "(id)");
-
+                //w.write(" -- REFERENCES " + sprclssName + "(id)");
                 foreignKeys.add(getForeignKey(schemaName, tableName,
                         attrName, sprclssName, "id"));
             }
@@ -790,8 +861,8 @@ public class OntologyGraph {
 
     }
 
-    private boolean skipProperty(OntologyProperty property, OntologyClass subject,
-            OntologyObject object) {
+    private boolean skipProperty(OntologyProperty property,
+            OntologyClass subject, OntologyObject object) {
         if (!(object instanceof OntologyClass)) {
             return false;
         }
@@ -815,12 +886,12 @@ public class OntologyGraph {
         return set;
     }
 
-    public void toTable(String fileName, String obdaPath) {
+    public void toSchema(String fileName, String obdaPath) {
         initializeTableMaps();
         Set<Pair<OntologyProperty, OntologyObject>> usedProperties
                 = new HashSet();
         Set<String> propertiesInOBDA
-                = omitPrefixes(getPropertiesInOBDA(obdaPath));
+                = omitPrefixes(getEntitiesInOBDA(obdaPath)); // Should be handled as null/empty
 
         try {
             BufferedFileWriter w = new BufferedFileWriter(fileName);
@@ -835,7 +906,7 @@ public class OntologyGraph {
                 Set<OntologyGraphEdge> edges = clss.getEdges(EdgeType.PROPERTY);
                 String tableName = clss.getLabel().replaceAll("[-.]", "");
                 String tableFullName = schemaName + "." + tableName;
-                if (tableName.equals("")) {
+                if (tableName.equals("")) { // double check - Why????!!!!!
                     continue;
                 }
                 w.writeln();
@@ -928,13 +999,85 @@ public class OntologyGraph {
 
     }
 
+    // Test method
+    public String replicateAllAttributesInSubclass() {
+        OntologyGraphNode subclass = null;
+        for (OntologyGraphNode clss : classes) {
+            if (clss.getLabel().equals("Editor")) {
+                subclass = clss;
+                break;
+            }
+        }
+        OntologyGraphNode superclass = subclass.getEdges(EdgeType.SUPERCLASS).
+                iterator().next().getNextNode();
+        return replicateAllAttributesInSubclass(superclass, subclass);
+    }
+
+    public String replicateAllAttributesInSubclass(OntologyGraphNode superclass,
+            OntologyGraphNode subclass) {
+        Set<OntologyGraphEdge> properties
+                = superclass.getEdges(EdgeType.PROPERTY);
+        String table1 = superclass.getLabel().replaceAll("[-.]", "");
+        String table2 = subclass.getLabel().replaceAll("[-.]", "");
+        String sql = "";
+        for (OntologyGraphEdge property : properties) {
+            OntologyGraphNode objectNode = property.getNextNode();
+            OntologyClass superclassObject = superclass.getAsClass();
+            Cardinality card = property.getProperty().getCardinality(ontology,
+                    superclassObject);
+            if (card.getMin() > 1 || card.getMax() > 1) {
+                continue;
+            }
+
+            sql += replicateAttributeInTable(schemaName, table1, table2, "id",
+                    "id", property.getLabel(), property.getLabel(),
+                    objectNode.getSQLDatatype()) + "\n\n\n";
+        }
+
+        return sql;
+    }
+
+    public static String replicateAttributeInTable(String schema1, String table1,
+            String schema2, String table2, String id1, String id2,
+            String column1, String column2, String datatype) {
+        String table1FullName = schema1 + "." + table1; // Super class
+        String table2FullName = schema2 + "." + table2; // Sub class
+        String sql = replicateAttributeInTable(table1FullName, table2FullName,
+                id1, id2, column1, column2, datatype);
+        return sql;
+    }
+
+    public static String replicateAttributeInTable(String schema, String table1,
+            String table2, String id1, String id2, String column1,
+            String column2, String datatype) {
+        String sql = replicateAttributeInTable(schema, table1, schema,
+                table2, id1, id2, column1, column2, datatype);
+        return sql;
+    }
+
+    public static String replicateAttributeInTable(String table1, String table2,
+            String id1, String id2, String column1, String column2,
+            String datatype) {
+        String sql = "ALTER TABLE " + table2 + " ADD COLUMN " + column2 + " "
+                + datatype + ";\n\n";
+        sql += "UPDATE TABLE " + table2
+                + " SET " + column2 + "=sq." + column1 + "\n"
+                + "FROM  (\n"
+                + "   SELECT " + table1 + "." + id1 + ", " + table1 + "."
+                + column1 + "\n"
+                + "   FROM   TABLE " + table1 + "\n"
+                + "   ) AS sq\n"
+                + "WHERE  " + table2 + "." + id2 + "=sq." + id1 + ";";
+
+        return sql;
+    }
+
     private void insertValues(BufferedFileWriter w, String tableName,
             Set<OntologyGraphEdge> properties, Set<OntologyGraphEdge> binary,
-            Set<String> propertiesInOBDA)
-            throws IOException {
-        if (!(properties.size() + binary.size() > 0)) {
-            return;
-        }
+            Set<String> propertiesInOBDA) throws IOException {
+        /*if (!(properties.size() + binary.size() > 0)) {
+         return;
+         }*/
 
         Set<OntologyGraphEdge> allProperties = new HashSet(properties.size()
                 + binary.size());
@@ -965,7 +1108,7 @@ public class OntologyGraph {
          if (!(propertyCount > 0))
          return;*/
         w.writeln();
-        w.writeln("CREATE VIEW ids AS");
+        w.writeln("CREATE MATERIALIZED VIEW ids AS");
         boolean first = true;
         for (OntologyGraphEdge property : allLocalProperties) {
             w.writeln();
@@ -977,7 +1120,7 @@ public class OntologyGraph {
             w.writeln("    SELECT x FROM");
             String propertyLabel = property.getLabel();
             String fullAttributeName = fullAttributeName(propertySchema,
-                    tableName, propertyLabel + "data");
+                    tableName, propertyLabel) + "data";
             w.writeln("    " + fullAttributeName);
             w.write(")");
         }
@@ -998,7 +1141,7 @@ public class OntologyGraph {
         for (OntologyGraphEdge property : localProperties) {
             String propertyLabel = property.getLabel();
             String fullAttributeName = fullAttributeName(propertySchema,
-                    tableName, propertyLabel + "data");
+                    tableName, propertyLabel) + "data";
 
             w.write(", " + fullAttributeName + "." + propertyLabel + " AS "
                     + propertyLabel);
@@ -1008,9 +1151,8 @@ public class OntologyGraph {
         first = true;
         for (OntologyGraphEdge property : localProperties) {
             String propertyLabel = property.getLabel();
-            String fullTableName = fullTableName(propertySchema, tableName +
-                    "data")
-                    + firstToUpperCase(propertyLabel);
+            String fullTableName = fullTableName(propertySchema, tableName)
+                    + firstToUpperCase(propertyLabel) + "data";
             w.writeln(" LEFT OUTER JOIN");
 
             w.write(fullTableName);
@@ -1020,7 +1162,7 @@ public class OntologyGraph {
         w.writeln(";");
         w.write();
 
-        w.writeln("DROP VIEW ids;");
+        w.writeln("DROP MATERIALIZED VIEW ids;");
         w.write();
 
     }
@@ -1048,8 +1190,7 @@ public class OntologyGraph {
             w.writeln();
             w.write("\t" + attrName + " INTEGER");
 
-            w.write(" -- REFERENCES " + foreignTableName
-                    + "(id)");
+            //w.write(" -- REFERENCES " + foreignTableName + "(id)");
             foreignKeys.add(getForeignKey(schemaName, tableName,
                     attrName, foreignTableName, "id"));
             addAttrToSchema(schemaName, tableName,
@@ -1109,8 +1250,8 @@ public class OntologyGraph {
             } else if (object.isDataType()) {
                 //w.writeln("\t" + subjectName + " "
                 //        + clss.getSQLDatatype() + ",");
-                w.writeln("\tid" + " INTEGER, -- REFERENCES " + subjectName +
-                        "(id)" + ",");
+                w.writeln("\tid" + " INTEGER, -- REFERENCES " + subjectName
+                        + "(id)" + ",");
                 w.writeln("\t" + propertyLabel + " "
                         + object.getSQLDatatype());
                 w.writeln(");");
@@ -1128,13 +1269,13 @@ public class OntologyGraph {
                     + propertyLabel + ");");
 
             w.writeln();
-            w.writeln("INSERT INTO " + binaryTableFullName + "(id, " +
-                    propertyLabel + ")");
+            w.writeln("INSERT INTO " + binaryTableFullName + "(id, "
+                    + propertyLabel + ")");
             //w.writeln("SELECT x, " + propertySchema + "." + binaryTableName +
             //        "." + propertyLabel + " AS " + propertyLabel);
             w.writeln("SELECT DISTINCT ON (x, " + propertyLabel + ") *");
-            w.writeln("FROM " + propertySchema + "." + binaryTableName +
-                    "data" + ";");
+            w.writeln("FROM " + propertySchema + "." + binaryTableName
+                    + "data" + ";");
         }
     }
 
@@ -1205,7 +1346,7 @@ public class OntologyGraph {
         OntologyGraphNode node = new OntologyGraphNode(clss, label);
         classes.add(node);
         entityMap.put(clss, node);
-        uriToNodeMap.put(uri, node);
+        uriToGraphObjectMap.put(uri, node);
 
         Set<OntologyIndividual> individualsLocalSet = clss.
                 getIndividuals(ontology);
@@ -1230,7 +1371,8 @@ public class OntologyGraph {
         Set<OntologyClass> classesSet = ontology.getClasses();
         Set<OntologyDatatype> datatypeSet = ontology.getDatatypes();
         Set<OntologyProperty> properties = ontology.getProperties();
-        Set<OntologyIndividual> individualsSet = new HashSet<OntologyIndividual>();
+        Set<OntologyIndividual> individualsSet
+                = new HashSet<OntologyIndividual>();
 
         classes = new HashSet<OntologyGraphNode>(classesSet.size());
         datatypes = new HashSet<OntologyGraphNode>(datatypeSet.size());
@@ -1249,7 +1391,7 @@ public class OntologyGraph {
                 = new HashMap<OntologyGraphNode, Partition>(classesSet.size()
                         + datatypeSet.size());
 
-        uriToNodeMap
+        uriToGraphObjectMap
                 = new HashMap<String, OntologyGraphObject>(classesSet.size()
                         + datatypeSet.size());
 
@@ -1271,7 +1413,7 @@ public class OntologyGraph {
             OntologyGraphNode node = new OntologyGraphNode(datatype, label);
             datatypes.add(node);
             entityMap.put(datatype, node);
-            uriToNodeMap.put(uri, node);
+            uriToGraphObjectMap.put(uri, node);
         }
         //System.out.println("Datatypes read.");
 
@@ -1426,7 +1568,8 @@ public class OntologyGraph {
                     //if (edge.isInverse())
                     //continue;
                     this.edges.remove(edge);
-                    if (clss.edgeExists(edge) || edge.getNextNode().equals(clss)) {
+                    if (clss.edgeExists(edge)
+                            || edge.getNextNode().equals(clss)) {
                         continue;
                     }
                     clss.addConnection(edge);
@@ -1440,7 +1583,8 @@ public class OntologyGraph {
         }
 
         // Connect edges to equivalent classes (edges going to equivalent classes)
-        List<OntologyGraphEdge> edgesToRemove = new ArrayList<OntologyGraphEdge>();
+        List<OntologyGraphEdge> edgesToRemove
+                = new ArrayList<OntologyGraphEdge>();
         List<OntologyGraphEdge> edgesToAdd = new ArrayList<OntologyGraphEdge>();
         for (OntologyGraphEdge edge : this.edges) {
             if (equivalenceMap.containsKey(edge.getNextNode())) {
@@ -1466,7 +1610,7 @@ public class OntologyGraph {
 
         for (OntologyGraphEdge edge : edges) {
             String uri = edge.getURIAsStr();
-            uriToNodeMap.put(uri, edge);
+            uriToGraphObjectMap.put(uri, edge);
         }
     }
 
@@ -1513,7 +1657,8 @@ public class OntologyGraph {
             for (OntologyGraphNode clss : classes) {
                 Set<OntologyGraphEdge> edgesSet = clss.getEdges(property);
                 if (edgesSet.size() == 0) {
-                    clss.addConnection(property, objectClasses.iterator().next());
+                    clss.addConnection(property,
+                            objectClasses.iterator().next());
                     addEdge(clss.lastEdgeAdded());
                     edgesSet = clss.getEdges(property);
                 }
@@ -1684,7 +1829,8 @@ public class OntologyGraph {
             }
             bw.close();
 
-            int numberOfNodes = classes.size() + datatypes.size() + edges.size();
+            int numberOfNodes = classes.size() + datatypes.size()
+                    + edges.size();
 
             Map<Integer, Float>[] adjacencyArray = new Map[numberOfNodes];
             for (int i = 0; i < adjacencyArray.length; i++) {
@@ -1729,8 +1875,10 @@ public class OntologyGraph {
                 } else {
                     float newWeight = adjacencyArray[predicateNumber].get(
                             objectNumber) + edge.getWeight();
-                    adjacencyArray[predicateNumber].put(objectNumber, newWeight);
-                    adjacencyArray[objectNumber].put(predicateNumber, newWeight);
+                    adjacencyArray[predicateNumber].put(objectNumber,
+                            newWeight);
+                    adjacencyArray[objectNumber].put(predicateNumber,
+                            newWeight);
                 }
 
                 /*
@@ -1831,8 +1979,8 @@ public class OntologyGraph {
         }
     }
 
-    private List<Pair<String, String>> labelsAndDatatypes(OntologyGraphNode node,
-            Set<OntologyGraphObject> set) {
+    private List<Pair<String, String>>
+            labelsAndDatatypes(OntologyGraphNode node, Set<OntologyGraphObject> set) {
         Set<OntologyGraphEdge> edges = node.getEdges();
         List<Pair<String, String>> ret
                 = new ArrayList<Pair<String, String>>(edges.size());
@@ -1900,7 +2048,7 @@ public class OntologyGraph {
                     }
                 }
 
-                OntologyGraphObject node = uriToNodeMap.get(uri);
+                OntologyGraphObject node = uriToGraphObjectMap.get(uri);
                 map.put(id, node);
             }
 

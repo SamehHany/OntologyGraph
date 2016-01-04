@@ -550,7 +550,10 @@
         <rdfs:label xml:lang="el">όνομα_γέννησης</rdfs:label>
         <rdfs:label xml:lang="en">birth name</rdfs:label>
         <rdfs:range rdf:resource="&xsd;string"/>
+        <rdfs:domain rdf:resource="&dbpedia;Person"/>
     </owl:DatatypeProperty>
+    
+    <owl:Class rdf:about="&dbpedia;Person" />
     
 
 
@@ -1037,7 +1040,7 @@
 
     <!--<owl:Class rdf:about="&mo;Movie"/>-->
     
-    <owl:Class rdf:about="&www;Movie">
+    <owl:Class rdf:about="&mo;Movie">
         <rdfs:subClassOf>
             <owl:Restriction>
                 <owl:onProperty rdf:resource="&mo;title"/>

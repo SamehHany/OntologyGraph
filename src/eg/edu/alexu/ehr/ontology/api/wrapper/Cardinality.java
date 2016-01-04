@@ -16,11 +16,17 @@ public class Cardinality {
     public Cardinality() {
         min = 1;
         max = Integer.MAX_VALUE;
+        //max = 1;
     }
 
     public Cardinality(int min, int max) {
         this.min = min;
         this.max = max;
+    }
+    
+    public Cardinality(int card) {
+        this.min = card;
+        this.max = card;
     }
 
     public void setMin(int min) {

@@ -24,7 +24,8 @@ import org.semanticweb.owlapi.model.OWLOntology;
 public class Main {
 
     public static void main(String[] args) throws OWLOntologyCreationException, IOException, URISyntaxException {
-        String inputfile = "movieontology-instances.owl";
+        //String inputfile = "movieontology-instances.owl";
+        String inputfile = args[0];
         //String inputfile = "wine.rdf";
         //String inputfile = "FlyAtlas-Vocabulary.owl";
         //String inputfile = "countries.owl";

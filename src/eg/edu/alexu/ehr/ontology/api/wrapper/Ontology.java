@@ -59,8 +59,8 @@ public class Ontology {
         try {
             
             // Handling multiple files
-            File dir = file;
-            File[] directoryListing = dir.listFiles();
+            //File dir = file;
+            File[] directoryListing = file.listFiles();
             if (directoryListing != null) {
                 for (File child : directoryListing) {
                     if (ontology == null) {
@@ -80,6 +80,27 @@ public class Ontology {
         this.ontology = ontology;
         discard = new HashSet();
         //getCardinalityInfo();
+    }
+    
+    public Ontology(List<String> pathsToOWLFile) {
+        File file = null;
+        OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
+        ontology = null;
+        try {
+            for (String pathToOWLFile : pathsToOWLFile) {
+                file = new File(pathToOWLFile);
+                if (ontology == null) {
+                    ontology = manager.loadOntologyFromOntologyDocument(file);
+                } else {
+                    OWLOntology tmpOnt = manager.
+                            loadOntologyFromOntologyDocument(file);
+                    manager.addAxioms(ontology, tmpOnt.getAxioms());
+                }
+            }
+        } catch (OWLOntologyCreationException ex) {
+            Logger.getLogger(Ontology.class.getName()).log(Level.SEVERE, null,
+                    ex);
+        }
     }
 
     public Ontology(OWLOntology ontology) {

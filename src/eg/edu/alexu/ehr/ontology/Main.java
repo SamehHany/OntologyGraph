@@ -11,7 +11,10 @@ import eg.edu.alexu.ehr.util.io.BufferedFileReader;
 import java.io.FileNotFoundException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,7 +28,8 @@ public class Main {
 
     public static void main(String[] args) throws OWLOntologyCreationException, IOException, URISyntaxException {
         //String inputfile = "movieontology-instances.owl";
-        String inputfile = args[0];
+        //String inputfile = args[0];
+        List<String> inputfiles = Arrays.asList(args);
         //String inputfile = "wine.rdf";
         //String inputfile = "FlyAtlas-Vocabulary.owl";
         //String inputfile = "countries.owl";
@@ -47,7 +51,8 @@ public class Main {
             System.out.println(o);
         }*/
         
-        Ontology ontology = new Ontology(inputfile);
+        //Ontology ontology = new Ontology(inputfile);
+        Ontology ontology = new Ontology(inputfiles);
         OntologyGraph graph = new OntologyGraph(ontology);
 //        graph.addTriple(IRI.create(new URI("http://www.movieontology.org/2009/11/09/movieontology.owl#movie1")),
 //                IRI.create(new URI("http://www.movieontology.org/2009/10/01/movieontology.owl#hasEditor")),

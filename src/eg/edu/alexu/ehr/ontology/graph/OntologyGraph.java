@@ -34,12 +34,19 @@ import eg.edu.alexu.ehr.util.io.BufferedFileWriter;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 import jdk.nashorn.internal.runtime.regexp.joni.MatcherFactory;
 import jdk.nashorn.internal.runtime.regexp.joni.Regex;
+import org.coode.owlapi.rdfxml.parser.AnonymousNodeChecker;
+import org.coode.owlapi.rdfxml.parser.OWLRDFConsumer;
+import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAnnotation;
+import org.semanticweb.owlapi.model.OWLLiteral;
+import org.semanticweb.owlapi.model.OWLOntologyLoaderConfiguration;
+import uk.ac.manchester.cs.owl.owlapi.turtle.parser.TurtleParser;
 
 public class OntologyGraph {
 
@@ -1362,6 +1369,18 @@ public class OntologyGraph {
          for (OntologyClass superClass : superClasses) {
          addClassToNodes(superClass);
          }*/
+    }
+    
+    public void addTriple(IRI subject, IRI predicate, IRI object) {
+        //OWLRDFConsumer consumer = new OWLRDFConsumer(ontology, ontology.getOWLOntology().getC)
+        OWLRDFConsumer consumer = new OWLRDFConsumer(ontology.getOWLOntology(),
+                (AnonymousNodeChecker) new TurtleParser((Reader) null),
+                new OWLOntologyLoaderConfiguration() );
+        consumer.addTriple(subject, predicate, object);
+    }
+    
+    public void addTriple(IRI subject, IRI predicate, OWLLiteral con) {
+        
     }
 
     public void build(Ontology ontology) {

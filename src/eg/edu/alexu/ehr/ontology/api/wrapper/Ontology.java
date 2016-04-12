@@ -57,7 +57,22 @@ public class Ontology {
         OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
         OWLOntology ontology = null;
         try {
-            ontology = manager.loadOntologyFromOntologyDocument(file);
+            
+            // Handling multiple files
+            File dir = file;
+            File[] directoryListing = dir.listFiles();
+            if (directoryListing != null) {
+                for (File child : directoryListing) {
+                    if (ontology == null) {
+                        ontology = manager.loadOntologyFromOntologyDocument(child);
+                    } else {
+                        OWLOntology tmpOnt = manager.loadOntologyFromOntologyDocument(child);
+                        manager.addAxioms(ontology, tmpOnt.getAxioms());
+                    }
+                }
+            } else {
+                ontology = manager.loadOntologyFromOntologyDocument(file);
+            }
         } catch (OWLOntologyCreationException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

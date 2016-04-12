@@ -9,21 +9,25 @@ import eg.edu.alexu.ehr.query.Plan;
 import eg.edu.alexu.ehr.util.db.Database;
 import eg.edu.alexu.ehr.util.io.BufferedFileReader;
 import java.io.FileNotFoundException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import jdk.nashorn.internal.runtime.regexp.joni.Regex;
+import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAnnotation;
+import org.semanticweb.owlapi.model.OWLLiteral;
 import org.semanticweb.owlapi.model.OWLOntology;
 
 public class Main {
 
-    public static void main(String[] args) throws OWLOntologyCreationException, IOException {
-        //String inputfile = "movieontology-instances.owl";
+    public static void main(String[] args) throws OWLOntologyCreationException, IOException, URISyntaxException {
+        String inputfile = "movieontology-instances.owl";
         //String inputfile = "wine.rdf";
         //String inputfile = "FlyAtlas-Vocabulary.owl";
-        String inputfile = "countries.owl";
+        //String inputfile = "countries.owl";
 	//Ontology ontology = new Ontology("FlyAtlas-Vocabulary.owl");
         //Ontology ontology = new Ontology("pc.rdf");
         //Ontology ontology = new Ontology("test.rdf");
@@ -44,6 +48,10 @@ public class Main {
         
         Ontology ontology = new Ontology(inputfile);
         OntologyGraph graph = new OntologyGraph(ontology);
+//        graph.addTriple(IRI.create(new URI("http://www.movieontology.org/2009/11/09/movieontology.owl#movie1")),
+//                IRI.create(new URI("http://www.movieontology.org/2009/10/01/movieontology.owl#hasEditor")),
+//                IRI.create(new URI("http://www.movieontology.org/2009/10/01/movieontology.owl#editor1")));
+//        graph.build(ontology);
         //graph.toTable("test/graph.sql");
         //graph.save("test/Edges.txt");
         graph.toSchema("graph.sql", "movieontology.obda");

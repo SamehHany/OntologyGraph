@@ -62,6 +62,9 @@ public class Main {
         //graph.save("test/Edges.txt");
         graph.toSchema("graph.sql", "movieontology.obda");
         graph.save("Edges.txt");
+        String sql = graph.populate("populate.sql");
+        //System.out.println("INSERT SQL:");
+        System.out.println(sql);
         //graph.generateOBDAFile(inputfile);
         //System.out.println(graph.replicateAllAttributesInSubclass());
         

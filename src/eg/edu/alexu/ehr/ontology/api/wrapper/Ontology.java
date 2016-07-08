@@ -86,6 +86,7 @@ public class Ontology {
         File file = null;
         OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
         ontology = null;
+        discard = new HashSet();
         try {
             for (String pathToOWLFile : pathsToOWLFile) {
                 file = new File(pathToOWLFile);

@@ -25,7 +25,10 @@ import eg.edu.alexu.ehr.ontology.api.wrapper.object.entities.OntologyClass;
 import eg.edu.alexu.ehr.ontology.api.wrapper.object.entities.OntologyDatatype;
 import eg.edu.alexu.ehr.ontology.api.wrapper.object.entities.OntologyEntity;
 import eg.edu.alexu.ehr.ontology.api.wrapper.object.values.OntologyIndividual;
+import eg.edu.alexu.ehr.ontology.api.wrapper.object.values.OntologyLiteral;
 import eg.edu.alexu.ehr.ontology.api.wrapper.object.values.OntologyValue;
+import eg.edu.alexu.ehr.ontology.sqlwriter.InsertWriter;
+import eg.edu.alexu.ehr.ontology.sqlwriter.SQLWriter;
 import eg.edu.alexu.ehr.util.Pair;
 import eg.edu.alexu.ehr.util.csv.CSV;
 import eg.edu.alexu.ehr.util.db.Table;
@@ -356,6 +359,110 @@ public class OntologyGraph {
         for (OntologyGraphNode clss : classes) {
 
         }
+    }
+    
+    public String populate(String fileName) {
+        BufferedFileWriter fwriter = null;
+        try {
+            fwriter = new BufferedFileWriter(fileName);
+        } catch (IOException ex) {
+            Logger.getLogger(OntologyGraph.class.getName()).log(Level.SEVERE,
+                    null, ex);
+        }
+        Map<Pair<String, Long>, InsertWriter> tableQueryMap = new HashMap<>();
+        
+        for (OntologyGraphNode node : individuals) {
+            Set<OntologyGraphEdge> clssEdges = node.getEdges(EdgeType.INSTANCEOF);
+            OntologyGraphNode clssNode = clssEdges.iterator().next().getNextNode();
+            String classTableName = nodeTableMap.get(clssNode);
+            if (classTableName == null) {
+                continue;
+            }
+            OntologyIndividual individual = (OntologyIndividual)node.getObject();
+            long id = hash(individual);
+            OntologyClass clss = (OntologyClass)clssNode.getObject();
+            
+            for (OntologyGraphEdge edge : clssNode.getEdges(EdgeType.PROPERTY)) {
+                OntologyProperty property = edge.getProperty();
+                Pair<String, String> pair = edgeTableAttrMap.get(edge);
+                if (pair == null) {
+                    continue;
+                }
+                String tableName = pair.getFirst();
+                String columnName = pair.getSecond();
+                
+                InsertWriter writer =
+                        tableQueryMap.get(new Pair<>(tableName, id));
+                if (writer == null) {
+                    writer = new InsertWriter(tableName);
+                    tableQueryMap.put(new Pair<>(tableName, id), writer);
+                    
+                    if (classTableName.equals(tableName)) {
+                        writer.addColumn("id");
+                        writer.addValue(Long.toString(id));
+                    }
+                }
+                
+                Map<OntologyProperty, Set<OntologyValue>> valuesMap
+                        = individual.getPropertyValues(ontology);
+                
+                Set<OntologyValue> values = valuesMap.get(property);
+                if (values == null || values.size() == 0) continue;
+                writer.addColumn(columnName);
+                OntologyValue value = values.iterator().next();
+                if (value.isLiteral()) {
+                    writer.addValue(((OntologyLiteral)value).getExpression());
+                } else {
+                    writer.addValue(Long.toString(
+                            hash((OntologyIndividual)value)));
+                }
+            }
+        }
+        
+        StringBuilder sqlBuilder = new StringBuilder();
+        for (InsertWriter writer : tableQueryMap.values()) {
+            String sql = writer.write();
+            try {
+                fwriter.writeln(sql);
+            } catch (IOException ex) {
+                Logger.getLogger(OntologyGraph.class.getName()).log(
+                        Level.SEVERE, null, ex);
+            }
+            sqlBuilder.append(sql);
+            sqlBuilder.append("\n");
+        }
+        
+        try {
+            fwriter.close();
+        } catch (IOException ex) {
+            Logger.getLogger(OntologyGraph.class.getName()).log(Level.SEVERE,
+                    null, ex);
+        }
+        
+        return sqlBuilder.toString();
+    }
+    
+    private long hash(OntologyIndividual individual) {
+        Map<OntologyProperty, Set<OntologyValue>> propertyValueMap =
+                individual.getPropertyValues(ontology);
+        
+        long h = 1125899906842597L; // prime
+
+        for (Map.Entry<OntologyProperty, Set<OntologyValue>> entry :
+                propertyValueMap.entrySet()) {
+            Set<OntologyValue> values = entry.getValue();
+            
+            for (OntologyValue value : values) {
+                if (value instanceof OntologyLiteral) {
+                    h = 31 * h + ((OntologyLiteral)value).getExpression().
+                            hashCode();
+                } else {
+                    h = 31 * h + hash((OntologyIndividual)value);
+                }
+            }
+        }
+        
+        return h;
     }
 
     public void insertIntoPropertyTables(String outpath) {
@@ -919,7 +1026,7 @@ public class OntologyGraph {
                 w.writeln();
                 w.writeln("CREATE TABLE " + tableFullName + "(");
                 addTable(clss, schemaName, tableName);
-                w.write("\tid SERIAL PRIMARY KEY");
+                w.write("\tid BIGSERIAL PRIMARY KEY");
 
                 writeSuperClassReferences(w, clss, foreignKeys, schemaName,
                         tableName);

@@ -5,7 +5,7 @@
         <group>
             <file>file:/mnt/Data/research/ehr/OntologyGraph/src/eg/edu/alexu/ehr/ontology/graph/OntologyGraph.java</file>
             <file>file:/mnt/Data/research/ehr/OntologyGraph/src/eg/edu/alexu/ehr/ontology/api/wrapper/Ontology.java</file>
-            <file>file:/mnt/Data/research/ehr/OntologyGraph/src/eg/edu/alexu/ehr/ontology/Main.java</file>
+            <file>file:/mnt/Data/research/ehr/OntologyGraph/src/eg/edu/alexu/ehr/ontology/sqlwriter/SQLWriter.java</file>
         </group>
     </open-files>
 </project-private>

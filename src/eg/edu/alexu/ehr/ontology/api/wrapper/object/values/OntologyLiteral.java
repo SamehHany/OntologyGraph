@@ -27,6 +27,14 @@ public class OntologyLiteral extends OntologyValue {
 		isIndividual = false;
 		this.datatype = datatype;
 	}
+        
+        public String getExpression() {
+            if (datatype.getOWLDatatype().isString()) {
+                return "'" + literal + "'";
+            }
+            
+            return literal;
+        }
 
         @Override
         public String toString() {
